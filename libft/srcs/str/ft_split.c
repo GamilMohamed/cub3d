@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 17:11:13 by mohazerr          #+#    #+#             */
-/*   Updated: 2023/01/28 01:33:07 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/01/30 23:44:14 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,13 @@ char	**to_tab(char **tab, char const *s, char *charset, int count)
 	return (tab);
 }
 
+#include <stdio.h>
+
 char	**ft_split(char const *s, char *charset, int *size)
 {
 	char	**tab;
 
+	*size = 0;
 	if (!s || !*s)
 		return (ft_calloc(sizeof(char *) * 1, 1));
 	*size = ft_countdelim(s, charset);

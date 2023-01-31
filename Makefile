@@ -9,8 +9,11 @@ DIR_OBJS		=	objs
 SRCS_NAMES		=	main.c \
 					parsing/parsing.c \
 					parsing/args.c \
+					parsing/split.c \
 					misc/error.c \
 					misc/chainedlist.c \
+					misc/free.c \
+					misc/print.c \
 
 OBJS_NAMES		=	${SRCS_NAMES:.c=.o}
 

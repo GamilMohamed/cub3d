@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 00:19:56 by mgamil            #+#    #+#             */
-/*   Updated: 2023/01/30 02:20:57 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/01/30 16:52:05 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	ft_freerr(t_rr *node)
 		temp = node->next;
 		ft_free((void **)&node);
 		node = temp;
-	}
+	}	
 }
 
 void	ft_printlist(t_rr *temp)
@@ -61,8 +61,19 @@ void	ft_printlist(t_rr *temp)
 	head = temp;
 	while (head)
 	{
-		ft_printf("[%i]", head->type);
-		ft_printf("file:{%s}\n", head->name);
+		if (head->type == 0)
+			ft_printf("%yNO%0");
+		if (head->type == 1)
+			ft_printf("%ySO%0");
+		if (head->type == 2)
+			ft_printf("%yWE%0");
+		if (head->type == 3)
+			ft_printf("%yEA%0");
+		if (head->type == 4)
+			ft_printf("%mF%0");
+		if (head->type == 5)
+			ft_printf("%mC%0");
+		ft_printf("\t{%s}\n", head->name);
 		head = head->next;
 	}
 }
