@@ -1,29 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   ft_tablen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/30 16:33:17 by mgamil            #+#    #+#             */
-/*   Updated: 2023/01/31 22:01:53 by mgamil           ###   ########.fr       */
+/*   Created: 2023/02/01 00:40:48 by mgamil            #+#    #+#             */
+/*   Updated: 2023/02/01 00:41:01 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "libft.h"
 
-void	*ft_freestruct_map(t_map *map)
+int	ft_tablen(char **tab)
 {
-	if (!map)
-		return (NULL);
-	ft_free((void **)& map->cubfile);
-	int i = -1;
-	while (++i < 4)
-		ft_free((void **)& map->path[i]);
-	i = -1;
-	while (++i < 2)
-		ft_free((void **)& map->colors[i]);
-	// ft_freerr(map->files);
-	// map->files = 0;
-	return (NULL);
+	int	i;
+
+	if (!tab || !*tab)
+		return (0);
+	i = 0;
+	while (tab[i])
+		i++;
+	return (i);
 }

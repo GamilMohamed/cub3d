@@ -6,11 +6,23 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 18:20:44 by mgamil            #+#    #+#             */
-/*   Updated: 2023/01/31 02:29:14 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/01 04:22:31 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+
+# define SPACES " \t"
+# define RESET "\033[0m"
+# define BLACK "\033[0;30m"
+# define RED "\033[0;31m"
+# define GREEN "\033[0;32m"
+# define YELLOW "\033[0;33m"
+# define BLUE "\033[0;34m"
+# define MAGENTA "\033[0;35m"
+# define CYAN "\033[0;36m"
+# define WHITE "\033[0;37m"
 
 char	*colored(char *str, int value)
 {
@@ -35,7 +47,7 @@ char	*colored(char *str, int value)
 		if (str[i] == '1')
 			printf("%s%c%s", MAGENTA, str[i], RESET);
 		if (str[i] == '0')
-			printf("%s%c%s", GREEN, str[i], RESET);
+			printf("%s%c%s", "\033[5;32m", str[i], RESET);
 		if (str[i] == ' ')
 			printf("%s%c%s", "\033[7;33m", str[i], RESET);
 		if (str[i] == 'R')
