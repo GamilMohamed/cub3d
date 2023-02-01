@@ -6,28 +6,63 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 00:44:27 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/01 00:47:03 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/01 19:02:17 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
+int	set_color_tab(int (*rgb)[3], char *color)
+{
+	int	tmp;
+	int	i;
+
+	i = 0;
+	while (*color)
+	{
+		tmp = 0;
+		while (ft_isdigit(*color))
+		{
+			tmp = (tmp * 10) + *color - '0';
+			if (tmp > 255)
+				return (EXIT_FAILURE);
+			color++;
+		}
+		if (i != 2 && *color != ',')
+			return (EXIT_FAILURE);
+		color++;
+		(*rgb)[i++] = tmp;
+	}
+	return (EXIT_SUCCESS);
+}
+
 int	fillpathcolors(t_map *map, char *str, int index)
 {
+	char	*temp;
+
 	if (index > 3)
 	{
+		temp = ft_strjoin(str, "\n");
 		index -= 4;
-		if (!map->colors[index])
+		if (index == 1)
 		{
-			map->colors[index] = ft_strdup(str);
-			map->type_colors[index] = index;
+			if (set_color_tab(&map->ceiling, temp))
+				return (ft_free((void **)& temp), 0);
 		}
 		else
-			return (0);
-		return (1);
+		{
+			if (set_color_tab(&map->floor, temp))
+				return (ft_free((void **)& temp), 0);
+		}
+		return (ft_free((void **)& temp), 1);
 	}
 	if (!map->path[index])
 	{
+		int fd = open(str, O_RDONLY);
+		if (fd == -1)
+			return (0);
+		else
+			close(fd);
 		map->path[index] = ft_strdup(str);
 		map->type_path[index] = index;
 	}
@@ -66,6 +101,11 @@ int	filldirections(t_map *map, char **tab)
 	return (0);
 }
 
+// int	updatecolors(t_map *map)
+// {
+
+// }
+
 void	*fillstruct(t_map *map)
 {
 	char	**tab;
@@ -77,6 +117,6 @@ void	*fillstruct(t_map *map)
 	if (filldirections(map, tab))
 		ft_error(ERR_KEYS, YELLOW, map);
 	ft_freetab(tab);
+	// updatecolors(map);
 	return (NULL);
 }
-

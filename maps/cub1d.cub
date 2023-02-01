@@ -1,9 +1,9 @@
 
 
 
-NO ./path_to_the_north_texture  
-SO      .
-C 225,30,0
+NO Makefile  
+SO      Makefile
+C 170,191,209
 
 
 
@@ -14,8 +14,8 @@ C 225,30,0
 
 
 
-WE                   ./path_to_the_west_texture                         
-EA ./path_to_the_east_texture
+WE                   Makefile                         
+EA Makefile
 
 
 
@@ -27,8 +27,8 @@ EA ./path_to_the_east_texture
 
 
 
-F            220,100,0
-
-111
-1N1
-111
+F            42,98,61
+11111
+10001
+10N0110001
+11111

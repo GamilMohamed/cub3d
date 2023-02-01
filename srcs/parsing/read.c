@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 00:42:13 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/01 00:43:24 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/01 13:15:21 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ char	*readmap(t_map *map)
 				NULL);
 		x = ft_strlen(buff);
 		if (x > map->maxlen)
-			map->maxlen = x;
+			map->maxlen = x - 1;
 		ret = ft_realloc(ret, buff);
 		ft_free((void **)&buff);
 		buff = get_next_line(map->filefd, 0);

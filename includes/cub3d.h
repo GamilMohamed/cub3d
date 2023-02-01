@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:33:03 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/01 04:44:24 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/01 23:19:16 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@
 # define CYAN "\033[0;36m"
 # define WHITE "\033[0;37m"
 
+# define ESCAPE 65307
+
 # define ERR_NO_MAP "where is the map bro ?"
 # define ERR_CHARS "no direction or strange char found!"
 # define ERR_INVALID "invalid map!"
@@ -49,6 +51,42 @@
 typedef struct s_rr		t_rr;
 typedef struct t_map	t_map;
 typedef struct t_mlx	t_mlx;
+typedef struct t_data	t_data;
+
+typedef union s_rgb
+{
+	int					color;
+	struct
+	{
+		unsigned char	r;
+		unsigned char	g;
+		unsigned char	b;
+		unsigned char	a;
+	};
+}						t_rgb;
+
+typedef struct s_plane
+{
+	double				posX;
+	double				posY;
+	double				dirX;
+	double				dirY;
+	double				planeX;
+	double				planeY;
+	double				moveSpeed;
+	double				rotSpeed;
+}						t_plane;
+
+typedef struct s_temp
+{
+	void				*img;
+	char				*addr;
+	int					a;
+	int					b;
+	int					c;
+	int					height;
+	int					width;
+}						t_temp;
 
 typedef struct t_map
 {
@@ -58,17 +96,32 @@ typedef struct t_map
 	int					maxlen;
 	int					height;
 	char				*colors[2];
+	int					ceiling[3];
+	int					floor[3];
 	int					type_colors[2];
 	int					type_path[4];
 	char				*path[4];
 	t_mlx				*mlx;
+	t_data				*data;
 }						t_map;
 
 typedef struct t_mlx
 {
-	void	*mlx;
-	void	*win;
-}		t_mlx;
+	void				*mlx;
+	void				*win;
+	void				*bg;
+	t_data				*data;
+}						t_mlx;
+
+typedef struct t_data
+{
+	int					win_h;
+	int					win_w;
+	char				*bg;
+	void				*back;
+	t_mlx				*mlx;
+
+}						t_data;
 
 /*		parsing			*/
 // args.c
@@ -103,6 +156,6 @@ t_rr					*ft_lstnew_rr(char *name, int type);
 void					ft_freerr(t_rr *node);
 void					ft_printlist(t_rr *temp);
 
-int						ft_game(t_map *map, t_mlx *mlx);
+int						ft_game(t_map *map, t_mlx *mlx, t_data *data);
 
 #endif
