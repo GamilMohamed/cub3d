@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:31:57 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/01 23:25:47 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/03 04:38:18 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,86 +35,58 @@ void	ft_printstruct(t_map *map)
 	printf("\t\t***\n");
 }
 
-char	*multiplicator(t_map *map, char *src, char *dst, int size)
+void	get_positions(t_map *map, t_data *data)
 {
 	int	i;
 	int	j;
-	int	count;
-	static int	stop;
 
-	i = -1;
-	count = 0;
-	while (src[++i])
+	i = 0;
+	while (map->map[i])
 	{
-		j = -1;
-		while (++j < (SIZE))
+		j = 0;
+		while (map->map[i][j])
 		{
-			if (ft_strchr("NSEW", src[i]) && !stop)
+			if (ft_strchr("NSEW", map->map[i][j]))
 			{
-				dst[count++] = src[i];
-				stop++;
+				map->data->player_pos.x = j;
+				map->data->player_pos.y = i;
+				map->data->player = map->map[i][j];
 			}
-			else if (!ft_strchr("NSEW", src[i]))
-				dst[count++] = src[i];
-			else
-				dst[count++] = '0';
+			j++;
 		}
+		i++;
 	}
-	return (dst);
+
 }
 
-char	**expandmap(t_map *map)
-{
-	char	**tab;
-	int		i;
-	int		j;
-	int		count;
-
-	i = -1;
-	count = 0;
-	tab = ft_calloc(sizeof(char *) * (map->height * SIZE + 1), 1);
-	while (map->map[++i])
-	{
-		j = -1;
-		while (++j < (SIZE))
-		{
-			tab[count] = ft_calloc(sizeof(char) * (map->maxlen * SIZE + 1000), 1);
-			multiplicator(map, map->map[i], tab[count], SIZE);
-			count++;
-		}
-	}
-	ft_freetab(map->map);
-	return (tab);
-}
 
 int	main(int ac, char **av)
 {
-	t_map	map;
+	t_map	*map;
 	t_mlx	mlx;
 	t_data	data;
 
-	map . mlx = & mlx;
-	map . data = & data;
-	ft_memset(&map, 0, sizeof(t_map));
-	map.maxlen = 0;
+	map = ft_calloc(sizeof(t_map) * 1, 1);
+	map->data = ft_calloc(sizeof(t_data) * 1, 1);
+	map->mlx = ft_calloc(sizeof(t_mlx) * 1, 1);
 	if (checkextension(ac, av[1]))
 		return (EXIT_FAILURE);
-	map.cubfile = readinfo(&map, &map.filefd, av[1]);
-	if (!map.cubfile)
+	map->cubfile = readinfo(map, & map->filefd, av[1]);
+	ft_printf("map->cubfile=%s\n", map->cubfile);
+	if (!map->cubfile)
 		return (EXIT_FAILURE);
-	fillstruct(&map);
-	ft_free((void **)&map.cubfile);
-	map.cubfile = readmap(&map);
-	if (!map.cubfile)
-		return (ft_error(ERR_NO_MAP, YELLOW, &map));
-	checkmap(&map);
-	ft_printstruct(&map);
-	ft_printf("valid map!\n");
-	map.map = expandmap(& map);
-	ft_printmap(map.map, 0);
-	// ft_freetab(map.map);
-	ft_game(&map, & mlx, & data);
-	ft_freestruct_map(&map);
+	fillstruct(map);
+	// ft_free((void **)map->cubfile);
+	map->cubfile = readmap(map);
+	if (!map->cubfile)
+		return (ft_error(ERR_NO_MAP, YELLOW, map));
+	checkmap(map);
+	get_positions(map, & data);
+	ft_printstruct(map);
+	// ft_printf("valid map!\n");
+	ft_printmap(map->map, 0);
+	ft_game(map, map->mlx, map->data);
+	ft_freestruct_map(map);
 	return (0);
 }
 

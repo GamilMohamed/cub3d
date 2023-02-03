@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:33:03 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/01 23:19:16 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/03 05:10:06 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,14 @@
 # define ERR_INVALID "invalid map!"
 # define ERR_KEYS "invalid keys!"
 # define ERR_FDFAIL "open file failed!"
-# define SIZE 2
 
+# define SIZE 10
+
+# define W 119
+# define A 97
+# define S 115
+# define D 100
+	
 typedef struct s_rr		t_rr;
 typedef struct t_map	t_map;
 typedef struct t_mlx	t_mlx;
@@ -88,6 +94,9 @@ typedef struct s_temp
 	int					width;
 }						t_temp;
 
+typedef double Luno2f __attribute__((ext_vector_type(2)));
+typedef int Luno2i __attribute__((ext_vector_type(2)));
+
 typedef struct t_map
 {
 	char				*cubfile;
@@ -101,6 +110,7 @@ typedef struct t_map
 	int					type_colors[2];
 	int					type_path[4];
 	char				*path[4];
+	char				last;
 	t_mlx				*mlx;
 	t_data				*data;
 }						t_map;
@@ -115,6 +125,12 @@ typedef struct t_mlx
 
 typedef struct t_data
 {
+	Luno2f					player_pos;
+	double					pos_px;
+	double					pos_py;
+	double					pos_cx;
+	double					pos_cy;
+	char				player;
 	int					win_h;
 	int					win_w;
 	char				*bg;

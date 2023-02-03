@@ -6,11 +6,66 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 00:25:19 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/01 18:44:56 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/03 00:24:59 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+char	*multiplicator(t_map *map, char *src, char *dst, int size)
+{
+	int	i;
+	int	j;
+	int	count;
+	static int	stop;
+
+	i = -1;
+	count = 0;
+	while (src[++i])
+	{
+		j = -1;
+		while (++j < (SIZE))
+		{
+			if (ft_strchr("NSEW", src[i]) && !stop)
+			{
+				dst[count++] = src[i];
+				stop++;
+			}
+			else if (!ft_strchr("NSEW", src[i]))
+				dst[count++] = src[i];
+			else
+				dst[count++] = '0';
+		}
+	}
+	return (dst);
+}
+
+char	**expandmap(t_map *map)
+{
+	char	**tab;
+	int		i;
+	int		j;
+	int		count;
+
+	i = -1;
+	count = 0;
+	tab = ft_calloc(sizeof(char *) * (map->height * SIZE + 1), 1);
+	while (map->map[++i])
+	{
+		j = -1;
+		while (++j < (SIZE))
+		{
+			tab[count] = ft_calloc(sizeof(char) * (map->maxlen * SIZE + 1), 1);
+			multiplicator(map, map->map[i], tab[count], SIZE);
+			count++;
+		}
+	}
+	ft_freetab(map->map);
+	map->maxlen *= SIZE;
+	map->height *= SIZE;
+	return (tab);
+}
+
 
 int	checkaround(t_map *map, int x, int y, char **tab)
 {
@@ -81,7 +136,6 @@ void	check_surroundings(t_map *map)
 					total++;
 	}
 	ft_printmap(map->map, 0);
-	// ft_freetab(map->map);
 }
 
 void	checkchars(t_map *map)
@@ -111,4 +165,5 @@ void	checkmap(t_map *map)
 {
 	checkchars(map);
 	check_surroundings(map);
+	// map->map = expandmap(map);
 }
