@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 00:25:19 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/03 00:24:59 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/04 08:47:50 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ void	check_surroundings(t_map *map)
 				if (checkaround(map, i, j, map->map))
 					total++;
 	}
-	ft_printmap(map->map, 0);
+	// ft_printmap(map->map, 0);
 }
 
 void	checkchars(t_map *map)

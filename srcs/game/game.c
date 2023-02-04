@@ -6,11 +6,19 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 01:20:48 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/03 06:35:45 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/04 09:22:56 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void	printcoords(Luno2i val, Luno2f val2)
+{
+	if (val.x)
+		printf("val.x:%i, val.y:%i\n", val.x, val.y);
+	if (val2.x)
+		printf("val2.x:%f, val2.y:%f\n", val2.x, val2.y);
+}
 
 void	my_mlx_pixel_put(t_temp *temp, int x, int y, int color)
 {
@@ -24,7 +32,6 @@ int	create_rgb(int t, int a, int b, int c)
 {
 	return (t << 24 | a << 16 | b << 8 | c);
 }
-
 
 int	create_trgb(int tab[3])
 {
@@ -71,7 +78,6 @@ int	initmlx(t_map *map, t_mlx *mlx, t_data *data, t_temp *temp)
 	if (!mlx->mlx)
 		return (1);
 	mlx_get_screen_size(mlx->mlx, &data->win_w, &data->win_h);
-	ft_printf("data->win_w:%i, data->win_h:%i\n", data->win_w, data->win_h);
 	mlx->win = mlx_new_window(mlx->mlx, data->win_w, data->win_h, "cub3D");
 	if (!mlx->win)
 		return (ft_free((void **)&mlx->mlx), 1);
@@ -83,86 +89,140 @@ int	initmlx(t_map *map, t_mlx *mlx, t_data *data, t_temp *temp)
 	return (0);
 }
 
-
-void	docircle(t_temp *temp, Luno2f coords, int ray)
+Luno2f	docircle(t_temp *temp, Luno2f coords, int ray)
 {
 	double r, s, x, y;
+	Luno2f circle;
+
 	r = coords.x;
 	s = coords.y;
-
-	printf("POSITION X:%f, POSITION Y:%f size:%i\n", r, s, ray);
-	for (x = (r - ray); x < (r + ray); x++)
+	for (circle.x = (r - ray); circle.x < (r + ray); circle.x++)
 	{
-		for (y = (s - ray); y < (s + ray); y++)
+		for (circle.y = (s - ray); circle.y < (s + ray); circle.y++)
 		{
-			if (pow(x - r, 2) + pow(y - s, 2) <= pow(ray, 2))
-				my_mlx_pixel_put(temp, x, y, create_rgb(0, 250, 214, 165));
-			// else
-			// 	my_mlx_pixel_put(temp, x, y, create_rgb(255, 207, 185, 255));
+			if (pow(circle.x - r, 2) + pow(circle.y - s, 2) <= pow(ray, 2))
+				my_mlx_pixel_put(temp, circle.x, circle.y, create_rgb(0, 250, 214, 165));
 		}
 	}
-	printf("fin du cercle x:%f, y:%f size:%i\n", x, y, ray);
+	return (circle);
 }
-
-
-
-// void	fillminimap(t_map *map, t_data *data, t_temp *temp, int size)
-// {
-// 	int h = 0;
-// 	Luno2f coords;
-// 	Luno2f guette;
-// 	Luno2f map_pos;
-// 	Luno2f pixel_pos;
-
-// 	int color = 0;
-// 	for (size_t z = 0; z < map->maxlen; z++)
-// 	{
-// 		for (size_t y = 0; y < map->height; y++)
-// 		{
-// 			for (size_t v = 0; v < size; v++)
-// 			{
-// 				for (size_t x = 0; x < size; x++)
-// 				{
-// 					if (map->map[y][z] == ' ')
-// 						color = create_rgb(0, 97, 118, 75);
-// 					else if (map->map[y][z] == '0') //|| map->map[y][z] == 'N')
-// 						color = create_rgb(0, 207, 185, 151);
-// 					else if (map->map[y][z] == '1')
-// 						color = create_rgb(0, 155, 161, 123);
-// 					if (map->map[y][z] == 'N' && !h)
-// 					{
-// 						color = create_rgb(0, 255, 25, 0);
-// 						if (!h++)
-// 						{
-// 							coords.xy = (Luno2f){x, v};
-// 							guette = coords + (data->player_pos * size + size / 2);
-// 						}
-// 					}
-// 					my_mlx_pixel_put(temp, x + z * size, v + y * size, color);
-// 				}
-// 			}
-// 		}
-// 	}
-// 	docircle(temp, guette, size / 2);
-// 		// 	j++;
-// 		// }
-// 		// i++;
-// 	// }*
-// }
 
 void	my_color_pixel_put(t_temp *temp, Luno2f coords, int color)
 {
 	my_mlx_pixel_put(temp, coords.x, coords.y, color);
 }
 
+void	draw_line(t_temp *temp, Luno2f coords, Luno2f end, int color)
+{
+	int dx, dy, i, e;
+	int incx, incy, inc1, inc2;
+	int x, y;
+
+	dx = end.x - coords.x;
+	dy = end.y - coords.y;
+
+	if (dx < 0)
+		dx = -dx;
+	if (dy < 0)
+		dy = -dy;
+	incx = 1;
+	if (end.x < coords.x)
+		incx = -1;
+	incy = 1;
+	if (end.y < coords.y)
+		incy = -1;
+	x = coords.x;
+	y = coords.y;
+	if (dx > dy)
+	{
+		my_mlx_pixel_put(temp, x, y, color);
+		e = 2 * dy - dx;
+		inc1 = 2 * (dy - dx);
+		inc2 = 2 * dy;
+		for (i = 0; i < dx; i++)
+		{
+			if (e >= 0)
+			{
+				y += incy;
+				e += inc1;
+			}
+			else
+				e += inc2;
+			x += incx;
+			my_mlx_pixel_put(temp, x, y, color);
+		}
+	}
+	else
+	{
+		my_mlx_pixel_put(temp, x, y, color);
+		e = 2 * dx - dy;
+		inc1 = 2 * (dx - dy);
+		inc2 = 2 * dx;
+		for (i = 0; i < dy; i++)
+		{
+			if (e >= 0)
+			{
+				x += incx;
+				e += inc1;
+			}
+			else
+				e += inc2;
+			y += incy;
+			my_mlx_pixel_put(temp, x, y, color);
+		}
+	}
+}
+
+void	draw_circle(t_temp *tmp, int xc, int yc, int r)
+{
+	int x = 0, y = r;
+	int d = 3 - 2 * r;
+
+	while (y >= x)
+	{
+		my_mlx_pixel_put(tmp, xc + x, yc + y, 0xFFFFFF);
+		my_mlx_pixel_put(tmp, xc + y, yc + x, 0xFFFFFF);
+		my_mlx_pixel_put(tmp, xc - x, yc + y, 0xFFFFFF);
+		my_mlx_pixel_put(tmp, xc - y, yc + x, 0xFFFFFF);
+		my_mlx_pixel_put(tmp, xc + x, yc - y, 0xFFFFFF);
+		my_mlx_pixel_put(tmp, xc + y, yc - x, 0xFFFFFF);
+		my_mlx_pixel_put(tmp, xc - x, yc - y, 0xFFFFFF);
+		my_mlx_pixel_put(tmp, xc - y, yc - x, 0xFFFFFF);
+		if (d < 0)
+			d = d + 4 * x + 6;
+		else
+		{
+			d = d + 4 * (x - y) + 10;
+			y--;
+		}
+		x++;
+	}
+}
+
+void	rotate_line(t_temp *tmp, Luno2f coords, int r, double angle)
+{
+	Luno2f end;
+	double rad;
+
+	// draw_circle(tmp, coords.x, coords.y, r / 2);
+	docircle(tmp, coords, r / 2);
+	rad = angle * M_PI / 180;
+	end.x = coords.x + r * 2 * cos(rad);
+	end.y = coords.y + r * 2 * sin(rad);
+	draw_line(tmp, coords, end, create_rgb(0, 147, 151, 12));	
+}
+
+
 void	fillminimap(t_map *map, t_data *data, t_temp *temp, int size)
 {
-	int h = 0;
-	Luno2f coords;
-	Luno2f map_pos;
-	Luno2f pixel_pos;
+	int		h;
+	Luno2f	coords;
+	Luno2f	map_pos;
+	Luno2f	pixel_pos;
+	int		color;
 
-	int color = 0;
+	h = 0;
+	color = 0;
 	for (map_pos.x = 0; map_pos.x < map->maxlen; map_pos.x++)
 	{
 		for (map_pos.y = 0; map_pos.y < map->height; map_pos.y++)
@@ -173,78 +233,63 @@ void	fillminimap(t_map *map, t_data *data, t_temp *temp, int size)
 				{
 					if (map->map[(int)map_pos.y][(int)map_pos.x] == ' ')
 						color = create_rgb(0, 97, 118, 75);
-					else if (map->map[(int)map_pos.y][(int)map_pos.x] == '0' || map->map[(int)map_pos.y][(int)map_pos.x] == 'N')
+					else if (map->map[(int)map_pos.y][(int)map_pos.x] == '0') // || map->map[(int)map_pos.y][(int)map_pos.x] == 'N')
 						color = create_rgb(0, 207, 185, 151);
 					else if (map->map[(int)map_pos.y][(int)map_pos.x] == '1')
 						color = create_rgb(0, 155, 161, 123);
 					if (map->map[(int)map_pos.y][(int)map_pos.x] == 'N' && !h)
 					{
-						color = create_rgb(0, 207, 185, 0);
+						color = create_rgb(0, 207, 185, 255);
 						if (!h++)
-						{
-							coords = pixel_pos;
-							coords += (data->player_pos * size + size / 2);
-							// printf("coords.x:%f, coords.y:%f\n", coords.x, coords.y);
-						}
+							coords = pixel_pos + (data->player_pos * size + size / 2);
 					}
-					my_color_pixel_put(temp, (pixel_pos + map_pos * size), color);
-					// my_mlx_pixel_put(temp, pixel_pos.x + map_pos.x * size, pixel_pos.y + map_pos.y * size, color);
+					my_color_pixel_put(temp, (pixel_pos + map_pos * size),
+							color);
 				}
 			}
 		}
 	}
-	docircle(temp, coords, size / 2);
+	rotate_line(temp, coords, size/2, data->rotation);
 }
 
-void	ft_printtomlx(t_map *map, t_mlx *mlx, t_data *data)
+t_temp	ft_printtomlx(t_map *map, t_mlx *mlx, t_data *data)
 {
 	t_temp	mini;
+	int		size;
 
-	int size;
-	size = 40;
-	// ft_printf("realmap:%i|%i\n", map->maxlen, map->height);
-	// ft_printf("window:%i|%i\n", data->win_w, data->win_h);
-	// ft_printf("size=%i\n", size);
+	size = 70;
 	mini.width = map->maxlen * size;
 	mini.height = map->height * size;
-	// ft_printf("minimap:%i|%i\n", mini.width, mini.height);
 	mini.img = mlx_new_image(mlx->mlx, mini.width, mini.height);
 	mini.addr = mlx_get_data_addr(mini.img, &mini.a, &mini.b, &mini.c);
-	fillminimap(map, data, & mini, size);
-	mlx_put_image_to_window(mlx->mlx, mlx->win, mini.img, 0, 0);
-	// ft_printmap(map->map, 0);
+	fillminimap(map, data, &mini, size);
+	mlx_put_image_to_window(mlx->mlx, mlx->win, mini.img, 20, 20);
+	return (mini);
 }
-
 
 void	movetodirection(t_map *map, double y, double x)
 {
-	int	px, py;
-	int enintx, eninty;
-	Luno2i enint;
-	Luno2i p;
+	Luno2i	enint;
+	Luno2i	p;
 
+	double px, py;
+	int enintx, eninty;
 	py = map->data->player_pos.y;
 	px = map->data->player_pos.x;
-	printf("BEFORE py:%i, px:%i %f|%f\n", py, px, y, x);
-	py += ((map->data->player_pos.y / (int)map->data->player_pos.y) > 0.5) - 0.5;
-	px += ((map->data->player_pos.x / (int)map->data->player_pos.x) > 0.5) - 0.5;
-	printf("AFTER py:%i, px:%i %f|%f\n", py, px, y, x);
-	if (map->map[py + (int)y][px + (int)x] != '1')
+	py += ((map->data->player_pos.y / (int)map->data->player_pos.y) > 0.5)
+		- 0.5;
+	px += ((map->data->player_pos.x / (int)map->data->player_pos.x) > 0.5)
+		- 0.5;
+	if (map->map[(int)py + (int)y][(int)px + (int)x] != '1')
 	{
-		ft_printf("%rdeplacement%0\n");
-		// printf("AVANT ft_move :player_pos.y=%f\n", map->data->player_pos.y);
-		// printf("AVANT ft_move :player_pos.x=%f\n", map->data->player_pos.x);
-		// printf("y*2:%f, x*2:%f\n", y, x);
-		map->map[py][px] = '0';
-		printf("%f,%f\n", map->data->player_pos.y, map->data->player_pos.x);
+		map->map[(int)py][(int)px] = '0';
 		map->data->player_pos.x += x / 4;
 		map->data->player_pos.y += y / 4;
-		// printf("APRES ft_move :player_pos.y=%f\n", map->data->player_pos.y);
-		// printf("APRES ft_move :player_pos.x=%f\n", map->data->player_pos.x);
-		enintx = map->data->player_pos.x + ((map->data->player_pos.x / (int)map->data->player_pos.x) > 0.5) - 0.5;
-		eninty = map->data->player_pos.y + ((map->data->player_pos.y / (int)map->data->player_pos.y) > 0.5) - 0.5;
+		enintx = map->data->player_pos.x + ((map->data->player_pos.x
+					/ (int)map->data->player_pos.x) > 0.5) - 0.5;
+		eninty = map->data->player_pos.y + ((map->data->player_pos.y
+					/ (int)map->data->player_pos.y) > 0.5) - 0.5;
 		map->map[eninty][enintx] = map->data->player;
-
 	}
 }
 
@@ -252,7 +297,6 @@ int	move(int key, t_map *map)
 {
 	if (key == ESCAPE)
 		return (mlx_loop_end(map->mlx->mlx));
-	printf("map->data->player_pos.y:%f, map->data->player_pos.x:%f\n", map->data->player_pos.y, map->data->player_pos.x);
 	if (key == W)
 		movetodirection(map, -1, 0);
 	if (key == S)
@@ -261,26 +305,35 @@ int	move(int key, t_map *map)
 		movetodirection(map, 0, 1);
 	if (key == A)
 		movetodirection(map, 0, -1);
-	// ft_printtab(map->map);
+	if (key == LEFT)
+		map->data->rotation -= 15;
+	if (key == RIGHT)
+		map->data->rotation += 15;
 	ft_printtomlx(map, map->mlx, map->data);
 	return (0);
 }
 
 int	ft_game(t_map *map, t_mlx *mlx, t_data *data)
 {
-	t_temp temp;
+	t_temp	temp;
 
+	int r;
+
+	// t_temp
+	r = 0;
 	if (initmlx(map, mlx, data, &temp))
 		return (1);
+	data->rotation = 0;
 	mlx_put_image_to_window(mlx->mlx, mlx->win, temp.img, 0, 0);
-	mlx_key_hook(mlx->win, &move, map);
 	ft_printtomlx(map, mlx, data);
+	mlx_key_hook(mlx->win, &move, map);
+	mlx_hook(mlx->win, r, KeyPressMask, &move, data);
 	mlx_loop(mlx->mlx);
 	mlx_destroy_image(mlx->mlx, temp.img);
+	// mlx_destroy_image(mlx->mlx, mini.img);
 	destroywindows(mlx);
 	return (0);
 }
-
 
 /*
 

@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:33:03 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/03 05:10:06 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/04 09:56:22 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+
+# include <X11/X.h>
+# include <X11/keysym.h>
 
 # define SPACES " \t"
 # define RESET "\033[0m"
@@ -53,7 +56,10 @@
 # define A 97
 # define S 115
 # define D 100
-	
+
+# define LEFT 65361
+# define RIGHT 65363
+
 typedef struct s_rr		t_rr;
 typedef struct t_map	t_map;
 typedef struct t_mlx	t_mlx;
@@ -94,8 +100,8 @@ typedef struct s_temp
 	int					width;
 }						t_temp;
 
-typedef double Luno2f __attribute__((ext_vector_type(2)));
-typedef int Luno2i __attribute__((ext_vector_type(2)));
+typedef double Luno2f	__attribute__((ext_vector_type(2)));
+typedef int Luno2i		__attribute__((ext_vector_type(2)));
 
 typedef struct t_map
 {
@@ -111,6 +117,8 @@ typedef struct t_map
 	int					type_path[4];
 	char				*path[4];
 	char				last;
+	t_temp				mini;
+	int					size;
 	t_mlx				*mlx;
 	t_data				*data;
 }						t_map;
@@ -125,11 +133,12 @@ typedef struct t_mlx
 
 typedef struct t_data
 {
-	Luno2f					player_pos;
-	double					pos_px;
-	double					pos_py;
-	double					pos_cx;
-	double					pos_cy;
+	double				rotation;
+	Luno2f				player_pos;
+	double				pos_px;
+	double				pos_py;
+	double				pos_cx;
+	double				pos_cy;
 	char				player;
 	int					win_h;
 	int					win_w;
@@ -173,5 +182,8 @@ void					ft_freerr(t_rr *node);
 void					ft_printlist(t_rr *temp);
 
 int						ft_game(t_map *map, t_mlx *mlx, t_data *data);
+void	my_mlx_pixel_put(t_temp *temp, int x, int y, int color);
+int	create_rgb(int t, int a, int b, int c);
+
 
 #endif
