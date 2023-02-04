@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:33:03 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/04 12:14:25 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/04 16:42:13 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,10 @@
 
 # define LEFT 65361
 # define RIGHT 65363
+# define UP 65362
+# define DOWN 65364
+
+
 
 typedef struct s_rr		t_rr;
 typedef struct t_map	t_map;
@@ -91,6 +95,7 @@ typedef struct s_plane
 
 typedef struct s_temp
 {
+	t_map				*map;
 	void				*img;
 	char				*addr;
 	int					a;
@@ -106,6 +111,7 @@ typedef int Luno2i		__attribute__((ext_vector_type(2)));
 
 typedef struct t_map
 {
+	int					nbrayons;
 	char				*cubfile;
 	char				**map;
 	int					filefd;

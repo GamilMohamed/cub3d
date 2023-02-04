@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 01:20:48 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/04 12:48:55 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/04 20:54:36 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,81 @@ void	draw_line(t_temp *temp, Luno2f coords, Luno2f end, int color)
 	}
 }
 
+
+void	draw_line_rays(t_map *map, t_temp *temp, Luno2f end, Luno2f coords, int color)
+{
+	int dx, dy, i, e;
+	int incx, incy, inc1, inc2;
+	int x, y;
+	int mort = 0;
+	dx = end.x - coords.x;
+	dy = end.y - coords.y;
+
+	if (dx < 0)
+		dx = -dx;
+	if (dy < 0)
+		dy = -dy;
+	incx = 1;
+	if (end.x < coords.x)
+		incx = -1;
+	incy = 1;
+	if (end.y < coords.y)
+		incy = -1;
+	x = (int)coords.x;
+	y = (int)coords.y;
+	if (dx > dy)
+	{
+		if (map->map[y/35][x/35] != '1')
+			my_mlx_pixel_put(temp, x, y, color);
+		else
+			return ;
+		e = 2 * dy - dx;
+		inc1 = 2 * (dy - dx);
+		inc2 = 2 * dy;
+		for (i = 0; i < dx; i++)
+		{
+			if (e >= 0)
+			{
+				y += incy;
+				e += inc1;
+			}
+			else
+				e += inc2;
+			x += incx;
+			if (map->map[y/35][x/35] != '1')
+				my_mlx_pixel_put(temp, x, y, color);
+			else
+				return ;
+		}
+	}
+	else
+	{
+		if (map->map[y/35][x/35] != '1')
+			my_mlx_pixel_put(temp, x, y, color);
+		else
+			return ;
+		e = 2 * dx - dy;
+		inc1 = 2 * (dx - dy);
+		inc2 = 2 * dx;
+		for (i = 0; i < dy; i++)
+		{
+			if (e >= 0)
+			{
+				x += incx;
+				e += inc1;
+			}
+			else
+				e += inc2;
+			y += incy;
+			if (map->map[y/35][x/35] != '1')
+				my_mlx_pixel_put(temp, x, y, color);
+			else
+				return ;
+		}
+	}
+}
+
+
 void	draw_circle(t_temp *tmp, int xc, int yc, int r)
 {
 	int x = 0, y = r;
@@ -199,17 +274,57 @@ void	draw_circle(t_temp *tmp, int xc, int yc, int r)
 	}
 }
 
-void	rotate_line(t_temp *tmp, Luno2f coords, int r, double angle)
+// printf("longueur=%f\n", longueur * cos((i / 3. * 45.) * (M_PI / 180)));
+
+		// jspr.x = tan((i / 3. * map->rotation) * (M_PI / 180)) * (longueur * cos((i / 3. * map->rotation) * (M_PI / 180)));
+		// jspr.y = (longueur * cos((i / 3. * map->rotation) * (M_PI / 180))) / cos((i / 3. * map->rotation) * (M_PI / 180));
+// void	draw_rayons(t_temp *tmp, Luno2f coords, t_map *map, Luno2f end, double longueur)
+// {
+// 	Luno2f jspr;
+// 	double	l;
+// 	printf("map->rotation=%f\n", map->rotation);
+// 	printf("coords.x:%f, coords.y:%f\n", coords.x, coords.y);
+// 	for (double i = 0; i < 16; i++)
+// 	{
+// 		// longueur / cos((i - 6) * 60);
+// 		// draw_line(tmp, coords, )
+// 		l = longueur * cos(((i - 8) / 8. * 45.) * (M_PI / 180));
+// 		jspr.x = coords.x + cos((map->rotation - ((i - 8) / 8. * 45.)) * (M_PI / 180)) * l;
+// 		jspr.y = coords.y + sin((map->rotation - ((i - 8) / 8. * 45.)) * (M_PI / 180)) * l;
+// 		printf("%f %f\n", jspr.x, jspr.y);
+// 		// printf("x:%f,\n", jspr.x);
+// 		// printf("y:%f,\n", jspr.y);
+// 		printf("longueur=%f\n", longueur * cos((i / 3. * 45.) * (M_PI / 180)));
+// 		draw_line(tmp, jspr, coords, 0xFFFF00);
+// 	}
+	
+// }
+
+
+void	draw_rayons(t_temp *tmp, Luno2f coords, t_map *map, Luno2f end, double longueur)
+{
+	Luno2f jspr = 0;
+	double	l;
+	for (double i = 0; i < map->nbrayons; i++)
+	{
+		l = longueur * cos(((i - (map->nbrayons/2)) / (map->nbrayons/2) * 45.) * (M_PI / 180));
+		jspr.x = coords.x + cos((map->rotation - ((i - (map->nbrayons/2)) / (map->nbrayons/2) * 45.)) * (M_PI / 180)) * l;
+		jspr.y = coords.y + sin((map->rotation - ((i - (map->nbrayons/2)) / (map->nbrayons/2) * 45.)) * (M_PI / 180)) * l;
+		draw_line_rays(map, tmp, jspr, coords, 0xFFFF00);
+	}
+}
+
+Luno2f	rotate_line(t_temp *tmp, Luno2f coords, int r, double angle)
 {
 	Luno2f end;
 	double rad;
 
 	// draw_circle(tmp, coords.x, coords.y, r / 2);
 	docircle(tmp, coords, r / 2);
-	rad = angle * M_PI / 180;
-	end.x = coords.x + r * 2 * cos(rad);
-	end.y = coords.y + r * 2 * sin(rad);
-	draw_line(tmp, coords, end, create_rgb(0, 147, 151, 12));	
+	rad = angle * M_PI / 180;	
+	end.x = coords.x + r * 10 * cos(rad);
+	end.y = coords.y + r * 10 * sin(rad);
+	return (end);
 }
 
 
@@ -232,7 +347,7 @@ void	fillminimap(t_map *map, t_data *data, t_temp *temp, int size)
 			pixel_pos.y = j / size;
 			pixel_pos.x = j % size;
 			if (map->map[(int)map_pos.y][(int)map_pos.x] == ' ')
-				color = create_rgb(0, 97, 118, 75);
+				color = create_trgb(map->ceiling);
 			else if (map->map[(int)map_pos.y][(int)map_pos.x] == '0') // || map->map[(int)map_pos.y][(int)map_pos.x] == 'N')
 				color = create_rgb(0, 207, 185, 151);
 			else if (map->map[(int)map_pos.y][(int)map_pos.x] == '1')
@@ -241,12 +356,17 @@ void	fillminimap(t_map *map, t_data *data, t_temp *temp, int size)
 			{
 				color = create_rgb(0, 207, 185, 255);
 				if (!h++)
+				{
 					coords = pixel_pos + (data->player_pos * size + size / 2);
+					// coords.x = pixel_pos.x + (data->player_pos.x * size + size / 2);
+					// coords.y = pixel_pos.y + (data->player_pos.y * size + size / 2);
+				}
 			}
 			pixel(temp, (pixel_pos + map_pos * size), color);
 		}
 	}
-	rotate_line(temp, coords, size / 2, map->rotation);
+	Luno2f end = rotate_line(temp, coords, size / 2, map->rotation);
+	draw_rayons(temp, coords, map, end, (double)size * 100);
 }
 
 void	ft_printtomlx(t_map *map, t_mlx *mlx, t_data *data)
@@ -260,7 +380,7 @@ void	ft_printtomlx(t_map *map, t_mlx *mlx, t_data *data)
 	mini.img = mlx_new_image(mlx->mlx, mini.width, mini.height);
 	mini.addr = mlx_get_data_addr(mini.img, &mini.a, &mini.b, &mini.c);
 	fillminimap(map, data, &mini, size);
-	mlx_put_image_to_window(mlx->mlx, mlx->win, mini.img, 20, 20);
+	mlx_put_image_to_window(mlx->mlx, mlx->win, mini.img, 35, 35);
 	// rebords(map, mlx, data, mini, size);
 	mlx_destroy_image(mlx->mlx, mini.img);
 }
@@ -278,19 +398,13 @@ void	movetodirection(t_map *map, double y, double x)
 		- 0.5;
 	px += ((map->data->player_pos.x / (int)map->data->player_pos.x) > 0.5)
 		- 0.5;
-	printf("*****************\n");
-	printf("pos of player py:%f, px:%f\n", py, px);
-	ft_printf("%rpos of wall  ? y:%i,  x:%i%0\n", (int)py + (int)y, (int)px + (int)x);
-	ft_printf("%gpos of N in posy:%i,posx:%i%0\n", (int)map->data->player_pos.y, (int)map->data->player_pos.x);
-	double total =  py - (int)py + (int)y;
-	printf("total = %f\n", total);
-	if (total < 2 && total > 1.25)
-		ft_printf("tu devrais passer la\n");
-	if (map->map[(int)py + (int)y][(int)px + (int)x] != '1') // || map->map[(int)py + (int)y / 3][(int)px + (int)x / 3])
+	double totala =  py - (int)py + (int)y;
+	double totalb =  px - (int)px + (int)x;
+	if (map->map[(int)py + (int)y][(int)px + (int)x] != '1' || (totala < 1.75 && totala > - 0.75) && (totalb < 1.75 && totalb > - 0.75)) // || map->map[(int)py + (int)y / 3][(int)px + (int)x / 3])
 	{
 		map->map[(int)py][(int)px] = '0';
-		map->data->player_pos.x += x / 4;
-		map->data->player_pos.y += y / 4;
+		map->data->player_pos.x += x / 6;
+		map->data->player_pos.y += y / 6;
 		enintx = map->data->player_pos.x + ((map->data->player_pos.x
 					/ (int)map->data->player_pos.x) > 0.5) - 0.5;
 		eninty = map->data->player_pos.y + ((map->data->player_pos.y
@@ -314,18 +428,22 @@ int	move(int key, t_map *map)
 {
 	if (key == ESCAPE)
 		return (mlx_loop_end(map->mlx->mlx));
-	if (key == W)
+	else if (key == W)
 		movetodirection(map, -1, 0);
-	if (key == S)
+	else if (key == S)
 		movetodirection(map, 1, 0);
-	if (key == D)
+	else if (key == D)
 		movetodirection(map, 0, 1);
-	if (key == A)
+	else if (key == A)
 		movetodirection(map, 0, -1);
-	if (key == LEFT)
+	else if (key == LEFT)
 		map->rotation -= 15;
-	if (key == RIGHT)
+	else if (key == RIGHT)
 		map->rotation += 15;
+	else if (key == UP)
+		map->nbrayons += 2;
+	else if (key == DOWN)
+		map->nbrayons -= 2;
 	ft_printtomlx(map, map->mlx, map->data);
 	return (0);
 }
@@ -338,6 +456,7 @@ int	ft_game(t_map *map, t_mlx *mlx, t_data *data)
 
 	// t_temp
 	r = 0;
+	map->nbrayons = 2;
 	if (initmlx(map, mlx, data, &temp))
 		return (1);
 	mlx_put_image_to_window(mlx->mlx, mlx->win, temp.img, 0, 0);
