@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 01:20:48 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/04 09:22:56 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/04 12:48:55 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ Luno2f	docircle(t_temp *temp, Luno2f coords, int ray)
 	return (circle);
 }
 
-void	my_color_pixel_put(t_temp *temp, Luno2f coords, int color)
+void	pixel(t_temp *temp, Luno2f coords, int color)
 {
 	my_mlx_pixel_put(temp, coords.x, coords.y, color);
 }
@@ -223,48 +223,46 @@ void	fillminimap(t_map *map, t_data *data, t_temp *temp, int size)
 
 	h = 0;
 	color = 0;
-	for (map_pos.x = 0; map_pos.x < map->maxlen; map_pos.x++)
+	for (int i = 0; i < (map->maxlen * map->height); i++)
 	{
-		for (map_pos.y = 0; map_pos.y < map->height; map_pos.y++)
+		map_pos.y = i / map->maxlen;
+		map_pos.x = i % map->maxlen;
+		for (int j = 0; j < (size * size); j++)
 		{
-			for (pixel_pos.y = 0; pixel_pos.y < size; pixel_pos.y++)
+			pixel_pos.y = j / size;
+			pixel_pos.x = j % size;
+			if (map->map[(int)map_pos.y][(int)map_pos.x] == ' ')
+				color = create_rgb(0, 97, 118, 75);
+			else if (map->map[(int)map_pos.y][(int)map_pos.x] == '0') // || map->map[(int)map_pos.y][(int)map_pos.x] == 'N')
+				color = create_rgb(0, 207, 185, 151);
+			else if (map->map[(int)map_pos.y][(int)map_pos.x] == '1')
+				color = create_rgb(0, 155, 161, 123);
+			if (ft_strchr("NSEW", map->map[(int)map_pos.y][(int)map_pos.x]) && !h)
 			{
-				for (pixel_pos.x = 0; pixel_pos.x < size; pixel_pos.x++)
-				{
-					if (map->map[(int)map_pos.y][(int)map_pos.x] == ' ')
-						color = create_rgb(0, 97, 118, 75);
-					else if (map->map[(int)map_pos.y][(int)map_pos.x] == '0') // || map->map[(int)map_pos.y][(int)map_pos.x] == 'N')
-						color = create_rgb(0, 207, 185, 151);
-					else if (map->map[(int)map_pos.y][(int)map_pos.x] == '1')
-						color = create_rgb(0, 155, 161, 123);
-					if (map->map[(int)map_pos.y][(int)map_pos.x] == 'N' && !h)
-					{
-						color = create_rgb(0, 207, 185, 255);
-						if (!h++)
-							coords = pixel_pos + (data->player_pos * size + size / 2);
-					}
-					my_color_pixel_put(temp, (pixel_pos + map_pos * size),
-							color);
-				}
+				color = create_rgb(0, 207, 185, 255);
+				if (!h++)
+					coords = pixel_pos + (data->player_pos * size + size / 2);
 			}
+			pixel(temp, (pixel_pos + map_pos * size), color);
 		}
 	}
-	rotate_line(temp, coords, size/2, data->rotation);
+	rotate_line(temp, coords, size / 2, map->rotation);
 }
 
-t_temp	ft_printtomlx(t_map *map, t_mlx *mlx, t_data *data)
+void	ft_printtomlx(t_map *map, t_mlx *mlx, t_data *data)
 {
 	t_temp	mini;
 	int		size;
 
-	size = 70;
+	size = 35;
 	mini.width = map->maxlen * size;
 	mini.height = map->height * size;
 	mini.img = mlx_new_image(mlx->mlx, mini.width, mini.height);
 	mini.addr = mlx_get_data_addr(mini.img, &mini.a, &mini.b, &mini.c);
 	fillminimap(map, data, &mini, size);
 	mlx_put_image_to_window(mlx->mlx, mlx->win, mini.img, 20, 20);
-	return (mini);
+	// rebords(map, mlx, data, mini, size);
+	mlx_destroy_image(mlx->mlx, mini.img);
 }
 
 void	movetodirection(t_map *map, double y, double x)
@@ -280,7 +278,15 @@ void	movetodirection(t_map *map, double y, double x)
 		- 0.5;
 	px += ((map->data->player_pos.x / (int)map->data->player_pos.x) > 0.5)
 		- 0.5;
-	if (map->map[(int)py + (int)y][(int)px + (int)x] != '1')
+	printf("*****************\n");
+	printf("pos of player py:%f, px:%f\n", py, px);
+	ft_printf("%rpos of wall  ? y:%i,  x:%i%0\n", (int)py + (int)y, (int)px + (int)x);
+	ft_printf("%gpos of N in posy:%i,posx:%i%0\n", (int)map->data->player_pos.y, (int)map->data->player_pos.x);
+	double total =  py - (int)py + (int)y;
+	printf("total = %f\n", total);
+	if (total < 2 && total > 1.25)
+		ft_printf("tu devrais passer la\n");
+	if (map->map[(int)py + (int)y][(int)px + (int)x] != '1') // || map->map[(int)py + (int)y / 3][(int)px + (int)x / 3])
 	{
 		map->map[(int)py][(int)px] = '0';
 		map->data->player_pos.x += x / 4;
@@ -292,6 +298,17 @@ void	movetodirection(t_map *map, double y, double x)
 		map->map[eninty][enintx] = map->data->player;
 	}
 }
+
+/*
+pos of player py:8.750000, px:4.500000	// 				py							px
+pos of wall  ? y:7,  x:4				// 		(int)py + (int)y,			(int)px + (int)x
+pos of N in posy:8,posx:4				// (int)map->data->player_pos.y (int)map->data->player_pos.x)
+										OK
+pos of player py:8.250000, px:4.250000
+pos of wall  ? y:8,  x:5
+pos of N in posy:7,posx:3
+										LIMIT
+*/
 
 int	move(int key, t_map *map)
 {
@@ -306,9 +323,9 @@ int	move(int key, t_map *map)
 	if (key == A)
 		movetodirection(map, 0, -1);
 	if (key == LEFT)
-		map->data->rotation -= 15;
+		map->rotation -= 15;
 	if (key == RIGHT)
-		map->data->rotation += 15;
+		map->rotation += 15;
 	ft_printtomlx(map, map->mlx, map->data);
 	return (0);
 }
@@ -323,14 +340,12 @@ int	ft_game(t_map *map, t_mlx *mlx, t_data *data)
 	r = 0;
 	if (initmlx(map, mlx, data, &temp))
 		return (1);
-	data->rotation = 0;
 	mlx_put_image_to_window(mlx->mlx, mlx->win, temp.img, 0, 0);
 	ft_printtomlx(map, mlx, data);
 	mlx_key_hook(mlx->win, &move, map);
 	mlx_hook(mlx->win, r, KeyPressMask, &move, data);
 	mlx_loop(mlx->mlx);
 	mlx_destroy_image(mlx->mlx, temp.img);
-	// mlx_destroy_image(mlx->mlx, mini.img);
 	destroywindows(mlx);
 	return (0);
 }

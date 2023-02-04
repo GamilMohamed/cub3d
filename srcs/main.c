@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:31:57 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/04 08:48:10 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/04 11:44:01 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,17 @@ void	ft_printstruct(t_map *map)
 	printf("\t\t***\n");
 }
 
+int	valueof(char c)
+{
+	if (c == 'N')
+		return (-90);
+	else if (c == 'S')
+		return (90);
+	else if (c == 'E')
+		return (0);
+	return (180);
+}
+
 void	get_positions(t_map *map, t_data *data)
 {
 	int	i;
@@ -48,6 +59,7 @@ void	get_positions(t_map *map, t_data *data)
 		{
 			if (ft_strchr("NSEW", map->map[i][j]))
 			{
+				map->rotation = valueof(map->map[i][j]);
 				map->data->player_pos.x = j;
 				map->data->player_pos.y = i;
 				map->data->player = map->map[i][j];

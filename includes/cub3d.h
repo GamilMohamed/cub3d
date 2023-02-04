@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:33:03 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/04 09:56:22 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/04 12:14:25 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ typedef struct s_temp
 	int					c;
 	int					height;
 	int					width;
+	int					size;
 }						t_temp;
 
 typedef double Luno2f	__attribute__((ext_vector_type(2)));
@@ -117,10 +118,11 @@ typedef struct t_map
 	int					type_path[4];
 	char				*path[4];
 	char				last;
-	t_temp				mini;
+	t_temp				*mini;
 	int					size;
 	t_mlx				*mlx;
 	t_data				*data;
+	double				rotation;
 }						t_map;
 
 typedef struct t_mlx
@@ -133,7 +135,6 @@ typedef struct t_mlx
 
 typedef struct t_data
 {
-	double				rotation;
 	Luno2f				player_pos;
 	double				pos_px;
 	double				pos_py;
