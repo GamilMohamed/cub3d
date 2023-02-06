@@ -2,7 +2,7 @@ NAME			=	cub3d
 
 LIBFT			=	libft.a 
 
-MLX				=	mlx/libmlx_Linux.a mlx/libmlx.a
+MLX				=	libmlx42.a
 
 DIR_SRCS		=	srcs
 
@@ -35,9 +35,9 @@ SRCS			=	$(addprefix $(DIR_SRCS)/,$(SRCS_NAMES))
 
 OBJS			=	$(addprefix $(DIR_OBJS)/,$(OBJS_NAMES))
 
-INC				=	-Iincludes -Ilibft/includes -I/usr/include
+INC				=	-Iincludes -Ilibft/includes -I/usr/include -I/MLX42/include/MLX42
 
-LIB				=	-Llibft -lft -lm -lXext -lX11 -L/usr/lib -Lmlx -lmlx -L/usr/lib -Imlx
+LIB				=	-Llibft -lft -lm -lXext -lX11 -L/usr/lib -ldl -lglfw -L/usr/lib
 
 CC				=	cc
 
@@ -53,11 +53,11 @@ all:	${NAME}
 # mv mlx/mlx/libmlx.a mlx/mlx/libmlx_Linux.a mlx/
 $(NAME): $(DIR_OBJS) $(OBJS) 
 	@make -C libft
-	$(CC) $(CFLAGS) ${INC} $(OBJS) $(LIB) -o $(NAME)
+	$(CC) $(OBJS) $(CFLAGS) $(LIB) $(MLX) -o $(NAME)
 	@echo "\033[31;5mcub3d\033[0m"
 
 $(OBJS) : $(DIR_OBJS)/%.o : $(DIR_SRCS)/%.c
-	$(CC) $(CFLAGS) $(MLX_FLAGS) $(CDFLAGS) $(INC) -c $< -o $@ 
+	$(CC) $(CFLAGS) $(MLX_FLAGS)  $(CDFLAGS) $(INC) -c $< -o $@ 
 
 $(DIR_OBJS):
 	mkdir -p $(DIR_OBJS)

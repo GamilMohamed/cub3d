@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:03:10 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/06 08:24:39 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/06 13:39:40 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ Luno2f	draw_line_rays(t_map *map, Luno2f end, Luno2f coords, bool print)
 			else
 				e += inc2;
 			x += incx;
+			if (print == 2)
+				my_mlx_pixel_put(map->mini, x, y, create_trgb((int [3]){255 - (int)r / 2, 255 - (int)r / 2, 255}));
 			if (print && y/35 > 0 && y/35 < map->height && x/35 > 0 && x/35 < map->maxlen && map->map[y/35][x/35] != '1' && !condition(x, y, 35, map->map))
 				my_mlx_pixel_put(map->mini, x, y, create_trgb((int [3]){255 - (int)r / 2, 255 - (int)r / 2, 255}));
 			else
@@ -129,6 +131,8 @@ Luno2f	draw_line_rays(t_map *map, Luno2f end, Luno2f coords, bool print)
 			else
 				e += inc2;
 			y += incy;
+			if (print == 2)
+				my_mlx_pixel_put(map->mini, x, y, create_trgb((int [3]){255 - (int)r / 2, 255 - (int)r / 2, 255}));
 			if (print && y/35 > 0 && y/35 < map->height && x/35 > 0 && x/35 < map->maxlen && map->map[y/35][x/35] != '1' && !condition(x, y, 35, map->map))
 				my_mlx_pixel_put(map->mini, x, y, create_trgb((int [3]){255 - (int)r / 2, 255 - (int)r / 2, 255}));
 			else
@@ -142,10 +146,11 @@ Luno2f	draw_line_rays(t_map *map, Luno2f end, Luno2f coords, bool print)
 
 void	my_mlx_pixel_put(t_temp *temp, int x, int y, int color)
 {
-	char	*dst;
+	// char	*dst;
 
-	dst = temp->addr + (y * temp->b + x * (temp->a / 8));
-	*(unsigned int *)dst = color;
+	mlx_put_pixel(temp->img, x, y, color);
+	// dst = temp->addr + (y * temp->b + x * (temp->a / 8));
+	// *(unsigned int *)dst = color;
 }
 
 Luno2f	docircle(t_temp *temp, Luno2f coords, int ray)

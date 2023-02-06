@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:04:40 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/06 08:16:17 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/06 16:50:53 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	map_to_minimap(t_map *map, t_data *data, t_temp *temp, int size)
 			pixel_pos.y = j / size;
 			pixel_pos.x = j % size;
 			if (map->map[(int)map_pos.y][(int)map_pos.x] == ' ')
-				color = create_trgb(map->ceiling);
+				color = 0;
 			else if (map->map[(int)map_pos.y][(int)map_pos.x] == '0') // || map->map[(int)map_pos.y][(int)map_pos.x] == 'N')
 				color = create_rgb(0, 207, 185, 151);
 			else if (map->map[(int)map_pos.y][(int)map_pos.x] == '1')
@@ -58,11 +58,20 @@ void	init_minimap(t_map *map, t_mlx *mlx, t_data *data)
 	temp->width = map->maxlen * temp->size;
 	temp->height = map->height * temp->size;
 	temp->img = mlx_new_image(mlx->mlx, temp->width, temp->height);
-	temp->addr = mlx_get_data_addr(temp->img, &temp->a, &temp->b, &temp->c);
+	// temp->addr = mlx_get_data_addr(temp->img, &temp->a, &temp->b, &temp->c);
 }
 
 void	fill_minimap(t_map *map, t_mlx *mlx, t_data *data)
 {
 	map_to_minimap(map, data, map->mini, map->mini->size);
 	camera_rays(map->mini, map, map->mini->coords, map->mini->size / 2);
+
+	for (size_t i = 0; i < data->win_w; i++)
+	{
+		// camera_plane(map, map->plane, i);
+		/* code */
+	}
+	
+// void	camera_plane(t_map *map, t_plane *p, int x)
+
 }

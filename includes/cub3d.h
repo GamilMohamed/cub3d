@@ -6,14 +6,14 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:33:03 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/06 08:25:08 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/06 14:50:27 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include "../mlx/mlx.h"
+# include "../MLX42/include/MLX42/MLX42.h"
 # include "get_next_line.h"
 # include "libft.h"
 # include <fcntl.h>
@@ -76,12 +76,10 @@ typedef int Luno2i		__attribute__((ext_vector_type(2)));
 
 typedef struct s_plane
 {
-	double				posX;
-	double				posY;
-	double				dirX;
-	double				dirY;
-	double				planeX;
-	double				planeY;
+	Luno2f				camera;
+	Luno2f				pos;
+	Luno2f				dir;
+	Luno2f				plane;
 	double				moveSpeed;
 	double				rotSpeed;
 }						t_plane;
@@ -99,11 +97,13 @@ typedef struct s_temp
 	double				size;
 	Luno2f				endray[2];
 	Luno2f				coords;
+	Luno2f				plane[2];
 }						t_temp;
 
 
 typedef struct t_map
 {
+	void				*addr;
 	int					nbrayons;
 	char				*cubfile;
 	char				**map;
@@ -118,9 +118,11 @@ typedef struct t_map
 	char				*path[4];
 	char				last;
 	t_temp				*mini;
+	t_temp				*temp;
 	int					size;
 	t_mlx				*mlx;
 	t_data				*data;
+	t_plane				*plane;
 	double				rotation;
 }						t_map;
 
@@ -201,8 +203,10 @@ double	calc_radius(double angle);
 Luno2f	normalize(Luno2f coords);
 
 // move.c
+// void	move(mlx_key_data_t key, t_map *map);
+void	move(mlx_key_data_t key, void *ptr);
 void	move_to_pos(t_map *map, Luno2f norm, Luno2f end);
-int		move(int key, t_map *map);
+// int		move(int key, t_map *map);
 
 // game.c
 void	printcoords(Luno2i val, Luno2f val2);
@@ -223,6 +227,10 @@ void	map_to_minimap(t_map *map, t_data *data, t_temp *temp, int size);
 void camera_rays(t_temp *tmp, t_map *map, Luno2f coords, double size);
 void	init_minimap(t_map *map, t_mlx *mlx, t_data *data);
 void	fill_minimap(t_map *map, t_mlx *mlx, t_data *data);
+
+
+void	verLine(void *addr, int x, int y1, int y2, int color);
+void	camera_plane(t_map *map, t_plane *p, int x);
 
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:06:37 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/06 08:32:07 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/06 16:51:46 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	calc_rayons(t_temp *tmp, Luno2f coords, t_map *map)
 	jspr.x = coords.x + cos((map->rotation - 90) * (M_PI / 180)) * l;
 	jspr.y = coords.y + sin((map->rotation - 90) * (M_PI / 180)) * l;
 	tmp->endray[1] = draw_line_rays(map, jspr, coords, 0);
-	pixel(tmp, tmp->endray[0], 0xFF0000);
-	pixel(tmp, tmp->endray[1], 0x00FF00);
+	// pixel(tmp, tmp->endray[0], 0xFF0000);
+	// pixel(tmp, tmp->endray[1], 0x00FF00);
 }
 
 // void	draw_rayons_all(t_temp *tmp, Luno2f coords, t_map *map)
@@ -49,6 +49,35 @@ void	calc_rayons(t_temp *tmp, Luno2f coords, t_map *map)
 // 	}
 // }
 
+void	verLine(void *addr, int x, int y1, int y2, int color)
+{
+	int	y;
+
+	y = y1;
+	while (y <= y2)
+	{
+		mlx_put_pixel(addr, x, y, color);
+		y++;
+	}
+}
+
+void	walldrawing(t_map *map, Luno2f test, Luno2f coords)
+{
+	int cube = 35;
+	int	VRES = map->data->win_h;
+	double wall;
+
+	double dist = sqrt(pow(test.x - coords.x, 2) + pow(test.y - coords.y, 2));
+	if (dist > VRES)
+		dist = VRES;
+	wall = cube * VRES / dist;
+	double offset = VRES - wall;
+	verLine(map->temp->img, 50, 100, 100, 0xFAC120F);
+	// verLine(map->temp->img, coords.x, test.y, test.x, 0xFAC120F);
+	// verLine(map->temp->img, 0, offset, cube, 0xFAC120F);
+	// printf("wall:%f, offset:%f\n", wall, offset);
+}
+
 void	draw_rayons_all(t_temp *tmp, Luno2f coords, t_map *map)
 {
 	Luno2f	jspr;
@@ -57,15 +86,26 @@ void	draw_rayons_all(t_temp *tmp, Luno2f coords, t_map *map)
 	double	radius;
 
 	jspr = 0;
+	
 	ray = map->nbrayons / 2;
-	for (double i = 1; i < map->nbrayons; i++)
+	// printf("ray=%f\n", ray);
+	map->plane->pos = map->data->player_pos;
+	map->plane->dir.x = -1;
+	map->plane->dir.y = 0;
+	map->plane->plane.x = 0;
+	map->plane->plane.y = 0.66;
+	map->plane->moveSpeed = 0.05;
+	map->plane->rotSpeed = 0.05;
+	for (double i = 0; i < map->nbrayons; i++)
 	{
 		radius = calc_radius((i - (ray)) / (ray)*45.);
-		l = (tmp->width + tmp->height) * cos(radius);
+		l = (tmp->width * tmp->height) * cos(radius);
 		radius = calc_radius((map->rotation - ((i - (ray)) / (ray)*45.)));
 		jspr.x = coords.x + cos(radius) * l;
 		jspr.y = coords.y + sin(radius) * l;
-		draw_line_rays(map, jspr, coords, ((i - (ray)) / (ray)*45.));
+		Luno2f test = draw_line_rays(map, jspr, coords, 1);
+		// walldrawing(map, test, coords);
+		// p->_plane(tmp, map, test, coords, map->plane, i);
 	}
 }
 

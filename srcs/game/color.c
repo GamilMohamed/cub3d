@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:08:37 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/06 08:09:02 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/06 13:38:16 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 int	create_rgb(int t, int a, int b, int c)
 {
-	return (t << 24 | a << 16 | b << 8 | c);
+	return (a << 24 | b << 16 | c << 8 | 255);
 }
 
 int	create_trgb(int tab[3])
 {
-	return (0 << 24 | tab[0] << 16 | tab[1] << 8 | tab[2]);
+	return (tab[0] << 24 | tab[1] << 16 | tab[2] << 8 | 255);
 }
 
 void	backgroundcolor(t_map *map, t_mlx *mlx, t_data *data, t_temp *temp)
