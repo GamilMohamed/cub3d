@@ -19,6 +19,13 @@ SRCS_NAMES		=	main.c \
 					misc/free.c \
 					misc/print.c \
 					game/game.c \
+					game/calc.c \
+					game/color.c \
+					game/draw.c \
+					game/init.c \
+					game/minimap.c \
+					game/move.c \
+					game/raycasting.c \
 
 OBJS_NAMES		=	${SRCS_NAMES:.c=.o}
 

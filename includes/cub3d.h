@@ -6,14 +6,14 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:33:03 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/04 16:42:13 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/06 08:25:08 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include "../mlx/mlx/mlx.h"
+# include "../mlx/mlx.h"
 # include "get_next_line.h"
 # include "libft.h"
 # include <fcntl.h>
@@ -27,6 +27,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <stdbool.h>
 
 # include <X11/X.h>
 # include <X11/keysym.h>
@@ -50,7 +51,7 @@
 # define ERR_KEYS "invalid keys!"
 # define ERR_FDFAIL "open file failed!"
 
-# define SIZE 10
+# define SIZE 2
 
 # define W 119
 # define A 97
@@ -62,24 +63,16 @@
 # define UP 65362
 # define DOWN 65364
 
+# define SPEED 1
 
 
 typedef struct s_rr		t_rr;
 typedef struct t_map	t_map;
 typedef struct t_mlx	t_mlx;
 typedef struct t_data	t_data;
+typedef double Luno2f	__attribute__((ext_vector_type(2)));
+typedef int Luno2i		__attribute__((ext_vector_type(2)));
 
-typedef union s_rgb
-{
-	int					color;
-	struct
-	{
-		unsigned char	r;
-		unsigned char	g;
-		unsigned char	b;
-		unsigned char	a;
-	};
-}						t_rgb;
 
 typedef struct s_plane
 {
@@ -103,11 +96,11 @@ typedef struct s_temp
 	int					c;
 	int					height;
 	int					width;
-	int					size;
+	double				size;
+	Luno2f				endray[2];
+	Luno2f				coords;
 }						t_temp;
 
-typedef double Luno2f	__attribute__((ext_vector_type(2)));
-typedef int Luno2i		__attribute__((ext_vector_type(2)));
 
 typedef struct t_map
 {
@@ -188,9 +181,48 @@ t_rr					*ft_lstnew_rr(char *name, int type);
 void					ft_freerr(t_rr *node);
 void					ft_printlist(t_rr *temp);
 
-int						ft_game(t_map *map, t_mlx *mlx, t_data *data);
-void	my_mlx_pixel_put(t_temp *temp, int x, int y, int color);
+/*	game	*/
+// init.c
+int	initmlx(t_map *map, t_mlx *mlx, t_data *data, t_temp *temp);
+
+// color.c
 int	create_rgb(int t, int a, int b, int c);
+int	create_trgb(int tab[3]);
+void	backgroundcolor(t_map *map, t_mlx *mlx, t_data *data, t_temp *temp);
+
+// raycasting.c
+void	draw_rayons(t_temp *tmp, Luno2f coords, t_map *map);
+void	draw_rayons_all(t_temp *tmp, Luno2f coords, t_map *map);
+
+// calc.c
+Luno2i convert_d_to_i(Luno2f src);
+Luno2f	calc_rotation(Luno2f coords, int r, double rad, int m);
+double	calc_radius(double angle);
+Luno2f	normalize(Luno2f coords);
+
+// move.c
+void	move_to_pos(t_map *map, Luno2f norm, Luno2f end);
+int		move(int key, t_map *map);
+
+// game.c
+void	printcoords(Luno2i val, Luno2f val2);
+void	destroywindows(t_mlx *mlx);
+int	ft_game(t_map *map, t_mlx *mlx, t_data *data);
+
+// draw.c
+int		condition(int x, int y, int size, char **map);
+void	draw_circle(t_temp *tmp, Luno2f coords, int r);
+Luno2f	draw_line_rays(t_map *map, Luno2f end, Luno2f coords, bool print);
+void	my_mlx_pixel_put(t_temp *temp, int x, int y, int color);
+Luno2f	docircle(t_temp *temp, Luno2f coords, int ray);
+void	pixel(t_temp *temp, Luno2f coords, int color);
+void	camera_rays(t_temp *tmp, t_map *map, Luno2f coords, double size);
+
+// minimap.c
+void	map_to_minimap(t_map *map, t_data *data, t_temp *temp, int size);
+void camera_rays(t_temp *tmp, t_map *map, Luno2f coords, double size);
+void	init_minimap(t_map *map, t_mlx *mlx, t_data *data);
+void	fill_minimap(t_map *map, t_mlx *mlx, t_data *data);
 
 
 #endif

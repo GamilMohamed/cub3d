@@ -1,0 +1,50 @@
+// init.c
+int	initmlx(t_map *map, t_mlx *mlx, t_data *data, t_temp *temp);
+
+// color.c
+int	create_rgb(int t, int a, int b, int c);
+int	create_trgb(int tab[3]);
+void	backgroundcolor(t_map *map, t_mlx *mlx, t_data *data, t_temp *temp);
+
+// raycasting.c
+void	draw_rayons(t_temp *tmp, Luno2f coords, t_map *map);
+void	draw_rayons_all(t_temp *tmp, Luno2f coords, t_map *map);
+
+// calc.c
+Luno2i convert_d_to_i(Luno2f src);
+Luno2f	calc_rotation(Luno2f coords, int r, double rad, int m);
+double	calc_radius(double angle);
+Luno2f	normalize(Luno2f coords);
+
+// move.c
+void	move_to_pos(t_map *map, Luno2f norm, Luno2f end);
+int	move(int key, t_map *map);
+
+// game.c
+void	printcoords(Luno2i val, Luno2f val2);
+void	destroywindows(t_mlx *mlx);
+int	ft_game(t_map *map, t_mlx *mlx, t_data *data);
+
+// draw.c
+int		condition(int x, int y, int size, double radius, char **map);
+void	draw_circle(t_temp *tmp, Luno2f coords, int r);
+Luno2f	draw_line_rays(t_map *map, Luno2f end, Luno2f coords, double color);
+void	my_mlx_pixel_put(t_temp *temp, int x, int y, int color);
+Luno2f	docircle(t_temp *temp, Luno2f coords, int ray);
+void	pixel(t_temp *temp, Luno2f coords, int color);
+
+// minimap.c
+void	map_to_minimap(t_map *map, t_data *data, t_temp *temp, int size);
+void camera_rays(t_temp *tmp, t_map *map, Luno2f coords, double size);
+void	init_minimap(t_map *map, t_mlx *mlx, t_data *data);
+void	fill_minimap(t_map *map, t_mlx *mlx, t_data *data);
+
+
+Copy paste these lines to your shell_config file for easier use
+	#prototypes generator
+	make_ptt() {make re -C ~/path/to/prototypes_generator_directory}
+	ptt() {~/path/to/prototypes_executable $@}
+
+#############################################
+# Léonard KRIEF        lkrief@student.42.fr #
+#############################################
