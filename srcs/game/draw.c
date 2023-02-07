@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mgamil <mgamil@42.student.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:03:10 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/06 13:39:40 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/07 02:40:23 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,10 +106,10 @@ Luno2f	draw_line_rays(t_map *map, Luno2f end, Luno2f coords, bool print)
 			else
 				e += inc2;
 			x += incx;
-			if (print == 2)
+			if (print == 1)
 				my_mlx_pixel_put(map->mini, x, y, create_trgb((int [3]){255 - (int)r / 2, 255 - (int)r / 2, 255}));
 			if (print && y/35 > 0 && y/35 < map->height && x/35 > 0 && x/35 < map->maxlen && map->map[y/35][x/35] != '1' && !condition(x, y, 35, map->map))
-				my_mlx_pixel_put(map->mini, x, y, create_trgb((int [3]){255 - (int)r / 2, 255 - (int)r / 2, 255}));
+				;// my_mlx_pixel_put(map->mini, x, y, create_trgb((int [3]){255 - (int)r / 2, 255 - (int)r / 2, 255}));
 			else
 				return ((Luno2f){x, y});
 			if (r < 255)
@@ -131,10 +131,10 @@ Luno2f	draw_line_rays(t_map *map, Luno2f end, Luno2f coords, bool print)
 			else
 				e += inc2;
 			y += incy;
-			if (print == 2)
+			if (print == 1)
 				my_mlx_pixel_put(map->mini, x, y, create_trgb((int [3]){255 - (int)r / 2, 255 - (int)r / 2, 255}));
 			if (print && y/35 > 0 && y/35 < map->height && x/35 > 0 && x/35 < map->maxlen && map->map[y/35][x/35] != '1' && !condition(x, y, 35, map->map))
-				my_mlx_pixel_put(map->mini, x, y, create_trgb((int [3]){255 - (int)r / 2, 255 - (int)r / 2, 255}));
+				; // my_mlx_pixel_put(map->mini, x, y, create_trgb((int [3]){255 - (int)r / 2, 255 - (int)r / 2, 255}));
 			else
 				return ((Luno2f){x, y});
 			if (r < 255)

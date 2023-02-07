@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mgamil <mgamil@42.student.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:06:37 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/06 16:51:46 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/07 03:15:33 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,18 +61,22 @@ void	verLine(void *addr, int x, int y1, int y2, int color)
 	}
 }
 
-void	walldrawing(t_map *map, Luno2f test, Luno2f coords)
+void	walldrawing(t_map *map, Luno2f test, Luno2f coords, double i)
 {
 	int cube = 35;
 	int	VRES = map->data->win_h;
 	double wall;
 
-	double dist = sqrt(pow(test.x - coords.x, 2) + pow(test.y - coords.y, 2));
+	printf("t %f|%f\n", test.x, test.y);
+	printf("c %f|%f\n", coords.x, coords.y);
+	double dist = sqrtf(pow(test.x - coords.x, 2) + pow(test.y - coords.y, 2));
+	printf("%f\n", dist);
+	printf("**********\n");
 	if (dist > VRES)
 		dist = VRES;
 	wall = cube * VRES / dist;
 	double offset = VRES - wall;
-	verLine(map->temp->img, 50, 100, 100, 0xFAC120F);
+	verLine(map->temp->img, i, 50, test.y, 0x00FF00);
 	// verLine(map->temp->img, coords.x, test.y, test.x, 0xFAC120F);
 	// verLine(map->temp->img, 0, offset, cube, 0xFAC120F);
 	// printf("wall:%f, offset:%f\n", wall, offset);
@@ -84,10 +88,11 @@ void	draw_rayons_all(t_temp *tmp, Luno2f coords, t_map *map)
 	double	l;
 	double	ray;
 	double	radius;
-
+	int width = map->data->win_w;
+	
 	jspr = 0;
 	
-	ray = map->nbrayons / 2;
+	ray = width / 2;
 	// printf("ray=%f\n", ray);
 	map->plane->pos = map->data->player_pos;
 	map->plane->dir.x = -1;
@@ -96,7 +101,7 @@ void	draw_rayons_all(t_temp *tmp, Luno2f coords, t_map *map)
 	map->plane->plane.y = 0.66;
 	map->plane->moveSpeed = 0.05;
 	map->plane->rotSpeed = 0.05;
-	for (double i = 0; i < map->nbrayons; i++)
+	for (double i = 1; i < width; i++)
 	{
 		radius = calc_radius((i - (ray)) / (ray)*45.);
 		l = (tmp->width * tmp->height) * cos(radius);
@@ -104,9 +109,10 @@ void	draw_rayons_all(t_temp *tmp, Luno2f coords, t_map *map)
 		jspr.x = coords.x + cos(radius) * l;
 		jspr.y = coords.y + sin(radius) * l;
 		Luno2f test = draw_line_rays(map, jspr, coords, 1);
-		// walldrawing(map, test, coords);
+		walldrawing(map, test, coords, i);
 		// p->_plane(tmp, map, test, coords, map->plane, i);
 	}
+	// exit(1);
 }
 
 void	camera_rays(t_temp *tmp, t_map *map, Luno2f coords, double size)
@@ -116,10 +122,10 @@ void	camera_rays(t_temp *tmp, t_map *map, Luno2f coords, double size)
 
 	draw_circle(tmp, tmp->coords, tmp->size / 4);
 	rad = calc_radius(map->rotation - 90.);
-	end = calc_rotation(tmp->coords, tmp->size, rad, 1);
+	end = calc_rotation(tmp->coords, tmp->size, rad, 0);
 	// draw_line_rays(map, end, tmp->coords, 0xF2BFA3);
 	rad = calc_radius(map->rotation + 90.);
-	end = calc_rotation(tmp->coords, tmp->size, rad, 1);
+	end = calc_rotation(tmp->coords, tmp->size, rad, 0);
 	// draw_line_rays(map, end, tmp->coords, 0xF2BFA3);
 	calc_rayons(tmp, coords, map);
 	draw_rayons_all(tmp, coords, map);

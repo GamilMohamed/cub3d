@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minimap.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mgamil <mgamil@42.student.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:04:40 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/06 16:50:53 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/07 03:15:50 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	map_to_minimap(t_map *map, t_data *data, t_temp *temp, int size)
 				if (!h++)
 					temp->coords = pixel_pos + (data->player_pos * size + size / 2);
 			}
-			pixel(temp, (pixel_pos + map_pos * size), color);
+			pixel(temp, (pixel_pos + map_pos * size), 1);
 		}
 	}
 }

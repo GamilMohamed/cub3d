@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   move.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mgamil <mgamil@42.student.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:07:38 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/06 11:19:41 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/07 03:30:36 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ void	move_to_pos(t_map *map, Luno2f norm, Luno2f end)
 	temp = map->mini->coords;
 	if (map->map[(int)(temp.y + (norm.y * 10))/35][(int)(temp.x + (norm.x * 10))/35] == '1')
 			return ;
-	if (map->map[(int)((temp.y + 5) + (norm.y * 20))/35][(int)(temp.x + (norm.x * 20))/35] == '1' && map->map[(int)((temp.y) + (norm.y * 20))/35][(int)((temp.x + 5) + (norm.x * 20))/35])
-		return ;
+	// if (map->map[(int)((temp.y + 5) + (norm.y * 20))/35][(int)(temp.x + (norm.x * 20))/35] == '1' && map->map[(int)((temp.y) + (norm.y * 20))/35][(int)((temp.x + 5) + (norm.x * 20))/35])
+	// 	return ;
 	map->mini->coords = (map->mini->coords + norm * 10);
 	pos = convert_d_to_i(temp);
 	map->map[pos.y/35][pos.x/35] = '0';
