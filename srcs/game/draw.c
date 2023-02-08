@@ -3,40 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   draw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgamil <mgamil@42.student.fr>              +#+  +:+       +#+        */
+/*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:03:10 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/07 02:40:23 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/08 01:36:31 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int		condition(int x, int y, int size, char **map)
+int		condition(int x, int y, int size, t_map *map)
 {
-	// if (!(x % 35) || !(y % 35))
-	// {
-		if ((x % 35 == 34) && (y % 35 == 0))
-		{
-			if (map[(y - 1)/35][x/35] == '1' && map[y/35][(x + 1)/35] == '1')
-				return (1);
-		}
-		else if ((x % 35 == 0) && (y % 35 == 0))
-		{
-			if (map[(y - 1)/35][x/35] == '1' && map[y/35][(x - 1)/35] == '1')
-				return (1);
-		}
-		else if ((x % 35 == 34) && (y % 35 == 34))
-		{
-			if (map[(y + 1)/35][x/35] == '1' && map[y/35][(x + 1)/35] == '1')
-				return (1);
-		}
-		else if ((x % 35 == 0) && (y % 35 == 34))
-		{
-			if (map[(y + 1)/35][x/35] == '1' && map[y/35][(x - 1)/35] == '1')
-				return (1);
-		}
-	// }
+	if (y/24 > 0 && y/24 < map->height && x/24 > 0 && x/24 < map->maxlen && map->map[y/24][x/24] == '1')
+		return (1);
+	if ((x % 24 == 23) && (y % 24 == 0))
+	{
+		if (map->map[(y - 1)/24][x/24] == '1' && map->map[y/24][(x + 1)/24] == '1')
+			return (1);
+	}
+	else if ((x % 24 == 0) && (y % 24 == 0))
+	{
+		if (map->map[(y - 1)/24][x/24] == '1' && map->map[y/24][(x - 1)/24] == '1')
+			return (1);
+	}
+	else if ((x % 24 == 23) && (y % 24 == 23))
+	{
+		if (map->map[(y + 1)/24][x/24] == '1' && map->map[y/24][(x + 1)/24] == '1')
+			return (1);
+	}
+	else if ((x % 24 == 0) && (y % 24 == 23))
+	{
+		if (map->map[(y + 1)/24][x/24] == '1' && map->map[y/24][(x - 1)/24] == '1')
+			return (1);
+	}
 	return (0);
 }
 
@@ -73,9 +72,6 @@ Luno2f	draw_line_rays(t_map *map, Luno2f end, Luno2f coords, bool print)
 	int incx, incy, inc1, inc2;
 	int x, y;
 
-	double r = 0;
-	int colorize = 0;
-
 	dx = end.x - coords.x;
 	dy = end.y - coords.y;
 
@@ -106,14 +102,10 @@ Luno2f	draw_line_rays(t_map *map, Luno2f end, Luno2f coords, bool print)
 			else
 				e += inc2;
 			x += incx;
-			if (print == 1)
-				my_mlx_pixel_put(map->mini, x, y, create_trgb((int [3]){255 - (int)r / 2, 255 - (int)r / 2, 255}));
-			if (print && y/35 > 0 && y/35 < map->height && x/35 > 0 && x/35 < map->maxlen && map->map[y/35][x/35] != '1' && !condition(x, y, 35, map->map))
-				;// my_mlx_pixel_put(map->mini, x, y, create_trgb((int [3]){255 - (int)r / 2, 255 - (int)r / 2, 255}));
+			if (!condition(x, y, 24, map))
+				my_mlx_pixel_put(map->mini, x, y, create_trgb((int [3]){255, 255, 255}));
 			else
 				return ((Luno2f){x, y});
-			if (r < 255)
-				r += 1;
 		}
 	}
 	else
@@ -131,14 +123,10 @@ Luno2f	draw_line_rays(t_map *map, Luno2f end, Luno2f coords, bool print)
 			else
 				e += inc2;
 			y += incy;
-			if (print == 1)
-				my_mlx_pixel_put(map->mini, x, y, create_trgb((int [3]){255 - (int)r / 2, 255 - (int)r / 2, 255}));
-			if (print && y/35 > 0 && y/35 < map->height && x/35 > 0 && x/35 < map->maxlen && map->map[y/35][x/35] != '1' && !condition(x, y, 35, map->map))
-				; // my_mlx_pixel_put(map->mini, x, y, create_trgb((int [3]){255 - (int)r / 2, 255 - (int)r / 2, 255}));
+			if (!condition(x, y, 24, map))
+				my_mlx_pixel_put(map->mini, x, y, create_trgb((int [3]){255, 255, 255}));
 			else
 				return ((Luno2f){x, y});
-			if (r < 255)
-				r += 1;
 		}
 	}
 	return ((Luno2f){x, y});
@@ -146,11 +134,10 @@ Luno2f	draw_line_rays(t_map *map, Luno2f end, Luno2f coords, bool print)
 
 void	my_mlx_pixel_put(t_temp *temp, int x, int y, int color)
 {
-	// char	*dst;
+	char	*dst;
 
-	mlx_put_pixel(temp->img, x, y, color);
-	// dst = temp->addr + (y * temp->b + x * (temp->a / 8));
-	// *(unsigned int *)dst = color;
+	dst = temp->addr + (y * temp->b + x * (temp->a / 8));
+	*(unsigned int*)dst = color;
 }
 
 Luno2f	docircle(t_temp *temp, Luno2f coords, int ray)

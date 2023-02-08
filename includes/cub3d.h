@@ -3,23 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgamil <mgamil@42.student.fr>              +#+  +:+       +#+        */
+/*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:33:03 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/07 02:21:47 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/08 04:47:56 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include "../MLX42/include/MLX42/MLX42.h"
+# include "../mlx/mlx/mlx.h"
 # include "get_next_line.h"
 # include "libft.h"
+# include <X11/X.h>
+# include <X11/keysym.h>
 # include <fcntl.h>
 # include <limits.h>
 # include <math.h>
 # include <pthread.h>
+# include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -27,10 +30,6 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
-# include <stdbool.h>
-
-// # include <X11/X.h>
-// # include <X11/keysym.h>
 
 # define SPACES " \t"
 # define RESET "\033[0m"
@@ -65,7 +64,6 @@
 
 # define SPEED 1
 
-
 typedef struct s_rr		t_rr;
 typedef struct t_map	t_map;
 typedef struct t_mlx	t_mlx;
@@ -73,13 +71,19 @@ typedef struct t_data	t_data;
 typedef double Luno2f	__attribute__((ext_vector_type(2)));
 typedef int Luno2i		__attribute__((ext_vector_type(2)));
 
-
 typedef struct s_plane
 {
 	Luno2f				camera;
+	Luno2i				map;
 	Luno2f				pos;
+	Luno2f				raydir;
 	Luno2f				dir;
 	Luno2f				plane;
+	Luno2f				deltadist;
+	int					side;
+	Luno2f				step;
+	Luno2f				sdist;
+	int					hit;
 	double				moveSpeed;
 	double				rotSpeed;
 }						t_plane;
@@ -95,14 +99,14 @@ typedef struct s_temp
 	int					height;
 	int					width;
 	double				size;
-	Luno2f				endray[2];
+	Luno2f				endray[3];
 	Luno2f				coords;
 	Luno2f				plane[2];
 }						t_temp;
 
-
 typedef struct t_map
 {
+	Luno2f				pos;
 	void				*addr;
 	int					nbrayons;
 	char				*cubfile;
@@ -162,7 +166,9 @@ void					checkchars(t_map *map);
 void					checkmap(t_map *map);
 //read.c
 int						lineempty(char *buff);
-char					*readinfo(t_map *map, int *fd, char *str);
+// char					*readinfo(t_map *map, int *fd, char *str);
+char	*readinfo(t_map *map, int *fd, const char *str);
+
 char					*readmap(t_map *map);
 //fill.c
 int						fillpathcolors(t_map *map, char *str, int index);
@@ -185,52 +191,62 @@ void					ft_printlist(t_rr *temp);
 
 /*	game	*/
 // init.c
-int	initmlx(t_map *map, t_mlx *mlx, t_data *data, t_temp *temp);
+int						initmlx(t_map *map, t_mlx *mlx, t_data *data,
+							t_temp *temp);
 
 // color.c
-int	create_rgb(int t, int a, int b, int c);
-int	create_trgb(int tab[3]);
-void	backgroundcolor(t_map *map, t_mlx *mlx, t_data *data, t_temp *temp);
+int						create_rgb(int t, int a, int b, int c);
+int						create_trgb(int tab[3]);
+void					backgroundcolor(t_map *map, t_mlx *mlx, t_data *data,
+							t_temp *temp);
 
 // raycasting.c
-void	draw_rayons(t_temp *tmp, Luno2f coords, t_map *map);
-void	draw_rayons_all(t_temp *tmp, Luno2f coords, t_map *map);
+void					draw_rayons(t_temp *tmp, Luno2f coords, t_map *map);
+void					draw_rayons_all(t_temp *tmp, Luno2f coords, t_map *map);
 
 // calc.c
-Luno2i convert_d_to_i(Luno2f src);
-Luno2f	calc_rotation(Luno2f coords, int r, double rad, int m);
-double	calc_radius(double angle);
-Luno2f	normalize(Luno2f coords);
+Luno2i					convert_d_to_i(Luno2f src);
+Luno2f					calc_rotation(Luno2f coords, int r, double rad, int m);
+double					calc_radius(double angle);
+Luno2f					normalize(Luno2f coords);
 
 // move.c
-// void	move(mlx_key_data_t key, t_map *map);
-void	move(mlx_key_data_t key, void *ptr);
-void	move_to_pos(t_map *map, Luno2f norm, Luno2f end);
-// int		move(int key, t_map *map);
+void					move_to_pos(t_map *map, Luno2f norm, Luno2f end);
+int						move(int key, t_map *map);
 
 // game.c
-void	printcoords(Luno2i val, Luno2f val2);
-void	destroywindows(t_mlx *mlx);
-int	ft_game(t_map *map, t_mlx *mlx, t_data *data);
+void					printcoords(Luno2i val, Luno2f val2);
+void					destroywindows(t_mlx *mlx);
+int						ft_game(t_map *map, t_mlx *mlx, t_data *data);
 
 // draw.c
-int		condition(int x, int y, int size, char **map);
-void	draw_circle(t_temp *tmp, Luno2f coords, int r);
-Luno2f	draw_line_rays(t_map *map, Luno2f end, Luno2f coords, bool print);
-void	my_mlx_pixel_put(t_temp *temp, int x, int y, int color);
-Luno2f	docircle(t_temp *temp, Luno2f coords, int ray);
-void	pixel(t_temp *temp, Luno2f coords, int color);
-void	camera_rays(t_temp *tmp, t_map *map, Luno2f coords, double size);
+int						condition(int x, int y, int size, t_map *map);
+void					draw_circle(t_temp *tmp, Luno2f coords, int r);
+Luno2f					draw_line_rays(t_map *map, Luno2f end, Luno2f coords,
+							bool print);
+
+void					my_mlx_pixel_put(t_temp *mp, int x, int y, int color);
+// void	my_mlx_pixel_put(void *stur, int x, int y, int color);
+
+// void	my_mlx_pixel_put(t_temp *temp, int x, int y, int color);
+Luno2f					docircle(t_temp *temp, Luno2f coords, int ray);
+void					pixel(t_temp *temp, Luno2f coords, int color);
+void					camera_rays(t_temp *tmp, t_map *map, Luno2f coords,
+							double size);
 
 // minimap.c
-void	map_to_minimap(t_map *map, t_data *data, t_temp *temp, int size);
-void camera_rays(t_temp *tmp, t_map *map, Luno2f coords, double size);
-void	init_minimap(t_map *map, t_mlx *mlx, t_data *data);
-void	fill_minimap(t_map *map, t_mlx *mlx, t_data *data);
+void					map_to_minimap(t_map *map, t_data *data, t_temp *temp,
+							int size);
+void					camera_rays(t_temp *tmp, t_map *map, Luno2f coords,
+							double size);
+void					init_minimap(t_map *map, t_mlx *mlx, t_data *data);
+void					fill_minimap(t_map *map, t_mlx *mlx, t_data *data);
+void					orientation_player(t_plane *plane, char player);
 
 
-void	verLine(void *addr, int x, int y1, int y2, int color);
-void	camera_plane(t_map *map, t_plane *p, int x);
-
+void					verLine(t_temp *temp, int x, int y1, int y2, int color);
+void					camera_plane(t_map *map, t_plane *p, int x);
+void					print_to_map(t_map *map);
+void					init_cast(t_map *map, t_plane *plane, int index);
 
 #endif

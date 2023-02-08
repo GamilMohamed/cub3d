@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:31:57 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/06 12:02:14 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/08 06:20:10 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ void	get_positions(t_map *map, t_data *data)
 				map->rotation = valueof(map->map[i][j]);
 				map->data->player_pos.x = j;
 				map->data->player_pos.y = i;
+				map->pos.x = (double)j;
+				map->pos.y = (double)i;
 				map->data->player = map->map[i][j];
 			}
 			j++;
@@ -78,11 +80,11 @@ int	main(int ac, char **av)
 	t_mlx	mlx;
 	t_data	data;
 
+	if (checkextension(ac, av[1]))
+		return (EXIT_FAILURE);
 	map = ft_calloc(sizeof(t_map) * 1, 1);
 	map->data = ft_calloc(sizeof(t_data) * 1, 1);
 	map->mlx = ft_calloc(sizeof(t_mlx) * 1, 1);
-	if (checkextension(ac, av[1]))
-		return (EXIT_FAILURE);
 	map->cubfile = readinfo(map, & map->filefd, av[1]);
 	ft_printf("map->cubfile=%s\n", map->cubfile);
 	if (!map->cubfile)
@@ -94,11 +96,13 @@ int	main(int ac, char **av)
 		return (ft_error(ERR_NO_MAP, YELLOW, map));
 	checkmap(map);
 	get_positions(map, & data);
-	// ft_printstruct(map);
-	// ft_printmap(map->map, 0);
+	ft_printstruct(map);
+	ft_printmap(map->map, 0);
 	ft_game(map, map->mlx, map->data);
 	ft_freetab(map->map);
 	ft_freestruct_map(map);
+	free(map->data);
+	free(map->mlx);
 	return (0);
 }
 

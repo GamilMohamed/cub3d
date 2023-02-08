@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 00:42:13 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/01 13:15:21 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/08 04:47:44 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	lineempty(char *buff)
 	return (buff[i] == 0);
 }
 
-char	*readinfo(t_map *map, int *fd, char *str)
+char	*readinfo(t_map *map, int *fd, const char *str)
 {
 	char	*buff;
 	char	*ret;

@@ -2,7 +2,7 @@ NAME			=	cub3d
 
 LIBFT			=	libft.a 
 
-MLX				=	libmlx42.a
+MLX				=	libmlx_Linux.a libmlx.a
 
 DIR_SRCS		=	srcs
 
@@ -35,9 +35,11 @@ SRCS			=	$(addprefix $(DIR_SRCS)/,$(SRCS_NAMES))
 
 OBJS			=	$(addprefix $(DIR_OBJS)/,$(OBJS_NAMES))
 
-INC				=	-Iincludes -Ilibft/includes -I/usr/include -I/MLX42/include/MLX42 -I/opt/X11/include -I/opt/homebrew/include
+INC				=	-Iincludes -Ilibft/includes -I/usr/include -I/mlx/include/mlx.h 
 
-LIB				=	-Llibft -lft -lm -L/usr/lib -L/opt/X11/lib -L/opt/homebrew/lib -framework Cocoa -framework OpenGL -framework IOKit -lglfw -framework OpenGL
+LIB				=	-Llibft -lft -lm -lXext -lX11 -L/usr/lib -Lmlx -lmlx -L/usr/lib -Imlx
+
+#LIB				=	-Llibft -lft -lm -L/usr/lib -L/opt/X11/lib -L/opt/homebrew/lib -framework Cocoa -framework OpenGL -framework IOKit -lglfw -framework OpenGL
 
 CC				=	cc
 
