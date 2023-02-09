@@ -6,46 +6,51 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:07:38 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/08 06:43:10 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/09 18:31:46 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	move(int key, t_map *map)
+int	move(t_map *map)
 {
 	t_plane *p;
 
+	// printf("movesadasdas key = %i\n", key);
 	p = map->plane;
-	if (key == W)
-	{
-		if (map->map[(int)(p->pos.y + p->moveSpeed * p->dir.y)][(int)(p->pos.x)] == '0')
-			p->pos.y += p->dir.y;
-		if (map->map[(int)(p->pos.y)][(int)(p->pos.x + p->moveSpeed * p->dir.x)] == '0')
-			p->pos.x += p->dir.x;
+	if (map->press->w == 1)
+	{ 
+		if (map->map[(int)(p->pos.x + p->moveSpeed * p->dir.x)][(int)(p->pos.y)] == '0')
+			p->pos.x += p->dir.x * p->moveSpeed;
+		if (map->map[(int)(p->pos.x)][(int)(p->pos.y + p->moveSpeed * p->dir.y)] == '0')
+			p->pos.y += p->dir.y * p->moveSpeed;
 	}
-	if (key == S)
-	{
-		if (map->map[(int)(p->pos.y - p->moveSpeed * p->dir.y)][(int)(p->pos.x)] == '0')
-			p->pos.y -= p->dir.y;
-		if (map->map[(int)(p->pos.y)][(int)(p->pos.x - p->moveSpeed * p->dir.x)] == '0')
-			p->pos.x -= p->dir.x;
+	if (map->press->s == 1)
+	{ 
+		if (map->map[(int)(p->pos.x - p->moveSpeed * p->dir.x)][(int)(p->pos.y)] == '0')
+			p->pos.x -= p->dir.x * p->moveSpeed;
+		if (map->map[(int)(p->pos.x)][(int)(p->pos.y - p->moveSpeed * p->dir.y)] == '0')
+			p->pos.y -= p->dir.y * p->moveSpeed;
 	}
-	if (key == D)
-	{
-		if (map->map[(int)(p->pos.y - p->moveSpeed * p->dir.x * sqrt(0.19))][(int)(p->pos.x)] == '0')
-			p->pos.y -= p->dir.x * sqrt(0.19);
-		if (map->map[(int)(p->pos.y)][(int)(p->pos.x + p->moveSpeed * 0.9 * p->dir.y)] == '0')
-			p->pos.x += 0.9 * p->dir.y;
+	if (map->press->a == 1)
+	{ 
+		if (map->map[(int)(p->pos.x - p->dir.y * p->moveSpeed)][(int)(p->pos.y)] == '0')
+			p->pos.x -= p->dir.y * p->moveSpeed;
+		if (map->map[(int)(p->pos.x)][(int)(p->pos.y + p->dir.x * p->moveSpeed)] == '0')
+			p->pos.y += p->dir.x * p->moveSpeed;
 	}
-	if (key == A)
-	{
-		if (map->map[(int)(p->pos.y + p->moveSpeed * p->dir.x * sqrt(0.19))][(int)(p->pos.x)] == '0')
-			p->pos.y += p->dir.x * sqrt(0.19);
-		if (map->map[(int)(p->pos.y)][(int)(p->pos.x - p->moveSpeed * 0.9 * p->dir.y)] == '0')
-			p->pos.x -= 0.9 * p->dir.y;
+	if (map->press->d == 1)
+	{ 
+		if (map->map[(int)(p->pos.x)][(int)(p->pos.y - p->dir.x* p->moveSpeed)] == '0')
+			p->pos.y -= p->dir.x * p->moveSpeed;
+		if (map->map[(int)(p->pos.x + p->dir.y * p->moveSpeed)][(int)(p->pos.y)] == '0')
+			p->pos.x += p->dir.y * p->moveSpeed;
+		// if (map->map[(int)(p->pos.y + p->moveSpeed * p->dir.x * sqrt(0.19))][(int)(p->pos.x)] == '0')
+		// 	p->pos.y += p->dir.x * sqrt(0.19) * p->moveSpeed;
+		// if (map->map[(int)(p->pos.y)][(int)(p->pos.x - p->moveSpeed * 0.9 * p->dir.y)] == '0')
+		// 	p->pos.x -= 0.9 * p->dir.y * p->moveSpeed;
 	}
-	if (key == RIGHT)
+	if (map->press->right == 1)
 	{
 		double oldDirx = p->dir.x;
 		p->dir.x = p->dir.x * cos(-p->rotSpeed) - p->dir.y * sin(-p->rotSpeed);
@@ -54,7 +59,7 @@ int	move(int key, t_map *map)
 		p->plane.x = p->plane.x * cos(-p->rotSpeed) - p->plane.y * sin(-p->rotSpeed);
 		p->plane.y = oldPlanex * sin(-p->rotSpeed) + p->plane.y * cos(-p->rotSpeed);
 	}
-	if (key == LEFT)
+	if (map->press->left == 1)
 	{
 		double oldDirx = p->dir.x;
 		p->dir.x = p->dir.x * cos(p->rotSpeed) - p->dir.y * sin(p->rotSpeed);
@@ -63,14 +68,12 @@ int	move(int key, t_map *map)
 		p->plane.x = p->plane.x * cos(p->rotSpeed) - p->plane.y * sin(p->rotSpeed);
 		p->plane.y = oldPlanex * sin(p->rotSpeed) + p->plane.y * cos(p->rotSpeed);
 	}
-	if (key == ESCAPE)
+	if (map->press->esc == 1)
 		mlx_loop_end(map->mlx->mlx);
-	if (key == 'z')
+	if (map->press->z == 1)
 	{
-		printf("dir-> x:%f|y:%f\n", p->dir.x, p->dir.y);
-		printf("pos-> x:%f|y:%f\n\n", p->pos.x, p->pos.y);
-		// ft_printf("%r*****%0\n");
-
+		printf("pos %f|%f\n",(p->pos.y),(p->pos.x));
+		printf("dor %f|%f\n",(p->dir.y),(p->dir.x));
 	}
 	print_to_map(map);	
 	mlx_put_image_to_window(map->mlx->mlx, map->mlx->win, map->temp->img, 0, 0);

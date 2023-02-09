@@ -27,6 +27,7 @@ SRCS_NAMES		=	main.c \
 					game/move.c \
 					game/raycasting.c \
 
+
 OBJS_NAMES		=	${SRCS_NAMES:.c=.o}
 
 DEPS			=	${SRCS_NAMES:.c=.d}

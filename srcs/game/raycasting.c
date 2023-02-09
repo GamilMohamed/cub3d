@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:06:37 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/08 06:40:29 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/09 18:30:17 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,10 @@ void	verLine(t_temp *temp, int x, int y1, int y2, int color)
 void	init_cast(t_map *map, t_plane *plane, int index)
 {
 	plane->camera.x = 2 * index / (double)map->data->win_w - 1;
-	plane->raydir = plane->dir + plane->plane * plane->camera.x;
-	plane->map.x = (int)map->pos.x;
-	plane->map.y = (int)map->pos.y;
+	plane->raydir.x = plane->dir.x + plane->plane.x * plane->camera.x;
+	plane->raydir.y = plane->dir.y + plane->plane.y * plane->camera.x;
+	plane->map.x = (int)plane->pos.x;
+	plane->map.y = (int)plane->pos.y;
 	plane->deltadist.x = fabs(1 / plane->raydir.x);
 	plane->deltadist.y = fabs(1 / plane->raydir.y);
 	plane->hit = 0;
@@ -94,7 +95,7 @@ void	dda(t_map *map, t_plane *p)
 			p->map.y += p->step.y;
 			p->side = 1;
 		}
-		if (map->map[p->map.y][p->map.x] == '1')
+		if (map->map[p->map.x][p->map.y] == '1')
 			p->hit = 1;
 	}
 }
@@ -105,12 +106,9 @@ void	dda(t_map *map, t_plane *p)
 		// 	pwall = map->plane->sdist.y - map->plane->deltadist.y;
 
 
+
 void	draw_rayons_all(t_temp *tmp, Luno2f coords, t_map *map)
 {
-	Luno2f	jspr;
-	double	l;
-	double	ray;
-	double	radius;
 	int		width;
 	int		height;
 	int		color;
@@ -118,12 +116,9 @@ void	draw_rayons_all(t_temp *tmp, Luno2f coords, t_map *map)
 	int		lineh;
 	int		drawstart;
 	int		drawend;
-	Luno2f	test;
 
 	width = map->data->win_w;
 	height = map->data->win_h;
-	jspr = 0;
-	ray = width / 2;
 	color = 0xFFF354;
 	for (double i = 0; i < width; i++)
 	{
@@ -144,8 +139,23 @@ void	draw_rayons_all(t_temp *tmp, Luno2f coords, t_map *map)
 		if (map->plane->side == 1)
 			color = 0x21FCaB;
 		verLine(map->temp, i, 0, drawstart, create_trgb(map->ceiling));
-		verLine(map->temp, i, drawstart, drawend, color);
 		verLine(map->temp, i, drawend, height, create_trgb(map->floor));
+		if (i == width / 2)
+		{
+			verLine(map->temp, i, drawstart, drawend, 0xFF0000);
+			// ft_printf("%rs : %i|e :%i%0\n", drawstart, drawend);
+			// ft_printf("%rs : %i|e :%i%0\n", drawstart, drawend);
+			// printf("%sr = %f side = %i, hit = %i%s\n", RED, i, map->plane->side, map->plane->hit, RESET);
+		}
+		else if (i == width / 2 - 1)
+		{
+			verLine(map->temp, i, drawstart, drawend, 0x0000FF);
+			// printf("%sr = %f side = %i, hit = %i%s\n", BLUE, i, map->plane->side, map->plane->hit, RESET);
+			// ft_printf("%bs : %i|e :%i%0\n", drawstart, drawend);
+		}
+		else
+			verLine(map->temp, i, drawstart, drawend, color);
+		// ft_bzero(map->temp->img, sizeof(void*));
 		// if (i < width)
 		// {
 		// 	radius = calc_radius((i - (ray)) / (ray)*45.);
@@ -165,7 +175,7 @@ void	camera_rays(t_temp *tmp, t_map *map, Luno2f coords, double size)
 	Luno2f	camera;
 	double	rad;
 
-	// draw_circle(tmp, map->plane->pos * 24, tmp->size / 4);
 	// calc_rayons(tmp, map->plane->pos * 24 , map);
 	draw_rayons_all(tmp, map->plane->pos * 24, map);
+	// draw_circle(tmp, map->plane->pos * 24, tmp->size / 4);
 }

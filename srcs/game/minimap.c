@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:04:40 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/08 03:16:31 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/09 18:29:15 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ void	init_minimap(t_map *map, t_mlx *mlx, t_data *data)
 	// tempyons = temp->width;
 	temp = map->mini;
 	temp->size = 24;
-	temp->width = (data->win_w / 64 * temp->size);
-	temp->height = (data->win_h / 64 * temp->size);
+	temp->width = (data->win_w / 32 * temp->size);
+	temp->height = (data->win_h / 32 * temp->size);
 	temp->img = mlx_new_image(mlx->mlx, temp->width, temp->height);
 	temp->addr = mlx_get_data_addr(temp->img, &temp->a, &temp->b, &temp->c);
 }

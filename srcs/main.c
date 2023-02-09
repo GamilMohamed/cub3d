@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:31:57 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/08 06:20:10 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/09 18:16:48 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,12 @@ void	get_positions(t_map *map, t_data *data)
 			if (ft_strchr("NSEW", map->map[i][j]))
 			{
 				map->rotation = valueof(map->map[i][j]);
-				map->data->player_pos.x = j;
-				map->data->player_pos.y = i;
-				map->pos.x = (double)j;
-				map->pos.y = (double)i;
+				map->data->player_pos.x = i + 0.5;
+				map->data->player_pos.y = j + 0.5;
+				map->pos.x = (double)i + 0.5;
+				map->pos.y = (double)j + 0.5;
 				map->data->player = map->map[i][j];
+				map->map[i][j] = '0';
 			}
 			j++;
 		}

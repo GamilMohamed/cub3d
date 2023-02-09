@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:33:03 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/08 04:47:56 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/08 19:47:43 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,21 @@ typedef struct t_data	t_data;
 typedef double Luno2f	__attribute__((ext_vector_type(2)));
 typedef int Luno2i		__attribute__((ext_vector_type(2)));
 
+typedef struct t_press
+{
+	int					w;
+	int					a;
+	int					s;
+	int					d;
+	int					left;
+	int					right;
+	int					up;
+	int					down;
+	int					esc;
+	int					q;
+	int					z;
+}	t_press;
+
 typedef struct s_plane
 {
 	Luno2f				camera;
@@ -128,6 +143,7 @@ typedef struct t_map
 	t_data				*data;
 	t_plane				*plane;
 	double				rotation;
+	t_press				*press;
 }						t_map;
 
 typedef struct t_mlx
@@ -212,7 +228,9 @@ Luno2f					normalize(Luno2f coords);
 
 // move.c
 void					move_to_pos(t_map *map, Luno2f norm, Luno2f end);
-int						move(int key, t_map *map);
+int	move(t_map *map);
+// int						move(int key, t_map *map);
+
 
 // game.c
 void					printcoords(Luno2i val, Luno2f val2);
