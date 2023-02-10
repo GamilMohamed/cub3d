@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:07:38 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/09 18:31:46 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/10 02:54:33 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,9 @@ int	move(t_map *map)
 		printf("pos %f|%f\n",(p->pos.y),(p->pos.x));
 		printf("dor %f|%f\n",(p->dir.y),(p->dir.x));
 	}
-	print_to_map(map);	
+	draw_rayons_all(map, map->temp, map->plane);
+	draw(map);
 	mlx_put_image_to_window(map->mlx->mlx, map->mlx->win, map->temp->img, 0, 0);
-	// mlx_put_image_to_window(map->mlx->mlx, map->mlx->win, map->mini->img, 24, 24);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:33:03 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/08 19:47:43 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/09 21:15:37 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,18 @@ typedef struct t_data	t_data;
 typedef double Luno2f	__attribute__((ext_vector_type(2)));
 typedef int Luno2i		__attribute__((ext_vector_type(2)));
 
+typedef struct	s_img
+{
+	void	*img;
+	int		*data;
+
+	int		size_l;
+	int		bpp;
+	int		endian;
+	int		img_width;
+	int		img_height;
+}				t_img;
+
 typedef struct t_press
 {
 	int					w;
@@ -84,7 +96,7 @@ typedef struct t_press
 	int					esc;
 	int					q;
 	int					z;
-}	t_press;
+}						t_press;
 
 typedef struct s_plane
 {
@@ -101,6 +113,9 @@ typedef struct s_plane
 	int					hit;
 	double				moveSpeed;
 	double				rotSpeed;
+	int					buff[540][960];
+	int					**texture;
+	int					re_buf;
 }						t_plane;
 
 typedef struct s_temp
@@ -144,6 +159,7 @@ typedef struct t_map
 	t_plane				*plane;
 	double				rotation;
 	t_press				*press;
+	t_img				img;
 }						t_map;
 
 typedef struct t_mlx
@@ -183,7 +199,7 @@ void					checkmap(t_map *map);
 //read.c
 int						lineempty(char *buff);
 // char					*readinfo(t_map *map, int *fd, char *str);
-char	*readinfo(t_map *map, int *fd, const char *str);
+char					*readinfo(t_map *map, int *fd, const char *str);
 
 char					*readmap(t_map *map);
 //fill.c
@@ -218,7 +234,7 @@ void					backgroundcolor(t_map *map, t_mlx *mlx, t_data *data,
 
 // raycasting.c
 void					draw_rayons(t_temp *tmp, Luno2f coords, t_map *map);
-void					draw_rayons_all(t_temp *tmp, Luno2f coords, t_map *map);
+void					draw_rayons_all(t_map *map, t_temp *tmp, t_plane *p);
 
 // calc.c
 Luno2i					convert_d_to_i(Luno2f src);
@@ -228,9 +244,8 @@ Luno2f					normalize(Luno2f coords);
 
 // move.c
 void					move_to_pos(t_map *map, Luno2f norm, Luno2f end);
-int	move(t_map *map);
+int						move(t_map *map);
 // int						move(int key, t_map *map);
-
 
 // game.c
 void					printcoords(Luno2i val, Luno2f val2);
@@ -261,10 +276,12 @@ void					init_minimap(t_map *map, t_mlx *mlx, t_data *data);
 void					fill_minimap(t_map *map, t_mlx *mlx, t_data *data);
 void					orientation_player(t_plane *plane, char player);
 
-
 void					verLine(t_temp *temp, int x, int y1, int y2, int color);
 void					camera_plane(t_map *map, t_plane *p, int x);
 void					print_to_map(t_map *map);
 void					init_cast(t_map *map, t_plane *plane, int index);
+
+void	draw(t_map *map);
+
 
 #endif

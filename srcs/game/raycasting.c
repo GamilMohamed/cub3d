@@ -6,41 +6,11 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:06:37 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/09 18:30:17 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/10 02:57:33 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-// void	calc_rayons(t_temp *tmp, Luno2f coords, t_map *map)
-// {
-// 	Luno2f	jspr;
-// 	double	l;
-
-// 	l = (tmp->width + tmp->height) * cos((M_PI / 180));
-// 	jspr.x = coords.x + cos((map->rotation) * (M_PI / 180)) * l;
-// 	jspr.y = coords.y + sin((map->rotation) * (M_PI / 180)) * l;
-// 	tmp->endray[0] = draw_line_rays(map, jspr, coords, 0xFF0000);
-// 	jspr.x = coords.x + cos((map->rotation - 90) * (M_PI / 180)) * l;
-// 	jspr.y = coords.y + sin((map->rotation - 90) * (M_PI / 180)) * l;
-// 	tmp->endray[1] = draw_line_rays(map, jspr, coords, 0x00FF00);
-// 	jspr.x = coords.x + cos((map->rotation + 90) * (M_PI / 180)) * l;
-// 	jspr.y = coords.y + sin((map->rotation + 90) * (M_PI / 180)) * l;
-// 	tmp->endray[2] = draw_line_rays(map, jspr, coords, 0x0000FF);
-// }
-
-void	verLine(t_temp *temp, int x, int y1, int y2, int color)
-{
-	int	y;
-
-	y = y1;
-	while (y <= y2)
-	{
-		my_mlx_pixel_put(temp, x, y, color);
-		y++;
-	}
-}
-
 
 void	init_cast(t_map *map, t_plane *plane, int index)
 {
@@ -53,7 +23,6 @@ void	init_cast(t_map *map, t_plane *plane, int index)
 	plane->deltadist.y = fabs(1 / plane->raydir.y);
 	plane->hit = 0;
 }
-
 
 void	init_steps(t_map *map, t_plane *p)
 {
@@ -100,35 +69,45 @@ void	dda(t_map *map, t_plane *p)
 	}
 }
 
-		// if (map->plane->side == 0)
-		// 	pwall = map->plane->sdist.x - map->plane->deltadist.x;
-		// else
-		// 	pwall = map->plane->sdist.y - map->plane->deltadist.y;
-
-
-
-void	draw_rayons_all(t_temp *tmp, Luno2f coords, t_map *map)
+void	draw_rayons_all(t_map *map, t_temp *tmp, t_plane *p)
 {
 	int		width;
 	int		height;
-	int		color;
 	double	pwall;
 	int		lineh;
 	int		drawstart;
 	int		drawend;
+	int		texnum;
+	int		texX;
+	double	step;
+	double	texPos;
+	int		texY;
+	int	color;
 
+	int texWidth = 64;  // width of texture
+	int texHeight = 64; // height of texture
 	width = map->data->win_w;
 	height = map->data->win_h;
-	color = 0xFFF354;
+	// color = 0xFFF354;
+	if (p->re_buf == 1)
+	{
+		for (int i = 0; i < height; i++)
+		{
+			for (int j = 0; j < width; j++)
+			{
+				p->buff[i][j] = 0;
+			}
+		}
+	}
 	for (double i = 0; i < width; i++)
 	{
-		init_cast(map, map->plane, i);
-		init_steps(map, map->plane);
-		dda(map, map->plane);
-		if (map->plane->side == 0)
-			pwall = (map->plane->map.x - map->plane->pos.x + (1 - map->plane->step.x) / 2) / map->plane->raydir.x;
+		init_cast(map, p, i);
+		init_steps(map, p);
+		dda(map, p);
+		if (p->side == 0)
+			pwall = (p->map.x - p->pos.x + (1 - p->step.x) / 2) / p->raydir.x;
 		else
-			pwall = (map->plane->map.y - map->plane->pos.y + (1 - map->plane->step.y) / 2) / map->plane->raydir.y;
+			pwall = (p->map.y - p->pos.y + (1 - p->step.y) / 2) / p->raydir.y;
 		lineh = (int)(height / pwall);
 		drawstart = -lineh / 2 + height / 2;
 		if (drawstart < 0)
@@ -136,46 +115,37 @@ void	draw_rayons_all(t_temp *tmp, Luno2f coords, t_map *map)
 		drawend = lineh / 2 + height / 2;
 		if (drawend >= height)
 			drawend = height - 1;
-		if (map->plane->side == 1)
-			color = 0x21FCaB;
-		verLine(map->temp, i, 0, drawstart, create_trgb(map->ceiling));
-		verLine(map->temp, i, drawend, height, create_trgb(map->floor));
-		if (i == width / 2)
-		{
-			verLine(map->temp, i, drawstart, drawend, 0xFF0000);
-			// ft_printf("%rs : %i|e :%i%0\n", drawstart, drawend);
-			// ft_printf("%rs : %i|e :%i%0\n", drawstart, drawend);
-			// printf("%sr = %f side = %i, hit = %i%s\n", RED, i, map->plane->side, map->plane->hit, RESET);
-		}
-		else if (i == width / 2 - 1)
-		{
-			verLine(map->temp, i, drawstart, drawend, 0x0000FF);
-			// printf("%sr = %f side = %i, hit = %i%s\n", BLUE, i, map->plane->side, map->plane->hit, RESET);
-			// ft_printf("%bs : %i|e :%i%0\n", drawstart, drawend);
-		}
+		// if (p->side == 1)
+		// 	color = 0x21FCaB;
+		/*                                  */
+		texnum = map->map[p->map.x][p->map.y] - '0' - 1;
+
+		double wallX; //where exactly the wall was hit
+		if (p->side == 0)
+			wallX = p->pos.y + pwall * p->raydir.y;
 		else
-			verLine(map->temp, i, drawstart, drawend, color);
-		// ft_bzero(map->temp->img, sizeof(void*));
-		// if (i < width)
-		// {
-		// 	radius = calc_radius((i - (ray)) / (ray)*45.);
-		// 	l = (50) * cos(radius);
-		// 	radius = calc_radius((map->plane->dir.x - ((i - (ray)) / (ray)*45.)));
-		// 	jspr.x = coords.x + cos(radius) * l;
-		// 	jspr.y = coords.y + sin(radius) * l;
-		// 	printf("coords.x %f | %f\n", coords.x, coords.y);
-		// 	test = draw_line_rays(map, jspr, coords, 1);
-		// }
+			wallX = p->pos.x + pwall * p->raydir.x;
+		wallX -= floor((wallX));
+		texX = (int)(wallX * (double)(texWidth));
+		if (p->side == 0 && p->raydir.x > 0)
+			texX = texWidth - texX - 1;
+		if (p->side == 1 && p->raydir.y < 0)
+			texX = texWidth - texX - 1;
+		double step = 1.0 * texHeight / lineh;
+		texPos = (drawstart - height / 2 + lineh / 2) * step;
+		for (int y = drawstart; y < drawend; y++)
+		{
+			texY = (int)texPos & (texHeight - 1);
+			texPos += step;
+			color = map->plane->texture[texnum][texHeight * texY + texX];
+			if (p->side == 1)
+				color = (color >> 1) & 8355711;
+			map->plane->buff[y][(int)i] = color;
+			p->re_buf = 1;
+		}
+		verLine(map->temp, i, drawstart, drawend, color);
+		verLine(map->temp, i, 0, drawstart, create_rgb(0, 124, 21, 255));
+		verLine(map->temp, i, drawend, height, create_trgb(map->floor));
+		// draw(map);
 	}
-}
-
-void	camera_rays(t_temp *tmp, t_map *map, Luno2f coords, double size)
-{
-	Luno2f	end;
-	Luno2f	camera;
-	double	rad;
-
-	// calc_rayons(tmp, map->plane->pos * 24 , map);
-	draw_rayons_all(tmp, map->plane->pos * 24, map);
-	// draw_circle(tmp, map->plane->pos * 24, tmp->size / 4);
 }

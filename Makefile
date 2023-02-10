@@ -23,7 +23,6 @@ SRCS_NAMES		=	main.c \
 					game/color.c \
 					game/draw.c \
 					game/init.c \
-					game/minimap.c \
 					game/move.c \
 					game/raycasting.c \
 
