@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 00:44:27 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/01 19:02:17 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/10 19:03:02 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	filldirections(t_map *map, char **tab)
 	int		k;
 	char	**temp;
 
-	static char *match[6] = {
+	static const char *match[6] = {
 		"NO", "SO", "WE", "EA", "F", "C"};
 	i = -1;
 	k = 0;
@@ -86,14 +86,18 @@ int	filldirections(t_map *map, char **tab)
 	while (tab[++i])
 	{
 		temp = ft_split(tab[i], SPACES, &j);
+		ft_printtab(temp);
 		if (!temp)
 			return (ft_freetab(tab), 1);
 		if (j != 2)
 			return (ft_freetab(tab), ft_freetab(temp), 1);
 		j = -1;
-		while (match[++j])
+		while (++j < 6)
+		{
+			printf("%i\n", j);
 			if (!ft_strcmp(temp[0], match[j]))
 				k += fillpathcolors(map, temp[1], j);
+		}
 		ft_freetab(temp);
 	}
 	if (k != 6)

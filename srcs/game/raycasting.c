@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:06:37 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/10 02:57:33 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/10 20:40:59 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,25 +69,62 @@ void	dda(t_map *map, t_plane *p)
 	}
 }
 
+void	wall_color_ns(t_map *map, t_plane *p, int *color, Luno2i tex)
+{
+	if (p->map.x + (1 - p->step.x) / 2 > p->pos.x)
+	{
+		*color = 0xFFFFFF;
+		// *color = p->texture[3][64 * tex.y + tex.x];
+	}
+	else
+	{
+		*color = 0x000000;
+		// *color = p->texture[2][64 * tex.y + tex.x];
+	}
+	*color = 0xFF0000;
+	*color = (*color >> 1) & 8355711;
+}
+
+void	wall_color_ew(t_map *map, t_plane *p, int *color, Luno2i tex)
+{
+	if (p->side == 1)
+	{
+		if (p->map.x + (1 - p->step.x) / 2 > p->pos.x)
+		{
+			*color = 0xFF0000;
+			// *color = p->texture[0][64 * tex.y + tex.x];
+		}
+		else
+		{
+			*color = 0x0000FF;
+			// *color = p->texture[1][64 * tex.y + tex.x];
+		}
+		*color = 0x0000FF;
+		*color = (*color >> 1) & 8355711;
+	}
+	else
+		wall_color_ns(map, p, color, tex);
+}
+
+
 void	draw_rayons_all(t_map *map, t_temp *tmp, t_plane *p)
 {
 	int		width;
 	int		height;
 	double	pwall;
 	int		lineh;
-	int		drawstart;
-	int		drawend;
 	int		texnum;
-	int		texX;
+	Luno2i 	tex;
+	Luno2i	draw;
 	double	step;
 	double	texPos;
-	int		texY;
 	int	color;
 
 	int texWidth = 64;  // width of texture
 	int texHeight = 64; // height of texture
 	width = map->data->win_w;
 	height = map->data->win_h;
+	int y;
 	// color = 0xFFF354;
 	if (p->re_buf == 1)
 	{
@@ -109,12 +146,12 @@ void	draw_rayons_all(t_map *map, t_temp *tmp, t_plane *p)
 		else
 			pwall = (p->map.y - p->pos.y + (1 - p->step.y) / 2) / p->raydir.y;
 		lineh = (int)(height / pwall);
-		drawstart = -lineh / 2 + height / 2;
-		if (drawstart < 0)
-			drawstart = 0;
-		drawend = lineh / 2 + height / 2;
-		if (drawend >= height)
-			drawend = height - 1;
+		draw.x = -lineh / 2 + height / 2;
+		if (draw.x < 0)
+			draw.x = 0;
+		draw.y = lineh / 2 + height / 2;
+		if (draw.y >= height)
+			draw.y = height - 1;
 		// if (p->side == 1)
 		// 	color = 0x21FCaB;
 		/*                                  */
@@ -126,26 +163,57 @@ void	draw_rayons_all(t_map *map, t_temp *tmp, t_plane *p)
 		else
 			wallX = p->pos.x + pwall * p->raydir.x;
 		wallX -= floor((wallX));
-		texX = (int)(wallX * (double)(texWidth));
+		printf("wallX = %f\n", wallX);
+		tex.x = (int)(wallX * (double)(texWidth));
 		if (p->side == 0 && p->raydir.x > 0)
-			texX = texWidth - texX - 1;
+			tex.x = texWidth - tex.x - 1;
 		if (p->side == 1 && p->raydir.y < 0)
-			texX = texWidth - texX - 1;
+			tex.x = texWidth - tex.x - 1;
 		double step = 1.0 * texHeight / lineh;
-		texPos = (drawstart - height / 2 + lineh / 2) * step;
-		for (int y = drawstart; y < drawend; y++)
+		texPos = (draw.x - height / 2 + lineh / 2) * step;
+		// for (y = draw.x; y < draw.y; y++)
+		//-0.59 180
+		//-0.28 360
+		//0.98  270
+		//-0.44 90
+		for (y = 0; y < height; y++)
 		{
-			texY = (int)texPos & (texHeight - 1);
-			texPos += step;
-			color = map->plane->texture[texnum][texHeight * texY + texX];
-			if (p->side == 1)
-				color = (color >> 1) & 8355711;
+			if (y < draw.x)
+				color = create_trgb(map->ceiling);
+			else if (y > draw.y)
+				color = create_trgb(map->floor);
+			else
+			{
+				tex.y = (int)texPos & (texHeight - 1);
+				// color = map->plane->texture[texnum][texHeight * tex.y + tex.x];
+				// texPos += step;
+				// if (p->side == 0) {
+					// color = 0xFF0000;
+					/*if (p->raydir.y < 0)
+						color = 0x000000;
+					if (p->raydir.y >= 0)
+						color = 0xFFFFFF;*/
+				// }
+				// else {
+				// 	color = 0x0000FF;
+				// 	if (p->raydir.x < 0)
+				// 		color = 0xFFFFFF;
+				// 	if (p->raydir.x >= 0)
+				// 		color = 0x0000FF;
+				// }
+				// printf("raydir.x:%f, raydfr.y:%f\n", p->raydir.x, p->raydir.y);
+				//if (p->side == 1)
+					//color = color / 2;
+				// wall_color_ns(map, map->plane, &color, tex);
+				wall_color_ew(map, map->plane, &color, tex);
+			}
 			map->plane->buff[y][(int)i] = color;
 			p->re_buf = 1;
 		}
-		verLine(map->temp, i, drawstart, drawend, color);
-		verLine(map->temp, i, 0, drawstart, create_rgb(0, 124, 21, 255));
-		verLine(map->temp, i, drawend, height, create_trgb(map->floor));
+		// printf("y = %i\n", y);
+		// verLine(map->img.img, i, draw.x, draw.y, color);
+		// verLine(map->img.img, i, draw.y, height, create_rgb(0, 121, 59, 12));
+		// verLine(map->img.img, i, 0, draw.x, create_rgb(0, 124, 21, 255));
 		// draw(map);
 	}
 }

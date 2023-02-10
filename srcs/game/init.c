@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:01:09 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/10 03:00:07 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/10 17:50:51 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 int	initmlx(t_map *map, t_mlx *mlx, t_data *data, t_temp *temp)
 {
-	int	z;
-
-	z = 0;
 	mlx->mlx = mlx_init();
 	if (!mlx->mlx)
 		return (1);
@@ -26,9 +23,9 @@ int	initmlx(t_map *map, t_mlx *mlx, t_data *data, t_temp *temp)
 	mlx->win = mlx_new_window(mlx->mlx, data->win_w, data->win_h, "cub3D");
 	if (!mlx->win)
 		return (ft_free((void **)&mlx->mlx), 1);
-	temp->img = mlx_new_image(mlx->mlx, data->win_w, data->win_h);
-	temp->addr = mlx_get_data_addr(temp->img, & temp->a, & temp->b, & temp->c);
-	if (!temp->img)
+	map->img.img = mlx_new_image(mlx->mlx, data->win_w, data->win_h);
+	map->img.data = (int *)mlx_get_data_addr(map->img.img, & map->img.bpp, & map->img.size_l, & map->img.endian);
+	if (!map->img.img)
 		return (1);
 
 	return (0);

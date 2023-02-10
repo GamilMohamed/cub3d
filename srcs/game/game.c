@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 01:20:48 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/10 02:59:48 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/10 20:02:37 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,10 +121,10 @@ void	draw(t_map *map)
 	{
 		for (int x = 0; x < map->data->win_w; x++)
 		{
-			map->temp->addr[y * map->data->win_w + x] = map->plane->buff[y][x];
+			map->img.data[y * map->data->win_w + x] = map->plane->buff[y][x];
 		}
 	}
-	mlx_put_image_to_window(map->mlx->mlx, map->mlx->win, map->temp->img, 0, 0);
+	mlx_put_image_to_window(map->mlx->mlx, map->mlx->win, map->img.img, 0, 0);
 }
 
 void	load_texture(t_map *map)
@@ -132,9 +132,9 @@ void	load_texture(t_map *map)
 	t_img	img;
 
 	load_image(map, map->plane->texture[0], "./s/brick2.xpm", &img);
-	load_image(map, map->plane->texture[1], "./s/brick2.xpm", &img);
-	load_image(map, map->plane->texture[2], "./s/brick2.xpm", &img);
-	load_image(map, map->plane->texture[3], "./s/brick2.xpm", &img);
+	load_image(map, map->plane->texture[1], "./s/jmleft.xpm", &img);
+	load_image(map, map->plane->texture[2], "./s/maxou.xpm", &img);
+	load_image(map, map->plane->texture[3], "./s/mgamil.xpm", &img);
 }
 
 void	init_buff(t_plane *p, t_map *map)
@@ -146,14 +146,14 @@ void	init_buff(t_plane *p, t_map *map)
 			p->buff[i][j] = 0;
 		}
 	}
-	p->texture = (int **)malloc(sizeof(int *) * 4 * 4);
+	p->texture = (int **)malloc(sizeof(int *) * (4 * 4));
 	for (int i = 0; i < 4; i++)
 	{
-		p->texture[i] = (int *)malloc(sizeof(int) * (64 * 640));
+		p->texture[i] = (int *)malloc(sizeof(int) * (64 * 64));
 	}
 	for (int i = 0; i < 4; i++)
 	{
-		for (int j = 0; j < (64 * 64 * 4); j++)
+		for (int j = 0; j < (64 * 64); j++)
 		{
 			p->texture[i][j] = 0;
 		}
@@ -165,8 +165,8 @@ void	init_plane(t_plane *plane, t_map *map)
 	orientation(plane, map->data->player);
 	plane->plane.x = 0.66 * (-1 * plane->dir.y);
 	plane->plane.y = 0.66 * (-1 * plane->dir.x);
-	plane->moveSpeed = 0.05;
-	plane->rotSpeed = 0.05;
+	plane->moveSpeed = 0.03;
+	plane->rotSpeed = 0.03;
 	plane->pos = map->pos;
 	plane->re_buf = 0;
 }
@@ -187,7 +187,7 @@ int	ft_game(t_map *map, t_mlx *mlx, t_data *data)
 	mlx_hook(mlx->win, 2, 1L << 0, &key_press, map);
 	mlx_hook(mlx->win, 3, 1L << 1, &key_release, map);
 	mlx_loop(mlx->mlx);
-	mlx_destroy_image(mlx->mlx, map->temp->img);
+	mlx_destroy_image(mlx->mlx, map->img.img);
 	destroywindows(mlx);
 	free(map->plane);
 	free(map->press);

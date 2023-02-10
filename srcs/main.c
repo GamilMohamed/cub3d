@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:31:57 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/09 21:01:36 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/10 18:58:40 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	main(int ac, char **av)
 	map->cubfile = readinfo(map, & map->filefd, av[1]);
 	if (!map->cubfile)
 		return (EXIT_FAILURE);
-	// fillstruct(map);
+	fillstruct(map);
 	ft_free((void **)& map->cubfile);
 	map->cubfile = readmap(map);
 	if (!map->cubfile)
