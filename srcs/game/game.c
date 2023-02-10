@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 01:20:48 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/10 20:02:37 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/10 21:58:37 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,10 +131,10 @@ void	load_texture(t_map *map)
 {
 	t_img	img;
 
-	load_image(map, map->plane->texture[0], "./s/brick2.xpm", &img);
-	load_image(map, map->plane->texture[1], "./s/jmleft.xpm", &img);
-	load_image(map, map->plane->texture[2], "./s/maxou.xpm", &img);
-	load_image(map, map->plane->texture[3], "./s/mgamil.xpm", &img);
+	load_image(map, map->plane->texture[0], map->path[0], &img);
+	load_image(map, map->plane->texture[1], map->path[1], &img);
+	load_image(map, map->plane->texture[2], map->path[2], &img);
+	load_image(map, map->plane->texture[3], map->path[3], &img);
 }
 
 void	init_buff(t_plane *p, t_map *map)
@@ -165,8 +165,8 @@ void	init_plane(t_plane *plane, t_map *map)
 	orientation(plane, map->data->player);
 	plane->plane.x = 0.66 * (-1 * plane->dir.y);
 	plane->plane.y = 0.66 * (-1 * plane->dir.x);
-	plane->moveSpeed = 0.03;
-	plane->rotSpeed = 0.03;
+	plane->moveSpeed = 0.01;
+	plane->rotSpeed = 0.01;
 	plane->pos = map->pos;
 	plane->re_buf = 0;
 }

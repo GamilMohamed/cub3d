@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:06:37 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/10 20:40:59 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/10 21:41:18 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,43 +69,34 @@ void	dda(t_map *map, t_plane *p)
 	}
 }
 
-void	wall_color_ns(t_map *map, t_plane *p, int *color, Luno2i tex)
-{
-	if (p->map.x + (1 - p->step.x) / 2 > p->pos.x)
-	{
-		*color = 0xFFFFFF;
-		// *color = p->texture[3][64 * tex.y + tex.x];
-	}
-	else
-	{
-		*color = 0x000000;
-		// *color = p->texture[2][64 * tex.y + tex.x];
-	}
-	*color = 0xFF0000;
-	*color = (*color >> 1) & 8355711;
-}
-
-void	wall_color_ew(t_map *map, t_plane *p, int *color, Luno2i tex)
+void	wall_color(t_map *map, t_plane *p, int *color, Luno2i tex)
 {
 	if (p->side == 1)
 	{
-		if (p->map.x + (1 - p->step.x) / 2 > p->pos.x)
-		{
-			*color = 0xFF0000;
-			// *color = p->texture[0][64 * tex.y + tex.x];
-		}
+		if (p->raydir.y > 0)
+			*color = p->texture[0][64 * tex.y + tex.x];
 		else
-		{
-			*color = 0x0000FF;
-			// *color = p->texture[1][64 * tex.y + tex.x];
-		}
-		*color = 0x0000FF;
-		*color = (*color >> 1) & 8355711;
+			*color = p->texture[1][64 * tex.y + tex.x];
 	}
 	else
-		wall_color_ns(map, p, color, tex);
+	{
+		if (p->raydir.x > 0)
+			*color = p->texture[3][64 * tex.y + tex.x];
+		else
+			*color = p->texture[2][64 * tex.y + tex.x];
+	}
 }
 
+double	sides(t_plane *p)
+{
+	double pwall;
+	
+	if (p->side == 0)
+		pwall = (p->map.x - p->pos.x + (1 - p->step.x) / 2) / p->raydir.x;
+	else
+		pwall = (p->map.y - p->pos.y + (1 - p->step.y) / 2) / p->raydir.y;
+	return (pwall);
+}
 
 void	draw_rayons_all(t_map *map, t_temp *tmp, t_plane *p)
 {
@@ -120,12 +111,11 @@ void	draw_rayons_all(t_map *map, t_temp *tmp, t_plane *p)
 	double	texPos;
 	int	color;
 
-	int texWidth = 64;  // width of texture
-	int texHeight = 64; // height of texture
+	int texWidth = 64;
+	int texHeight = 64;
 	width = map->data->win_w;
 	height = map->data->win_h;
 	int y;
-	// color = 0xFFF354;
 	if (p->re_buf == 1)
 	{
 		for (int i = 0; i < height; i++)
@@ -141,10 +131,8 @@ void	draw_rayons_all(t_map *map, t_temp *tmp, t_plane *p)
 		init_cast(map, p, i);
 		init_steps(map, p);
 		dda(map, p);
-		if (p->side == 0)
-			pwall = (p->map.x - p->pos.x + (1 - p->step.x) / 2) / p->raydir.x;
-		else
-			pwall = (p->map.y - p->pos.y + (1 - p->step.y) / 2) / p->raydir.y;
+		pwall = sides(map->plane);
+
 		lineh = (int)(height / pwall);
 		draw.x = -lineh / 2 + height / 2;
 		if (draw.x < 0)
@@ -152,18 +140,13 @@ void	draw_rayons_all(t_map *map, t_temp *tmp, t_plane *p)
 		draw.y = lineh / 2 + height / 2;
 		if (draw.y >= height)
 			draw.y = height - 1;
-		// if (p->side == 1)
-		// 	color = 0x21FCaB;
-		/*                                  */
 		texnum = map->map[p->map.x][p->map.y] - '0' - 1;
-
 		double wallX; //where exactly the wall was hit
 		if (p->side == 0)
 			wallX = p->pos.y + pwall * p->raydir.y;
 		else
 			wallX = p->pos.x + pwall * p->raydir.x;
 		wallX -= floor((wallX));
-		printf("wallX = %f\n", wallX);
 		tex.x = (int)(wallX * (double)(texWidth));
 		if (p->side == 0 && p->raydir.x > 0)
 			tex.x = texWidth - tex.x - 1;
@@ -171,11 +154,6 @@ void	draw_rayons_all(t_map *map, t_temp *tmp, t_plane *p)
 			tex.x = texWidth - tex.x - 1;
 		double step = 1.0 * texHeight / lineh;
 		texPos = (draw.x - height / 2 + lineh / 2) * step;
-		// for (y = draw.x; y < draw.y; y++)
-		//-0.59 180
-		//-0.28 360
-		//0.98  270
-		//-0.44 90
 		for (y = 0; y < height; y++)
 		{
 			if (y < draw.x)
@@ -185,35 +163,12 @@ void	draw_rayons_all(t_map *map, t_temp *tmp, t_plane *p)
 			else
 			{
 				tex.y = (int)texPos & (texHeight - 1);
-				// color = map->plane->texture[texnum][texHeight * tex.y + tex.x];
-				// texPos += step;
-				// if (p->side == 0) {
-					// color = 0xFF0000;
-					/*if (p->raydir.y < 0)
-						color = 0x000000;
-					if (p->raydir.y >= 0)
-						color = 0xFFFFFF;*/
-				// }
-				// else {
-				// 	color = 0x0000FF;
-				// 	if (p->raydir.x < 0)
-				// 		color = 0xFFFFFF;
-				// 	if (p->raydir.x >= 0)
-				// 		color = 0x0000FF;
-				// }
-				// printf("raydir.x:%f, raydfr.y:%f\n", p->raydir.x, p->raydir.y);
-				//if (p->side == 1)
-					//color = color / 2;
-				// wall_color_ns(map, map->plane, &color, tex);
-				wall_color_ew(map, map->plane, &color, tex);
+				color = map->plane->texture[texnum][texHeight * tex.y + tex.x];
+				texPos += step;
+				wall_color(map, map->plane, &color, tex);
 			}
 			map->plane->buff[y][(int)i] = color;
 			p->re_buf = 1;
 		}
-		// printf("y = %i\n", y);
-		// verLine(map->img.img, i, draw.x, draw.y, color);
-		// verLine(map->img.img, i, draw.y, height, create_rgb(0, 121, 59, 12));
-		// verLine(map->img.img, i, 0, draw.x, create_rgb(0, 124, 21, 255));
-		// draw(map);
 	}
 }

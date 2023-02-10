@@ -1,9 +1,9 @@
 
-NO Makefile
-SO      Makefile
+NO s/brown.xpm
+SO      s/orange.xpm
 C 171,191,219
-WE                   Makefile                         
-EA Makefile
+WE                   s/light_blue.xpm                         
+EA s/magenta.xpm
 F            42,98,61
 
 
