@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 00:44:27 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/10 19:03:02 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/11 04:42:46 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,11 +104,6 @@ int	filldirections(t_map *map, char **tab)
 		return (ft_freetab(tab), 1);
 	return (0);
 }
-
-// int	updatecolors(t_map *map)
-// {
-
-// }
 
 void	*fillstruct(t_map *map)
 {

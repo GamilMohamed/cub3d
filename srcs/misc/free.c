@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 16:33:17 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/03 02:02:45 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/11 04:48:17 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 void	*ft_freestruct_map(t_map *map)
 {
+	int	i;
+
 	if (!map)
 		return (NULL);
-	ft_free((void **)& map->cubfile);
-	int i = -1;
+	ft_free((void **)&map->cubfile);
+	i = -1;
 	while (++i < 4)
-		ft_free((void **)& map->path[i]);
-	ft_free((void **)& map->data);
-	ft_free((void **)& map->mlx);
-	ft_free((void **)& map);
-	// ft_freerr(map->files);
-	// map->files = 0;
+		ft_free((void **)&map->path[i]);
+	ft_free((void **)&map->data);
+	ft_free((void **)&map->mlx);
+	ft_free((void **)&map);
 	return (NULL);
 }

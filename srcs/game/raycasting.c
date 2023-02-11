@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:06:37 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/10 21:41:18 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/11 05:45:13 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	init_cast(t_map *map, t_plane *plane, int index)
 {
-	plane->camera.x = 2 * index / (double)map->data->win_w - 1;
+	plane->camera.x = 2 * index / (double)WIDTH - 1;
 	plane->raydir.x = plane->dir.x + plane->plane.x * plane->camera.x;
 	plane->raydir.y = plane->dir.y + plane->plane.y * plane->camera.x;
 	plane->map.x = (int)plane->pos.x;
@@ -89,8 +89,8 @@ void	wall_color(t_map *map, t_plane *p, int *color, Luno2i tex)
 
 double	sides(t_plane *p)
 {
-	double pwall;
-	
+	double	pwall;
+
 	if (p->side == 0)
 		pwall = (p->map.x - p->pos.x + (1 - p->step.x) / 2) / p->raydir.x;
 	else
@@ -98,77 +98,86 @@ double	sides(t_plane *p)
 	return (pwall);
 }
 
+Luno2i	get_draw(int lineh)
+{
+	Luno2i	draw;
+
+	draw.x = -lineh / 2 + HEIGHT / 2;
+	if (draw.x < 0)
+		draw.x = 0;
+	draw.y = lineh / 2 + HEIGHT / 2;
+	if (draw.y >= HEIGHT)
+		draw.y = HEIGHT - 1;
+	return (draw);
+}
+
+double	get_wall_x(t_map *map, t_plane *p, double pwall)
+{
+	double	wallx;
+
+	if (p->side == 0)
+		wallx = p->pos.y + pwall * p->raydir.y;
+	else
+		wallx = p->pos.x + pwall * p->raydir.x;
+	wallx -= floor(wallx);
+	return (wallx);
+}
+
+int	get_tex_x(t_plane *p, double wallx)
+{
+	int	val;
+
+	val = (int)(wallx * (double)(64));
+	if (p->side == 0 && p->raydir.x > 0)
+		val = 64 - val - 1;
+	if (p->side == 1 && p->raydir.y < 0)
+		val = 64 - val - 1;
+	return (val);
+}
+
+void	draw_rayons_all_2(t_map *map, t_drawrays *r, t_plane *p, int i)
+{
+	int	y;
+
+	y = -1;
+	r->step = 1.0 * 64 / r->lineh;
+	r->texPos = (r->draw.x - HEIGHT / 2 + r->lineh / 2) * r->step;
+	while (++y < HEIGHT)
+	{
+		if (y < r->draw.x)
+			r->color = create_trgb(map->ceiling);
+		else if (y > r->draw.y)
+			r->color = create_trgb(map->floor);
+		else
+		{
+			r->tex.y = (int)r->texPos & (64 - 1);
+			r->color = map->plane->texture[r->texnum][64 * r->tex.y + r->tex.x];
+			r->texPos += r->step;
+			wall_color(map, map->plane, &r->color, r->tex);
+		}
+		map->plane->buff[y][(int)i] = r->color;
+		p->re_buf = 1;
+	}
+}
+
 void	draw_rayons_all(t_map *map, t_temp *tmp, t_plane *p)
 {
-	int		width;
-	int		height;
-	double	pwall;
-	int		lineh;
-	int		texnum;
-	Luno2i 	tex;
-	Luno2i	draw;
-	double	step;
-	double	texPos;
-	int	color;
+	t_drawrays	r;
+	int			y;
 
-	int texWidth = 64;
-	int texHeight = 64;
-	width = map->data->win_w;
-	height = map->data->win_h;
-	int y;
 	if (p->re_buf == 1)
-	{
-		for (int i = 0; i < height; i++)
-		{
-			for (int j = 0; j < width; j++)
-			{
-				p->buff[i][j] = 0;
-			}
-		}
-	}
-	for (double i = 0; i < width; i++)
+		ft_memset(&p->buff, 0, sizeof(int) * WIDTH * HEIGHT);
+	for (double i = 0; i < WIDTH; i++)
 	{
 		init_cast(map, p, i);
 		init_steps(map, p);
 		dda(map, p);
-		pwall = sides(map->plane);
-
-		lineh = (int)(height / pwall);
-		draw.x = -lineh / 2 + height / 2;
-		if (draw.x < 0)
-			draw.x = 0;
-		draw.y = lineh / 2 + height / 2;
-		if (draw.y >= height)
-			draw.y = height - 1;
-		texnum = map->map[p->map.x][p->map.y] - '0' - 1;
-		double wallX; //where exactly the wall was hit
-		if (p->side == 0)
-			wallX = p->pos.y + pwall * p->raydir.y;
-		else
-			wallX = p->pos.x + pwall * p->raydir.x;
-		wallX -= floor((wallX));
-		tex.x = (int)(wallX * (double)(texWidth));
-		if (p->side == 0 && p->raydir.x > 0)
-			tex.x = texWidth - tex.x - 1;
-		if (p->side == 1 && p->raydir.y < 0)
-			tex.x = texWidth - tex.x - 1;
-		double step = 1.0 * texHeight / lineh;
-		texPos = (draw.x - height / 2 + lineh / 2) * step;
-		for (y = 0; y < height; y++)
-		{
-			if (y < draw.x)
-				color = create_trgb(map->ceiling);
-			else if (y > draw.y)
-				color = create_trgb(map->floor);
-			else
-			{
-				tex.y = (int)texPos & (texHeight - 1);
-				color = map->plane->texture[texnum][texHeight * tex.y + tex.x];
-				texPos += step;
-				wall_color(map, map->plane, &color, tex);
-			}
-			map->plane->buff[y][(int)i] = color;
-			p->re_buf = 1;
-		}
+		r.pwall = sides(map->plane);
+		r.lineh = (int)(HEIGHT / r.pwall);
+		r.draw = get_draw(r.lineh);
+		r.texnum = map->map[p->map.x][p->map.y] - '0' - 1;
+		r.wallx = get_wall_x(map, p, r.pwall);
+		r.tex.x = get_tex_x(p, r.wallx);
+		draw_rayons_all_2(map, &r, p, i);
 	}
 }

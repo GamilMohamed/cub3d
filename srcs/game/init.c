@@ -6,27 +6,82 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:01:09 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/10 17:50:51 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/11 04:12:55 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void	orientation(t_plane *plane, char player)
+{
+	if (player == 'N')
+	{
+		plane->dir.x = 0;
+		plane->dir.y = -1;
+	}
+	else if (player == 'S')
+	{
+		plane->dir.x = 0;
+		plane->dir.y = 1;
+	}
+	else if (player == 'E')
+	{
+		plane->dir.x = 1;
+		plane->dir.y = 0;
+	}
+	else if (player == 'W')
+	{
+		plane->dir.x = -1;
+		plane->dir.y = 0;
+	}
+}
 
 int	initmlx(t_map *map, t_mlx *mlx, t_data *data, t_temp *temp)
 {
 	mlx->mlx = mlx_init();
 	if (!mlx->mlx)
 		return (1);
-	data->win_h = 540;
-	data->win_w = 960;
-	// mlx_get_screen_size(mlx->mlx, &data->win_w, &data->win_h);
-	mlx->win = mlx_new_window(mlx->mlx, data->win_w, data->win_h, "cub3D");
+	mlx->win = mlx_new_window(mlx->mlx, WIDTH, HEIGHT, "cub3D");
 	if (!mlx->win)
 		return (ft_free((void **)&mlx->mlx), 1);
-	map->img.img = mlx_new_image(mlx->mlx, data->win_w, data->win_h);
-	map->img.data = (int *)mlx_get_data_addr(map->img.img, & map->img.bpp, & map->img.size_l, & map->img.endian);
+	map->img.img = mlx_new_image(mlx->mlx, WIDTH, HEIGHT);
 	if (!map->img.img)
 		return (1);
-
+	map->img.data = (int *)mlx_get_data_addr(map->img.img, &map->img.bpp,
+			&map->img.size_l, &map->img.endian);
 	return (0);
+}
+
+void	init_buff(t_plane *p, t_map *map)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	while (++i < HEIGHT)
+	{
+		j = -1;
+		while (++j < WIDTH)
+			p->buff[i][j] = 0;
+	}
+	p->texture = (int **)malloc(sizeof(int *) * (4 * 4));
+	i = -1;
+	while (++i < 4)
+	{
+		j = -1;
+		p->texture[i] = (int *)malloc(sizeof(int) * (64 * 64));
+		while (++j < (64 * 64))
+			p->texture[i][j] = 0;
+	}
+}
+
+void	init_plane(t_plane *plane, t_map *map)
+{
+	orientation(plane, map->data->player);
+	plane->plane.x = 0.66 * (-1 * plane->dir.y);
+	plane->plane.y = 0.66 * (-1 * plane->dir.x);
+	plane->moveSpeed = 0.01;
+	plane->rotSpeed = 0.01;
+	plane->pos = map->pos;
+	plane->re_buf = 0;
 }

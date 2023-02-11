@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:31:57 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/11 00:15:34 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/11 04:13:22 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	ft_printstruct(t_map *map)
 	i = -1;
 	while (++i < 3)
 		ft_printf("%i,", map->floor[i]);
-
 	printf("\t\tMAP\t\t\n");
 	ft_printmap(map->map, 0);
 	ft_printmap(map->map, 1);
@@ -59,9 +58,7 @@ void	get_positions(t_map *map, t_data *data)
 		}
 		i++;
 	}
-
 }
-
 
 int	main(int ac, char **av)
 {
@@ -74,22 +71,20 @@ int	main(int ac, char **av)
 	map = ft_calloc(sizeof(t_map) * 1, 1);
 	map->data = ft_calloc(sizeof(t_data) * 1, 1);
 	map->mlx = ft_calloc(sizeof(t_mlx) * 1, 1);
-	map->cubfile = readinfo(map, & map->filefd, av[1]);
+	map->cubfile = readinfo(map, &map->filefd, av[1]);
 	if (!map->cubfile)
 		return (EXIT_FAILURE);
 	fillstruct(map);
-	ft_free((void **)& map->cubfile);
+	ft_free((void **)&map->cubfile);
 	map->cubfile = readmap(map);
 	if (!map->cubfile)
 		return (ft_error(ERR_NO_MAP, YELLOW, map));
 	checkmap(map);
-	get_positions(map, & data);
-	// ft_printstruct(map);
-	// ft_printmap(map->map, 0);
+	get_positions(map, &data);
+	ft_printstruct(map);
+	ft_printmap(map->map, 0);
 	ft_game(map, map->mlx, map->data);
 	ft_freetab(map->map);
 	ft_freestruct_map(map);
-	// free(map->data);
-	// free(map->mlx);
 	return (0);
 }

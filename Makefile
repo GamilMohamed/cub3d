@@ -21,10 +21,11 @@ SRCS_NAMES		=	main.c \
 					game/game.c \
 					game/calc.c \
 					game/color.c \
-					game/draw.c \
 					game/init.c \
 					game/move.c \
 					game/raycasting.c \
+					game/textures.c \
+					game/key.c \
 
 
 OBJS_NAMES		=	${SRCS_NAMES:.c=.o}

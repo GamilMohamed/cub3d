@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 23:06:31 by mgamil            #+#    #+#             */
-/*   Updated: 2023/01/30 16:55:06 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/11 04:43:24 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,3 @@ void	*closefile(t_map *map)
 	ft_freestruct_map(map);
 	return (NULL);
 }
-

@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 00:25:19 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/11 00:16:01 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/11 04:29:54 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 char	*multiplicator(t_map *map, char *src, char *dst, int size)
 {
-	int	i;
-	int	j;
-	int	count;
+	int			i;
+	int			j;
+	int			count;
 	static int	stop;
 
 	i = -1;
@@ -65,7 +65,6 @@ char	**expandmap(t_map *map)
 	map->height *= SIZE;
 	return (tab);
 }
-
 
 int	checkaround(t_map *map, int x, int y, char **tab)
 {
@@ -120,13 +119,14 @@ void	check_surroundings(t_map *map)
 	int		size;
 	int		i;
 	int		j;
-	int		total = 0;
+	int		total;
 
+	total = 0;
 	i = -1;
 	map->map = ft_specialit(map->cubfile, "\n", map->maxlen + 2);
 	map->height = ft_tablen(map->map);
 	map->maxlen += 2;
-	// ft_printmap(map->map, 1);
+	ft_printmap(map->map, 1);
 	while (++i < map->height)
 	{
 		j = -1;
@@ -165,5 +165,5 @@ void	checkmap(t_map *map)
 {
 	checkchars(map);
 	check_surroundings(map);
-	map->map = expandmap(map);
+	// map->map = expandmap(map);
 }

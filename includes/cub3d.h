@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:33:03 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/11 02:21:48 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/11 05:39:08 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,9 @@
 
 # define SIZE 1
 
+# define WIDTH 960
+# define HEIGHT 540
+
 # define W 119
 # define A 97
 # define S 115
@@ -71,17 +74,32 @@ typedef struct t_data	t_data;
 typedef double Luno2f	__attribute__((ext_vector_type(2)));
 typedef int Luno2i		__attribute__((ext_vector_type(2)));
 
-typedef struct	s_img
+typedef struct t_drawrays
 {
-	void	*img;
-	int		*data;
+	double				pwall;
+	int					lineh;
+	int					texnum;
+	Luno2i				tex;
+	Luno2i				draw;
+	double				texPos;
+	int					color;
+	int					y;
+	double				step;
+	double				wallx;
 
-	int		size_l;
-	int		bpp;
-	int		endian;
-	int		img_width;
-	int		img_height;
-}				t_img;
+}						t_drawrays;
+
+typedef struct s_img
+{
+	void				*img;
+	int					*data;
+
+	int					size_l;
+	int					bpp;
+	int					endian;
+	int					w;
+	int					h;
+}						t_img;
 
 typedef struct t_press
 {
@@ -228,6 +246,8 @@ void					ft_printlist(t_rr *temp);
 // init.c
 int						initmlx(t_map *map, t_mlx *mlx, t_data *data,
 							t_temp *temp);
+void					init_plane(t_plane *plane, t_map *map);
+void					init_buff(t_plane *p, t_map *map);
 
 // color.c
 int						create_rgb(int t, int a, int b, int c);
@@ -246,13 +266,14 @@ double					calc_radius(double angle);
 Luno2f					normalize(Luno2f coords);
 
 // move.c
-void					move_to_pos(t_map *map, Luno2f norm, Luno2f end);
+int						key_release(int keycode, t_map *map);
+int						key_press(int keycode, t_map *map);
 int						move(t_map *map);
-// int						move(int key, t_map *map);
 
 // game.c
 void					printcoords(Luno2i val, Luno2f val2);
-void					destroywindows(t_mlx *mlx);
+void					destroywindows(t_mlx *mlx, t_map *map);
+
 int						ft_game(t_map *map, t_mlx *mlx, t_data *data);
 
 // draw.c
@@ -260,11 +281,12 @@ int						condition(int x, int y, int size, t_map *map);
 void					draw_circle(t_temp *tmp, Luno2f coords, int r);
 Luno2f					draw_line_rays(t_map *map, Luno2f end, Luno2f coords,
 							bool print);
+void					load_image(t_map *map, int *texture, char *path,
+							t_img *img);
+void					draw(t_map *map);
+void					load_texture(t_map *map);
 
 void					my_mlx_pixel_put(t_temp *mp, int x, int y, int color);
-// void	my_mlx_pixel_put(void *stur, int x, int y, int color);
-
-// void	my_mlx_pixel_put(t_temp *temp, int x, int y, int color);
 Luno2f					docircle(t_temp *temp, Luno2f coords, int ray);
 void					pixel(t_temp *temp, Luno2f coords, int color);
 void					camera_rays(t_temp *tmp, t_map *map, Luno2f coords,
@@ -284,7 +306,6 @@ void					camera_plane(t_map *map, t_plane *p, int x);
 void					print_to_map(t_map *map);
 void					init_cast(t_map *map, t_plane *plane, int index);
 
-void	draw(t_map *map);
-
+void					draw(t_map *map);
 
 #endif

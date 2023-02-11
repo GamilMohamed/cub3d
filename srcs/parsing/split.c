@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 20:03:02 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/02 18:21:49 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/11 04:29:48 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ char	*ft_strtsub(char const *str, int start, int end, int *size)
 	char	*var;
 
 	i = 0;
-
 	var = ft_calloc(sizeof(char) * ((*size) + 1), 1);
 	if (!var)
 		return (NULL);
