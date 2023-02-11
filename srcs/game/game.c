@@ -6,50 +6,11 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 01:20:48 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/10 21:58:37 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/11 02:53:34 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-void	direction_zero(t_plane *plane, char player)
-{
-	if (player == 'N' || player == 'S')
-	{
-		plane->dir.y = 0;
-		plane->plane.x = 0.66;
-	}
-	else if (player == 'E' || player == 'W')
-	{
-		plane->dir.x = 0;
-		plane->plane.y = 0.66;
-	}
-}
-
-void	orientation(t_plane *plane, char player)
-{
-	if (player == 'N')
-	{
-		plane->dir.x = 0;
-		plane->dir.y = -1;
-	}
-	else if (player == 'S')
-	{
-		plane->dir.x = 0;
-		plane->dir.y = 1;
-	}
-	else if (player == 'E')
-	{
-		plane->dir.x = 1;
-		plane->dir.y = 0;
-	}
-	else if (player == 'W')
-	{
-		plane->dir.x = -1;
-		plane->dir.y = 0;
-	}
-	//direction_zero(plane, player);
-}
 
 void	destroywindows(t_mlx *mlx)
 {
@@ -103,8 +64,10 @@ int	key_press(int keycode, t_map *map)
 
 void	load_image(t_map *map, int *texture, char *path, t_img *img)
 {
-	img->img = mlx_xpm_file_to_image(map->mlx->mlx, path, &img->img_width, &img->img_height);
-	img->data = (int *)mlx_get_data_addr(img->img, &img->bpp, &img->size_l, &img->endian);
+	img->img = mlx_xpm_file_to_image(map->mlx->mlx, path, &img->img_width,
+			&img->img_height);
+	img->data = (int *)mlx_get_data_addr(img->img, &img->bpp, &img->size_l,
+			&img->endian);
 	for (int y = 0; y < img->img_height; y++)
 	{
 		for (int x = 0; x < img->img_width; x++)
@@ -131,14 +94,17 @@ void	load_texture(t_map *map)
 {
 	t_img	img;
 
-	load_image(map, map->plane->texture[0], map->path[0], &img);
-	load_image(map, map->plane->texture[1], map->path[1], &img);
-	load_image(map, map->plane->texture[2], map->path[2], &img);
-	load_image(map, map->plane->texture[3], map->path[3], &img);
+	load_image(map, map->plane->texture[2], map->path[0], &img); // n
+	load_image(map, map->plane->texture[1], map->path[2], &img); // s
+	load_image(map, map->plane->texture[0], map->path[3], &img); // w
+	load_image(map, map->plane->texture[3], map->path[1], &img); // e
 }
 
 void	init_buff(t_plane *p, t_map *map)
 {
+	int	i;
+	int	j;
+
 	for (int i = 0; i < map->data->win_h; i++)
 	{
 		for (int j = 0; j < map->data->win_w; j++)
@@ -147,16 +113,37 @@ void	init_buff(t_plane *p, t_map *map)
 		}
 	}
 	p->texture = (int **)malloc(sizeof(int *) * (4 * 4));
-	for (int i = 0; i < 4; i++)
+	i = -1;
+	while (++i < 4)
 	{
 		p->texture[i] = (int *)malloc(sizeof(int) * (64 * 64));
-	}
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < (64 * 64); j++)
-		{
+		j = -1;
+		while (++j < (64 * 64))
 			p->texture[i][j] = 0;
-		}
+	}
+}
+
+void	orientation(t_plane *plane, char player)
+{
+	if (player == 'N')
+	{
+		plane->dir.x = -1;
+		plane->dir.y = 0;
+	}
+	else if (player == 'S')
+	{
+		plane->dir.x = 1;
+		plane->dir.y = 0;
+	}
+	else if (player == 'E')
+	{
+		plane->dir.x = 0;
+		plane->dir.y = 1;
+	}
+	else if (player == 'W')
+	{
+		plane->dir.x = 0;
+		plane->dir.y = -1;
 	}
 }
 
@@ -164,6 +151,9 @@ void	init_plane(t_plane *plane, t_map *map)
 {
 	orientation(plane, map->data->player);
 	plane->plane.x = 0.66 * (-1 * plane->dir.y);
+	plane->plane.y = 0.66 * (-1 * plane->dir.x);
+	if (plane->dir.x == 0)
+		plane->plane.x = 0.66 * plane->dir.y;
 	plane->plane.y = 0.66 * (-1 * plane->dir.x);
 	plane->moveSpeed = 0.01;
 	plane->rotSpeed = 0.01;
@@ -182,10 +172,9 @@ int	ft_game(t_map *map, t_mlx *mlx, t_data *data)
 	init_buff(map->plane, map);
 	load_texture(map);
 	draw_rayons_all(map, map->temp, map->plane);
-	// mlx_put_image_to_window(mlx->mlx, mlx->win, map->temp->img, 0, 0);
-	mlx_loop_hook(mlx->mlx, &move, map);
 	mlx_hook(mlx->win, 2, 1L << 0, &key_press, map);
 	mlx_hook(mlx->win, 3, 1L << 1, &key_release, map);
+	mlx_loop_hook(mlx->mlx, &move, map);
 	mlx_loop(mlx->mlx);
 	mlx_destroy_image(mlx->mlx, map->img.img);
 	destroywindows(mlx);
@@ -208,6 +197,22 @@ ETAPE 4: la ligne doit mtn sarreter au 1er mur
 ETAPE 5: ligne x fov
 
 
+
+
+*/
+
+/*
+
+West regarde comme le nord
+Est regarde comme le sud
+sud regarde comme le west
+nord regarde comme le west
+
+etape 2
+nord regarde comme le west
+West regarde comme le nord
+sud regarde comme le west
+Est regarde comme le sud
 
 
 */

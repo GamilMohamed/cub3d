@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:31:57 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/10 18:58:40 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/11 00:15:34 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@ int	main(int ac, char **av)
 		return (ft_error(ERR_NO_MAP, YELLOW, map));
 	checkmap(map);
 	get_positions(map, & data);
-	ft_printstruct(map);
-	ft_printmap(map->map, 0);
+	// ft_printstruct(map);
+	// ft_printmap(map->map, 0);
 	ft_game(map, map->mlx, map->data);
 	ft_freetab(map->map);
 	ft_freestruct_map(map);

@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:33:03 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/09 21:15:37 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/11 02:21:48 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@
 # define ERR_KEYS "invalid keys!"
 # define ERR_FDFAIL "open file failed!"
 
-# define SIZE 2
+# define SIZE 1
 
 # define W 119
 # define A 97
@@ -96,6 +96,9 @@ typedef struct t_press
 	int					esc;
 	int					q;
 	int					z;
+	int					mouse;
+	int					mouse_x;
+	int					mouse_y;
 }						t_press;
 
 typedef struct s_plane
