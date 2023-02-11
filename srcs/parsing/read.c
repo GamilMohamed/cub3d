@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 00:42:13 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/08 04:47:44 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/11 21:19:49 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,8 @@ char	*readmap(t_map *map)
 {
 	char	*buff;
 	char	*ret;
-	int		i;
 	int		x;
 
-	i = 0;
-	x = 0;
 	buff = get_next_line(map->filefd, 0);
 	if (!buff)
 		return (ft_error("fail", YELLOW, map), NULL);
@@ -71,8 +68,7 @@ char	*readmap(t_map *map)
 	while (buff)
 	{
 		if (lineempty(buff))
-			return (free(buff), free(ret), ft_error(ERR_INVALID, YELLOW, map),
-				NULL);
+			return (free(buff), free(ret), ft_error(ERR_INVALID, YELLOW, map));
 		x = ft_strlen(buff);
 		if (x > map->maxlen)
 			map->maxlen = x - 1;
@@ -80,6 +76,5 @@ char	*readmap(t_map *map)
 		ft_free((void **)&buff);
 		buff = get_next_line(map->filefd, 0);
 	}
-	close(map->filefd);
-	return (ret);
+	return (close(map->filefd), ret);
 }

@@ -6,13 +6,13 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 23:06:31 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/11 04:43:24 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/11 21:20:00 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	ft_error(char *str, char *color, t_map *map)
+void	*ft_error(char *str, char *color, t_map *map)
 {
 	ft_printf("%s%s%s\n", color, str, RESET);
 	closefile(map);

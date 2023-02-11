@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:31:57 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/11 04:13:22 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/11 21:23:36 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ void	get_positions(t_map *map, t_data *data)
 		{
 			if (ft_strchr("NSEW", map->map[i][j]))
 			{
-				map->data->player_pos.x = i + 0.5;
-				map->data->player_pos.y = j + 0.5;
+				data->player_pos.x = i + 0.5;
+				data->player_pos.y = j + 0.5;
 				map->pos.x = (double)i + 0.5;
 				map->pos.y = (double)j + 0.5;
 				map->data->player = map->map[i][j];
@@ -63,7 +63,6 @@ void	get_positions(t_map *map, t_data *data)
 int	main(int ac, char **av)
 {
 	t_map	*map;
-	t_mlx	mlx;
 	t_data	data;
 
 	if (checkextension(ac, av[1]))
@@ -78,13 +77,13 @@ int	main(int ac, char **av)
 	ft_free((void **)&map->cubfile);
 	map->cubfile = readmap(map);
 	if (!map->cubfile)
-		return (ft_error(ERR_NO_MAP, YELLOW, map));
+		return (ft_error(ERR_NO_MAP, YELLOW, map), 1);
 	checkmap(map);
 	get_positions(map, &data);
-	ft_printstruct(map);
-	ft_printmap(map->map, 0);
 	ft_game(map, map->mlx, map->data);
 	ft_freetab(map->map);
 	ft_freestruct_map(map);
 	return (0);
 }
+// ft_printstruct(map);
+// ft_printmap(map->map, 0);

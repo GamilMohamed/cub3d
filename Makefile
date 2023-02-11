@@ -26,6 +26,7 @@ SRCS_NAMES		=	main.c \
 					game/raycasting.c \
 					game/textures.c \
 					game/key.c \
+					game/utils.c \
 
 
 OBJS_NAMES		=	${SRCS_NAMES:.c=.o}
@@ -46,7 +47,7 @@ CC				=	cc
 
 CDFLAGS 		= 	-MMD -MP
 
-CFLAGS			=	-g3 # -Wall -Werror -Wextra
+CFLAGS			=	-g3 -Wall -Werror -Wextra
 
 MAKEFLAGS		=	--no-print-directory
 

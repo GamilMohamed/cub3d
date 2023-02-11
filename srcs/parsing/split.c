@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 20:03:02 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/11 04:29:48 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/11 20:45:10 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char	**to_tab(char **tab, char const *s, char *charset, int *tabint[2])
 		start = i;
 		while (s[i] && (!ft_strchr(charset, s[i])))
 			i++;
-			tab[index] = ft_strtsub(s, start, i, tabint[1]);
+		tab[index] = ft_strtsub(s, start, i, tabint[1]);
 		if (!tab[index])
 			return (ft_freetab(tab), NULL);
 		index++;
@@ -85,7 +85,6 @@ char	**ft_specialit(char const *s, char *charset, int size)
 	tab = ft_calloc(sizeof(char *) * (n + 2), 1);
 	if (!tab)
 		return (NULL);
-	ft_printf("size=%i\n", size);
 	tab = to_tab(tab, s, charset, (int *[2]){& n, & size});
 	*(tab + n + 1) = NULL;
 	return (tab);

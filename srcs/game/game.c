@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 01:20:48 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/11 04:02:58 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/11 20:52:12 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,16 @@ void	destroywindows(t_mlx *mlx, t_map *map)
 
 int	ft_game(t_map *map, t_mlx *mlx, t_data *data)
 {
+	(void)data;
 	map->temp = ft_calloc(sizeof(t_temp), 1);
 	map->plane = ft_calloc(sizeof(t_plane), 1);
 	map->press = ft_calloc(sizeof(t_press), 1);
-	if (initmlx(map, mlx, data, map->temp))
+	if (initmlx(map, mlx))
 		return (1);
 	init_plane(map->plane, map);
-	init_buff(map->plane, map);
+	init_buff(map->plane);
 	load_texture(map);
-	draw_rayons_all(map, map->temp, map->plane);
+	draw_rayons_all(map, map->plane);
 	mlx_loop_hook(mlx->mlx, &move, map);
 	mlx_hook(mlx->win, 2, 1L << 0, &key_press, map);
 	mlx_hook(mlx->win, 3, 1L << 1, &key_release, map);
