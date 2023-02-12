@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 23:06:31 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/11 21:20:00 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/12 20:34:25 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	*ft_error(char *str, char *color, t_map *map)
 {
 	ft_printf("%s%s%s\n", color, str, RESET);
 	closefile(map);
-	ft_freestruct_map(map);
 	exit (1);
 }
 

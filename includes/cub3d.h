@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:33:03 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/11 21:20:09 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/12 20:32:54 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@
 # define ERR_INVALID "invalid map!"
 # define ERR_KEYS "invalid keys!"
 # define ERR_FDFAIL "open file failed!"
+# define ERR_MAP "map has leaks"
 
 # define SIZE 1
 

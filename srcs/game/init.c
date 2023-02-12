@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:01:09 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/11 21:10:31 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/12 16:44:36 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ void	init_plane(t_plane *plane, t_map *map)
 	orientation(plane, map->data->player);
 	plane->plane.x = 0.66 * (-1 * plane->dir.y);
 	plane->plane.y = 0.66 * (-1 * plane->dir.x);
-	plane->movespeed = 0.05;
-	plane->rotspeed = 0.05;
+	plane->movespeed = 0.09;
+	plane->rotspeed = 0.09;
 	plane->pos = map->pos;
 	plane->re_buf = 0;
 }

@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 00:25:19 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/11 21:20:46 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/12 20:33:22 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ void	check_surroundings(t_map *map)
 		while (++j < map->maxlen)
 			if (map->map[i][j] == ' ')
 				if (checkaround(map, i, j, map->map))
-					total++;
+					ft_error(ERR_MAP, YELLOW, map);
 	}
 }
 
