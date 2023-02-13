@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
+/*   cub3d_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:33:03 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/13 01:21:06 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/13 05:05:43 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ typedef struct t_map	t_map;
 typedef struct t_mlx	t_mlx;
 typedef struct t_data	t_data;
 
-typedef double			t_luno2f	__attribute__((ext_vector_type(2)));
-typedef int				t_luno2i	__attribute__((ext_vector_type(2)));
+typedef double t_luno2f	__attribute__((ext_vector_type(2)));
+typedef int t_luno2i	__attribute__((ext_vector_type(2)));
 
 typedef struct t_drawrays
 {
@@ -89,11 +89,23 @@ typedef struct t_drawrays
 
 }						t_drawrays;
 
+typedef struct s_help
+{
+	void				*img;
+	void				*help;
+	int					*data;
+
+	int					size_l;
+	int					bpp;
+	int					endian;
+	int					w;
+	int					h;
+}						t_help;
+
 typedef struct s_img
 {
 	void				*img;
 	int					*data;
-
 	int					size_l;
 	int					bpp;
 	int					endian;
@@ -114,9 +126,12 @@ typedef struct t_press
 	int					esc;
 	int					q;
 	int					z;
+	int					m;
 	int					mouse;
 	int					mouse_x;
 	int					mouse_y;
+
+	int					h;
 }						t_press;
 
 typedef struct s_plane
@@ -142,6 +157,7 @@ typedef struct s_plane
 typedef struct s_temp
 {
 	t_map				*map;
+	void				*win;
 	void				*img;
 	char				*addr;
 	int					a;
@@ -181,6 +197,7 @@ typedef struct t_map
 	double				rotation;
 	t_press				*press;
 	t_img				img;
+	t_img				help;
 }						t_map;
 
 typedef struct t_mlx
@@ -229,7 +246,7 @@ int						filldirections(t_map *map, char **tab);
 void					*fillstruct(t_map *map);
 /*		misc			*/
 //error.c
-void	*ft_error(char *str, char *color, t_map *map);
+void					*ft_error(char *str, char *color, t_map *map);
 // int						ft_error(char *str, char *color, t_map *map);
 void					*closefile(t_map *map);
 //free.c
@@ -260,7 +277,10 @@ void					backgroundcolor(t_map *map, t_mlx *mlx, t_data *data,
 
 // raycasting.c
 void					draw_rayons(t_temp *tmp, t_luno2f coords, t_map *map);
-void					draw_rayons_all(t_map *map, t_plane *p);
+// void					draw_rayons_all(t_map *map, t_plane *p);
+void					draw_rayons_all_2(t_map *map, t_drawrays *r, t_plane *p,
+							int i, int max);
+void					draw_rayons_all(t_map *map, t_plane *p, int max);
 
 // calc.c
 t_luno2i				convert_d_to_i(t_luno2f src);
@@ -285,12 +305,15 @@ int						condition(int x, int y, int size, t_map *map);
 void					draw_circle(t_temp *tmp, t_luno2f coords, int r);
 t_luno2f				draw_line_rays(t_map *map, t_luno2f end,
 							t_luno2f coords, bool print);
-// void					load_image(t_map *map, int *texture, char *path,
-							// t_img *img);
-int	load_image(t_map *map, int *texture, char *path, t_img *img);
+int						load_image(t_map *map, int *texture, char *path,
+							t_img *img);
 
 void					draw(t_map *map);
 void					load_texture(t_map *map);
+
+// void	my_mlx_pixel_put(t_temp temp, int x, int y, int color);
+// void	pixel(t_temp temp, t_luno2f coords, int color);
+
 
 void					my_mlx_pixel_put(t_temp *mp, int x, int y, int color);
 t_luno2f				docircle(t_temp *temp, t_luno2f coords, int ray);
@@ -301,6 +324,8 @@ void					camera_rays(t_temp *tmp, t_map *map, t_luno2f coords,
 // minimap.c
 void					map_to_minimap(t_map *map, t_data *data, t_temp *temp,
 							int size);
+// void	map_to_minimap(t_map *map, t_data *data, t_temp temp, int size);
+
 void					camera_rays(t_temp *tmp, t_map *map, t_luno2f coords,
 							double size);
 void					init_minimap(t_map *map, t_mlx *mlx, t_data *data);
@@ -319,5 +344,7 @@ t_luno2i				get_draw(int lineh);
 int						get_tex_x(t_plane *p, double wallx);
 void					wall_color(t_plane *p, int *color, t_luno2i tex);
 double					get_wall_x(t_plane *p, double pwall);
+
+void					print_help(t_map *map);
 
 #endif

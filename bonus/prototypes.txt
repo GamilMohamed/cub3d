@@ -1,0 +1,55 @@
+// init.c
+int	initmlx(t_map *map, t_mlx *mlx, t_data *data, t_temp *temp);
+
+// color.c
+int	create_rgb(int t, int a, int b, int c);
+int	create_trgb(int tab[3]);
+void	backgroundcolor(t_map *map, t_mlx *mlx, t_data *data, t_temp *temp);
+
+// raycasting.c
+void	calc_rayons(t_temp *tmp, t_luno2f coords, t_map *map);
+void	verLine(void *addr, int x, int y1, int y2, int color);
+void	walldrawing(t_map *map, t_luno2f test, t_luno2f coords, double i, t_plane *p);
+void	draw_rayons_all(t_temp *tmp, t_luno2f coords, t_map *map);
+void	camera_rays(t_temp *tmp, t_map *map, t_luno2f coords, double size);
+
+// calc.c
+t_luno2i convert_d_to_i(t_luno2f src);
+t_luno2f	calc_rotation(t_luno2f coords, int r, double rad, int m);
+double	calc_radius(double angle);
+t_luno2f	normalize(t_luno2f coords);
+
+// move.c
+void	move_to_pos(t_map *map, t_luno2f norm, t_luno2f end);
+
+// game.c
+void	draw_line_rays_main(t_temp *temp, t_luno2f end, t_luno2f coords, bool print);
+void	printcoords(t_luno2i val, t_luno2f val2);
+void	make_plane(t_map *map, t_temp *mini);
+void	print_game(t_map *map, t_mlx *mlx, t_data *data, t_temp *temp);
+void print_to_map(void *ptr);
+void	test(void *param);
+int	ft_game(t_map *map, t_mlx *mlx, t_data *data);
+
+// draw.c
+int		condition(int x, int y, int size, char **map);
+void	draw_circle(t_temp *tmp, t_luno2f coords, int r);
+t_luno2f	draw_line_rays(t_map *map, t_luno2f end, t_luno2f coords, bool print);
+void	my_mlx_pixel_put(t_temp *temp, int x, int y, int color);
+t_luno2f	docircle(t_temp *temp, t_luno2f coords, int ray);
+void	pixel(t_temp *temp, t_luno2f coords, int color);
+
+// minimap.c
+void	map_to_minimap(t_map *map, t_data *data, t_temp *temp, int size);
+void	init_minimap(t_map *map, t_mlx *mlx, t_data *data);
+void	fill_minimap(t_map *map, t_mlx *mlx, t_data *data);
+
+
+Copy paste these lines to your shell_config file for easier use
+	#prototypes generator
+	make_ptt() {make re -C ~/path/to/prototypes_generator_directory}
+	ptt() {~/path/to/prototypes_executable $@}
+
+#############################################
+# Léonard KRIEF        lkrief@student.42.fr #
+#############################################

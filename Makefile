@@ -6,6 +6,8 @@ MLX				=	libmlx_Linux.a libmlx.a
 
 DIR_SRCS		=	srcs
 
+DIR_BONUS		=	bonus
+
 DIR_OBJS		=	objs
 
 SRCS_NAMES		=	main.c \
@@ -28,14 +30,46 @@ SRCS_NAMES		=	main.c \
 					game/key.c \
 					game/utils.c \
 
+BONUS			=	main_bonus.c \
+					parsing/parsing_bonus.c \
+					parsing/args_bonus.c \
+					parsing/split_bonus.c \
+					parsing/map_bonus.c \
+					parsing/read_bonus.c \
+					parsing/fill_bonus.c \
+					misc/error_bonus.c \
+					misc/free_bonus.c \
+					misc/print_bonus.c \
+					game/game_bonus.c \
+					game/calc_bonus.c \
+					game/color_bonus.c \
+					game/init_bonus.c \
+					game/move_bonus.c \
+					game/raycasting_bonus.c \
+					game/textures_bonus.c \
+					game/key_bonus.c \
+					game/utils_bonus.c \
+					help/help_bonus.c \
+					game/minimap_bonus.c \
+
+
 
 OBJS_NAMES		=	${SRCS_NAMES:.c=.o}
 
+OBJS_NAMES_B	=	${BONUS:.c=.o}
+
 DEPS			=	${SRCS_NAMES:.c=.d}
+
+DEPS_B			=	${BONUS:.c=.d}
+
+
+SRCS_B			=	$(addprefix $(DIR_BONUS)/,$(BONUS))
 
 SRCS			=	$(addprefix $(DIR_SRCS)/,$(SRCS_NAMES))
 
 OBJS			=	$(addprefix $(DIR_OBJS)/,$(OBJS_NAMES))
+
+OBJS_B			=	$(addprefix $(DIR_OBJS)/,$(OBJS_NAMES_B))
 
 INC				=	-Iincludes -Ilibft/includes -I/usr/include -I/mlx/include/mlx.h 
 
@@ -47,7 +81,7 @@ CC				=	cc
 
 CDFLAGS 		= 	-MMD -MP
 
-CFLAGS			=	-g3 -Wall -Werror -Wextra
+CFLAGS			=	-g3 # -Wall -Werror -Wextra
 
 MAKEFLAGS		=	--no-print-directory
 
@@ -60,6 +94,14 @@ $(NAME): $(DIR_OBJS) $(OBJS)
 	$(CC) $(OBJS) $(CFLAGS) $(LIB) $(MLX) -o $(NAME)
 	@echo "\033[31;5mcub3d\033[0m"
 
+bonus: $(DIR_OBJS) $(OBJS_B) 
+	@make -C libft
+	$(CC) $(OBJS_B) $(CFLAGS) $(LIB) $(MLX) -o $(NAME)
+	@echo "\033[31;5mcub3d\033[0m"
+
+$(OBJS_B) : $(DIR_OBJS)/%.o : $(DIR_BONUS)/%.c
+	$(CC) $(CFLAGS) $(MLX_FLAGS)  $(CDFLAGS) $(INC) -c $< -o $@ 
+
 $(OBJS) : $(DIR_OBJS)/%.o : $(DIR_SRCS)/%.c
 	$(CC) $(CFLAGS) $(MLX_FLAGS)  $(CDFLAGS) $(INC) -c $< -o $@ 
 
@@ -67,6 +109,7 @@ $(DIR_OBJS):
 	mkdir -p $(DIR_OBJS)
 	mkdir -p objs/parsing
 	mkdir -p objs/misc
+	mkdir -p objs/help
 	mkdir -p objs/game
 
 leaks:	${NAME}

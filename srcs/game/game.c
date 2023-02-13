@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 01:20:48 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/11 20:52:12 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/13 01:25:32 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,12 @@ void	destroywindows(t_mlx *mlx, t_map *map)
 	free(map->temp);
 }
 
+int	ft_close(t_map *map)
+{
+	mlx_loop_end(map->mlx->mlx);
+	return (1);
+}
+
 int	ft_game(t_map *map, t_mlx *mlx, t_data *data)
 {
 	(void)data;
@@ -50,6 +56,7 @@ int	ft_game(t_map *map, t_mlx *mlx, t_data *data)
 	mlx_loop_hook(mlx->mlx, &move, map);
 	mlx_hook(mlx->win, 2, 1L << 0, &key_press, map);
 	mlx_hook(mlx->win, 3, 1L << 1, &key_release, map);
+	mlx_hook(mlx->win, 17, 0, &ft_close, map);
 	mlx_loop(mlx->mlx);
 	destroywindows(mlx, map);
 	return (0);
