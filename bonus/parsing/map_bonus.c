@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map.c                                              :+:      :+:    :+:   */
+/*   map_bonus.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 00:25:19 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/12 20:49:20 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/14 03:55:53 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,31 +40,31 @@ char	*multiplicator(char *src, char *dst)
 	return (dst);
 }
 
-// char	**expandmap(t_map *map)
-// {
-// 	char	**tab;
-// 	int		i;
-// 	int		j;
-// 	int		count;
+char	**expandmap(t_map *map)
+{
+	char	**tab;
+	int		i;
+	int		j;
+	int		count;
 
-// 	i = -1;
-// 	count = 0;
-// 	tab = ft_calloc(sizeof(char *) * (map->height * SIZE + 1), 1);
-// 	while (map->map[++i])
-// 	{
-// 		j = -1;
-// 		while (++j < (SIZE))
-// 		{
-// 			tab[count] = ft_calloc(sizeof(char) * (map->maxlen * SIZE + 1), 1);
-// 			multiplicator(map->map[i], tab[count]);
-// 			count++;
-// 		}
-// 	}
-// 	ft_freetab(map->map);
-// 	map->maxlen *= SIZE;
-// 	map->height *= SIZE;
-// 	return (tab);
-// }
+	i = -1;
+	count = 0;
+	tab = ft_calloc(sizeof(char *) * (map->height * SIZE + 1), 1);
+	while (map->map[++i])
+	{
+		j = -1;
+		while (++j < (SIZE))
+		{
+			tab[count] = ft_calloc(sizeof(char) * (map->maxlen * SIZE + 1), 1);
+			multiplicator(map->map[i], tab[count]);
+			count++;
+		}
+	}
+	ft_freetab(map->map);
+	map->maxlen *= SIZE;
+	map->height *= SIZE;
+	return (tab);
+}
 
 // int	checkaround(t_map *map, int x, int y, char **tab)
 // {
@@ -149,7 +149,7 @@ void	checkchars(t_map *map)
 	{
 		if (ft_strchr("NSEW", str[i]))
 			var++;
-		else if (!ft_strchr(" 10\n", str[i]))
+		else if (!ft_strchr(" 10D\n", str[i]))
 			wrong++;
 		i++;
 	}
@@ -161,5 +161,5 @@ void	checkmap(t_map *map)
 {
 	checkchars(map);
 	check_surroundings(map);
+	map->map = expandmap(map);
 }
-// map->map = expandmap(map);

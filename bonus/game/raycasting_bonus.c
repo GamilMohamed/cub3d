@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:06:37 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/13 01:04:36 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/14 08:36:11 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,10 @@ void	dda(t_map *map, t_plane *p)
 			p->map.y += p->step.y;
 			p->side = 1;
 		}
-		if (map->map[p->map.x][p->map.y] == '1')
+		if (map->map[p->map.x][p->map.y] == '1' || map->map[p->map.x][p->map.y] == 'D')
 			p->hit = 1;
+		// if (map->map[p->map.x][p->map.y] == 'D')
+			// p->door = 1;
 	}
 }
 
@@ -89,13 +91,42 @@ void	draw_rayons_all_2(t_map *map, t_drawrays *r, t_plane *p, int i, int max)
 		else
 		{
 			r->tex.y = (int)r->texpos & (64 - 1);
-			r->color = map->plane->texture[r->texnum][64 * r->tex.y + r->tex.x];
 			r->texpos += r->step;
 			wall_color(map->plane, &r->color, r->tex);
 		}
 		map->plane->buff[y][(int)i] = r->color;
 		p->re_buf = 1;
 	}
+	p->door = 0;
+}
+
+t_luno2i check(int x, int y, t_plane *p)
+{
+	int temp;
+	int temp2;
+	x += p->drawstart;
+	y += p->drawstart;
+	// p->drawstart = 0;
+	// *y += p->drawstart;
+	// printf("x = %d, temp = %d ds = %i \n", x, y, p->drawstart);
+	return ((t_luno2i){x, y});
+}
+
+static
+t_luno2i	get_drawss(int lineh, t_plane *p)
+{
+	t_luno2i	draw;
+
+	draw.x = p->drawstart;
+	draw.y = p->drawend;
+
+	draw.x += -lineh / 2 + HEIGHT / 2;
+	if (draw.x < 0)
+		draw.x = 0;
+	draw.y += lineh / 2 + HEIGHT / 2;
+	if (draw.y >= HEIGHT)
+		draw.y = HEIGHT - 1;
+	return (draw);
 }
 
 void	draw_rayons_all(t_map *map, t_plane *p, int max)
@@ -113,10 +144,11 @@ void	draw_rayons_all(t_map *map, t_plane *p, int max)
 		dda(map, p);
 		r.pwall = sides(map->plane);
 		r.lineh = (int)(HEIGHT / r.pwall);
-		r.draw = get_draw(r.lineh);
+		r.draw = get_drawss(r.lineh, p);
 		r.texnum = map->map[p->map.x][p->map.y] - '0' - 1;
 		r.wallx = get_wall_x(p, r.pwall);
 		r.tex.x = get_tex_x(p, r.wallx);
 		draw_rayons_all_2(map, &r, p, i, max);
 	}
+	// map->plane->drawstart = 0;
 }

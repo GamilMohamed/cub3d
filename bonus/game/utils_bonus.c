@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 18:09:28 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/12 20:49:20 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/14 13:48:29 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,18 @@ double	sides(t_plane *p)
 	return (pwall);
 }
 
-t_luno2i	get_draw(int lineh)
-{
-	t_luno2i	draw;
+// t_luno2i	get_draw(int lineh)
+// {
+// 	t_luno2i	draw;
 
-	draw.x = -lineh / 2 + HEIGHT / 2;
-	if (draw.x < 0)
-		draw.x = 0;
-	draw.y = lineh / 2 + HEIGHT / 2;
-	if (draw.y >= HEIGHT)
-		draw.y = HEIGHT - 1;
-	return (draw);
-}
+// 	draw.x = -lineh / 2 + HEIGHT / 2;
+// 	if (draw.x < 0)
+// 		draw.x = 0;
+// 	draw.y = lineh / 2 + HEIGHT / 2;
+// 	if (draw.y >= HEIGHT)
+// 		draw.y = HEIGHT - 1;
+// 	return (draw);
+// }
 
 double	get_wall_x(t_plane *p, double pwall)
 {

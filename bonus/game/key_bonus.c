@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 04:47:10 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/13 06:04:48 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/14 06:09:51 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ int	key_release(int keycode, t_map *map)
 		map->press->right = 2;
 	if (keycode == 'h')
 		map->press->h = 2;
-	// if (keycode == 'm')
-		// map->press->m = 2;
+	// if (keycode == ' ')
+	// 	map->press->door = 2;
 	if (keycode == ESCAPE || keycode == 'q')
 		map->press->esc = 2;
 	return (0);
@@ -51,8 +51,8 @@ int	key_press(int keycode, t_map *map)
 		map->press->right = 1;
 	if (keycode == 'h')
 		map->press->h = 1;
-	// if (keycode == 'm')
-	// 	map->press->m = 1;
+	// if (keycode == ' ')
+	// 	map->press->door = 1;
 	if (keycode == ESCAPE || keycode == 'q')
 		map->press->esc = 1;
 	return (0);

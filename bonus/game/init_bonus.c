@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   init_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:01:09 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/12 20:49:20 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/14 16:16:44 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,9 @@ void	init_buff(t_plane *p)
 		while (++j < WIDTH)
 			p->buff[i][j] = 0;
 	}
-	p->texture = (int **)malloc(sizeof(int *) * (4 * 4));
+	p->texture = (int **)malloc(sizeof(int *) * (5 * 5));
 	i = -1;
-	while (++i < 4)
+	while (++i < 5)
 	{
 		j = -1;
 		p->texture[i] = (int *)malloc(sizeof(int) * (64 * 64));

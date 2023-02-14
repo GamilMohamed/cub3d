@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/13 03:30:42 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/13 08:16:09 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/14 06:32:39 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,10 @@ void	map_to_minimap(t_map *map, t_data *data, t_temp *temp, int size)
 				color = create_rgb(0, 207, 185, 151);
 			else if (map->map[(int)map_pos.y][(int)map_pos.x] == '1')
 				color = create_rgb(0, 155, 161, 123);
+			else if (map->map[(int)map_pos.y][(int)map_pos.x] == 'D')
+				color = create_rgb(0, 155, 11, 0);
+			else if (map->map[(int)map_pos.y][(int)map_pos.x] == 'C')
+				color = create_rgb(0, 11, 151, 55);
 			if (ft_strchr("NSEW", map->map[(int)map_pos.y][(int)map_pos.x]) && !h)
 			{
 				map->map[(int)map_pos.y][(int)map_pos.x] = '0';
@@ -391,8 +395,8 @@ void	draw_one_ray(t_temp *temp, t_luno2f coords, t_luno2f dir)
 	t_luno2f mid;
 	t_luno2f right;
 
-	middle.x = coords.x + dir.y * 4;
-	middle.y = coords.y + dir.x * 4;
+	middle.x = coords.x + dir.y * 5;
+	middle.y = coords.y + dir.x * 5;
 
 	d.x = coords.x - middle.x;
 	d.y = coords.y - middle.y;
@@ -405,7 +409,9 @@ void	draw_one_ray(t_temp *temp, t_luno2f coords, t_luno2f dir)
 	pixel(temp, left, 0xFF0000);
 	pixel(temp, middle, 0x00FF00);
 	pixel(temp, right, 0x0000FF);
-	fill_triangle(temp, left.x, left.y, right.x, right.y, middle.x, middle.y);
+	temp->front = middle;
+	// fill_triangle(temp, left.x, left.y, right.x, right.y, middle.x, middle.y);
+}
 
 void	fill_minimap(t_map *map, t_mlx *mlx, t_data *data)
 {

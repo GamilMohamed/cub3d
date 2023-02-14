@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:33:03 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/13 05:05:43 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/14 16:10:49 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ typedef struct s_help
 	int					endian;
 	int					w;
 	int					h;
+	int					**help_buff;
 }						t_help;
 
 typedef struct s_img
@@ -130,7 +131,7 @@ typedef struct t_press
 	int					mouse;
 	int					mouse_x;
 	int					mouse_y;
-
+	int					door;
 	int					h;
 }						t_press;
 
@@ -147,11 +148,14 @@ typedef struct s_plane
 	t_luno2f			step;
 	t_luno2f			sdist;
 	int					hit;
+	double					drawstart;
+	double					drawend;
 	double				movespeed;
 	double				rotspeed;
-	int					buff[540][960];
+	int					buff[HEIGHT][WIDTH];
 	int					**texture;
 	int					re_buf;
+	int					door;
 }						t_plane;
 
 typedef struct s_temp
@@ -169,6 +173,7 @@ typedef struct s_temp
 	t_luno2f			endray[3];
 	t_luno2f			coords;
 	t_luno2f			plane[2];
+	t_luno2f			front;
 }						t_temp;
 
 typedef struct t_map
