@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 04:03:03 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/14 10:34:00 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/16 02:37:09 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,70 @@ void	draw(t_map *map)
 {
 	int	i;
 	int	j;
+	t_luno2i size;
+
+	size.x = HEIGHT;
+	size.y = WIDTH;
 
 	i = -1;
-	while (++i < HEIGHT)
+	while (++i < size.x)
 	{
 		j = -1;
-		while (++j < WIDTH)
-			map->img.data[WIDTH * i + j] = map->plane->buff[i][j];
+		while (++j < size.y)
+		{
+			map->img.data[size.y * i + j] = map->plane->buff[i][j];
+		}
 	}
 	mlx_put_image_to_window(map->mlx->mlx, map->mlx->win, map->img.img, 0, 0);
+}
+
+void	fill_clock(char clock[64][1024])
+{
+	int i = -1;
+	char	temp[1024];
+	while (++i < 64)
+	{
+		ft_strcpy(clock[i], "clock/clock_");
+		ft_stoval(clock[i], i, 12, 12 + lenof(i));
+		ft_strcat(clock[i], ".xpm");
+	}
+}
+
+int	load_clock(t_map *map, t_plane *p, t_img *img)
+{
+	int	i;
+	int	j;
+	int	r;
+
+	fill_clock(p->clock);
+	p->tex_clock = (int **)ft_calloc(sizeof(int), 64 * 64);
+	i = -1;
+	while(++i < 64)
+		p->tex_clock[i] = (int *)ft_calloc(sizeof(int), (64 * 64));
+	i = -1;
+	while (++i < 64)
+	{
+		img->img = mlx_xpm_file_to_image(map->mlx->mlx, p->clock[i], &img->w, &img->h);
+		if (!img->img)
+		{
+			printf("%s\n", p->clock[i]);
+			printf("%swrong texture path! %s\n", RED, RESET);
+			return (1);
+		}
+		img->data = (int *)mlx_get_data_addr(img->img, &img->bpp, &img->size_l,
+				&img->endian);
+		r = -1;
+		while (++r < img->w)
+		{
+			j = -1;
+			while (++j < img->h)
+			{
+				p->tex_clock[i][img->w * r + j] = img->data[img->w * r + j];
+			}
+		}
+		mlx_destroy_image(map->mlx->mlx, img->img);
+	}
+	return (0);
 }
 
 void	load_texture(t_map *map)
@@ -63,6 +118,9 @@ void	load_texture(t_map *map)
 		mlx_loop_end(map->mlx->mlx);
 	if (load_image(map, map->plane->texture[3], map->path[3], &img))
 		mlx_loop_end(map->mlx->mlx);
-	if (load_image(map, map->plane->texture[4], "s/W.xpm", &img))
+	if (load_image(map, map->plane->texture[4], "s/door.xpm", &img))
 		mlx_loop_end(map->mlx->mlx);
+	if (load_clock(map, map->plane, &img))
+		mlx_loop_end(map->mlx->mlx);
+	
 }

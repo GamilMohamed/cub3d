@@ -51,7 +51,7 @@ BONUS			=	main_bonus.c \
 					game/utils_bonus.c \
 					help/help_bonus.c \
 					game/minimap_bonus.c \
-
+					game/sprite_bonus.c \
 
 
 OBJS_NAMES		=	${SRCS_NAMES:.c=.o}

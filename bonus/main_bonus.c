@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:31:57 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/14 12:14:21 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/16 01:10:34 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,54 +60,83 @@ void	get_positions(t_map *map, t_data *data)
 	}
 }
 
-char *get_file(char *buff, char *str, int *index)
+void	ft_stoval(char *str, int n, int start, int len)
 {
-	static char *extension[2] = {".JPG", ".jpg"};
-	char	copy[1024];
+	int				i;
+	unsigned int	nb;
 
-	for (*index = 0; *index < 2; (*index)++)
+	str[len] = 0;
+	nb = n;
+	i = start;
+	while (--len >= i)
 	{
-		ft_strcpy(copy, buff);
-		ft_strcat(copy, extension[*index]);
-		if (access(copy, F_OK) != -1)
-			return (ft_strdup(copy));
+		str[len] = (nb % 10) + '0';
+		nb /= 10;
+	}
+}
+
+
+char	*get_file(char *buff, char *str, int *index)
+{
+	static char	*extension[2] = {".JPG", ".jpg"};
+	char		copy[1024];
+	int			year;
+	char		value[5];
+
+	year = 2022;
+	while (*index < 2)
+	{
+		year = 2022;
+		while (year > 2012)
+		{
+			ft_strcpy(copy, buff);
+			ft_stoval(buff, year--, 26, 26 + 4);
+			ft_strcat(buff, "/");
+			ft_strcat(buff, str);
+			ft_strcat(buff, extension[*index]);
+			if (access(buff, F_OK) != -1)
+				return (ft_strdup(buff));
+		}
+		(*index)++;
 	}
 	return (printf("%sfile not found%s\n", RED, RESET), NULL);
 }
 
+void	exec(char *file, char buff[3][1024], char **env)
+{
+	if (fork() == 0)
+		execve("/usr/bin/cp", (char *[]){"/usr/bin/cp", file, "./stud", NULL},
+				env);
+	wait(NULL);
+	if (fork() == 0)
+		execve("/usr/bin/convert", (char *[]){"/usr/bin/convert", buff[1],
+				"-resize", "64x64", buff[2], NULL}, env);
+	wait(NULL);
+}
+
 int	extension(t_map *map, char *str, char *year, char **env)
 {
-	char	buff[1024];
-	char	temp[1024];
-	char	fin[1024];
-	char 	*file;
-	int 	index;
-	char *extension[2] = {".JPG", ".jpg"};
+	static char	*extension[2] = {".JPG", ".jpg"};
+	char	buff[3][1024];
+	char	*file;
+	int		index;
 
-	if (!str || !year)
-		return 0;
-	ft_strcpy(buff, "/sgoinfre/photos_students/");
-	ft_strcat(buff, year);
-	ft_strcat(buff, "/");
-	ft_strcat(buff, str);
-	file = get_file(buff, str, & index);
+	if (!str)
+		return (0);
+	ft_strcpy(buff[0], "/sgoinfre/photos_students/");
+	file = get_file(buff[0], str, &index);
 	if (!file)
 		return (0);
-	ft_strcpy(temp, "./stud/");
-	ft_strcat(temp, str);
-	ft_strcat(temp, extension[index]);
-	ft_strcpy(fin, "./stud/");
-	ft_strcat(fin, str);
-	ft_strcat(fin, ".xpm");
-	if (fork() == 0)
-		execve("/usr/bin/cp", (char *[]){"/usr/bin/cp", file, "./stud", NULL}, env);
-	wait(NULL);
-	if (fork() == 0)
-		execve("/usr/bin/convert", (char *[]){"/usr/bin/convert", temp, "-resize", "64x64", fin, NULL}, env);
-	wait(NULL);
-	map->path[0] = ft_strdup(fin);
-	unlink(temp);
-	return (1);
+	ft_strcpy(buff[1], "./stud/");
+	ft_strcat(buff[1], str);
+	ft_strcat(buff[1], extension[index]);
+	ft_strcpy(buff[2], "./stud/");
+	ft_strcat(buff[2], str);
+	ft_strcat(buff[2], ".xpm");
+	exec(file, buff, env);
+	ft_free((void **)& map->path[0]);
+	map->path[0] = ft_strdup(buff[2]);
+	return (unlink(buff[1]), 1);
 }
 
 int	main(int ac, char **av, char **env)
@@ -131,7 +160,7 @@ int	main(int ac, char **av, char **env)
 		return (ft_error(ERR_NO_MAP, YELLOW, map), 1);
 	checkmap(map);
 	get_positions(map, &data);
-	// ft_printmap(map->map, 0);
+	ft_printmap(map->map, 0);
 	ft_game(map, map->mlx, map->data);
 	ft_freetab(map->map);
 	ft_freestruct_map(map);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print.c                                            :+:      :+:    :+:   */
+/*   print_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 18:20:44 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/12 20:49:20 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/16 01:12:13 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ char	*colored(char *str, int value)
 			printf("%s%c%s", "\033[7;32m", str[i], RESET);
 		if (str[i] == 'R')
 			printf("%s%c%s", "\033[7;31m", ' ', RESET);
+		if (str[i] == 'D')
+			printf("%s%c%s", "\033[7;38m", ' ', RESET);
 		i++;
 	}
 	while(str[i] && !value)
@@ -54,6 +56,8 @@ char	*colored(char *str, int value)
 			printf("%s%c%s", "\033[7;31m", ' ', RESET);
 		if (str[i] == 'N' || str[i] == 'S' || str[i] == 'E' || str[i] == 'W') 
 			printf("%s%c%s", WHITE, str[i], RESET);
+		if (str[i] == 'D')
+			printf("%s%c%s", "\033[7;38m", ' ', RESET);
 		i++;
 	}
 	return (NULL);

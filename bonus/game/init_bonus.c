@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:01:09 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/14 16:16:44 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/15 22:51:09 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,24 @@ int	initmlx(t_map *map, t_mlx *mlx)
 	return (0);
 }
 
+// void	init_clock(t_plane *p)
+// {
+// 	int	i;
+// 	int	j;
+
+// 	i = -1;
+// 	while (++i < HEIGHT)
+// 	{
+// 		j = -1;
+// 		while (++j < WIDTH)
+// 			p->buff[i][j] = 0;
+// 	}
+// 	p->clock = (int **)malloc(sizeof(int *) * (16 * 16));
+// 	i = -1;
+// 	while (++i < 16)
+// 		p->clock[i] = (int *)ft_calloc(sizeof(int), (64 * 64));
+// }
+
 void	init_buff(t_plane *p)
 {
 	int	i;
@@ -67,12 +85,7 @@ void	init_buff(t_plane *p)
 	p->texture = (int **)malloc(sizeof(int *) * (5 * 5));
 	i = -1;
 	while (++i < 5)
-	{
-		j = -1;
-		p->texture[i] = (int *)malloc(sizeof(int) * (64 * 64));
-		while (++j < (64 * 64))
-			p->texture[i][j] = 0;
-	}
+		p->texture[i] = (int *)ft_calloc(sizeof(int), (64 * 64));
 }
 
 void	init_plane(t_plane *plane, t_map *map)

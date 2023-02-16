@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:07:38 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/14 16:09:40 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/16 03:52:50 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,37 +81,46 @@ void	direction_we(t_map *map, t_plane *p, int dir)
 	}
 }
 
-#define SECOND 0.5
+#define SECOND 1
 
 void	day_night(t_map *map)
 {
 	static	double	max;
 	static	double	r;
+	double	time;
 	static	double	d;
 	static	int		stop;
+	char			buff[1024];
 	if (stop)
 	{
-		draw_rayons_all(map, map->plane, max);
+		draw_rayons_all(map, map->plane, max, ((r / 2) * 64 / 510));
 		if (max == 0)
 			stop = 0;
 		max -= SECOND;
 	}
 	if (!stop)
 	{
-		draw_rayons_all(map, map->plane, max);
+		draw_rayons_all(map, map->plane, max, ((r / 2) * 64 / 510));
 		if (max == 510)
 			stop = 1;
 		max += SECOND;
 	}
 	r += SECOND;
-	draw(map);
+	time = r / 42.5;
+	// draw(map);
 	mlx_string_put(map->mlx->mlx, map->mlx->win, 10, HEIGHT - 10, 0x00FFFFFF, "press h for help");
-	mlx_string_put(map->mlx->mlx, map->mlx->win, WIDTH - 110, HEIGHT - 10, 0x00FFFFFF, ft_strjoin("jour: ", ft_itoa(d)));
-	mlx_string_put(map->mlx->mlx, map->mlx->win, WIDTH - 60, HEIGHT - 10, 0x00FFFFFF, ft_strjoin(ft_itoa(r / 42.5), "h"));
-	if (r / 42.5 == 24)
+	ft_strcpy(buff, "day: ");
+	ft_stoval(buff, d, 5, 5 + lenof(d));
+	mlx_string_put(map->mlx->mlx, map->mlx->win, WIDTH - 110, HEIGHT - 10, 0x00FFFFFF, buff);
+	ft_stoval(buff, time, 0, lenof(time));
+	ft_strcat(buff, "h");
+	mlx_string_put(map->mlx->mlx, map->mlx->win, WIDTH - 60, HEIGHT - 10, 0x00FFFFFF, buff);
+	if (time == 24)
 	{
 		r = 0;
 		d++;
+		if (d == 1023)
+			d = 0;
 	}
 }
 
@@ -199,15 +208,16 @@ int	move(t_map *map)
 	if (map->press->esc == 1)
 		mlx_loop_end(map->mlx->mlx);
 	day_night(map);
-	// p->door = 0;
+	if (map->press->h == 1)
+		print_help(map, & map->help);
+	draw(map);
+	p->door = 0;
 	if (map->press->m == 2)
 	{
 		fill_minimap(map, map->mlx,	map->data);
 		mlx_put_image_to_window(map->mlx->mlx, map->mlx->win, map->mini->img, 10, 10);
-		p->door = 1;
+		// p->door = 1;
 	}
-	if (map->press->h == 1)
-		mlx_put_image_to_window(map->mlx->mlx, map->mlx->win, map->help.img, WIDTH / 4, HEIGHT / 4);
 	return (0);
 }
 

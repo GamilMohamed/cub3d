@@ -6,13 +6,28 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 18:09:28 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/14 13:48:29 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/16 03:49:35 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d_bonus.h"
 
-void	wall_color(t_plane *p, int *color, t_luno2i tex)
+int	lenof(int n)
+{
+	int	len;
+
+	if (n == 0)
+		return (1);
+	len = (n < 0);
+	while (n != 0)
+	{
+		n /= 10;
+		len++;
+	}
+	return (len);
+}
+
+void	wall_color(t_plane *p, unsigned int *color, t_luno2i tex, int time)
 {
 	if (p->side == 1)
 	{
@@ -28,6 +43,8 @@ void	wall_color(t_plane *p, int *color, t_luno2i tex)
 		else
 			*color = p->texture[2][64 * tex.y + tex.x];
 	}
+	if (p->door == 1)
+		*color = p->texture[4][64 * tex.y + tex.x];
 }
 
 double	sides(t_plane *p)
@@ -41,18 +58,18 @@ double	sides(t_plane *p)
 	return (pwall);
 }
 
-// t_luno2i	get_draw(int lineh)
-// {
-// 	t_luno2i	draw;
+t_luno2i	get_draw(int lineh)
+{
+	t_luno2i	draw;
 
-// 	draw.x = -lineh / 2 + HEIGHT / 2;
-// 	if (draw.x < 0)
-// 		draw.x = 0;
-// 	draw.y = lineh / 2 + HEIGHT / 2;
-// 	if (draw.y >= HEIGHT)
-// 		draw.y = HEIGHT - 1;
-// 	return (draw);
-// }
+	draw.x = -lineh / 2 + HEIGHT / 2;
+	if (draw.x < 0)
+		draw.x = 0;
+	draw.y = lineh / 2 + HEIGHT / 2;
+	if (draw.y >= HEIGHT)
+		draw.y = HEIGHT - 1;
+	return (draw);
+}
 
 double	get_wall_x(t_plane *p, double pwall)
 {
