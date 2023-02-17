@@ -125,6 +125,7 @@ clean:
 fclean:	clean
 	make fclean -C libft
 	rm -rf ${LIBFT}
+	rm -rf ${MLX}
 	rm -rf ${NAME}
 
 re:	fclean all
