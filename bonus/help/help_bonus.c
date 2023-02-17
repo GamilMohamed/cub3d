@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 20:41:29 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/16 02:08:51 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/16 22:20:01 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ void	print_help(t_map *map, t_help *help)
 	unsigned int	color;
 
 	y = 0;
-	while (y < help->h)
+	while (y < (unsigned int)help->h)
 	{
 		x = 0;
-		while (x < help->w)
+		while (x < (unsigned int)help->w)
 		{
 			color = mlx_get_pixel(help, x, y);
 			if (!(color == 0x00))

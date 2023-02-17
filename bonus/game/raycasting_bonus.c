@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:06:37 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/16 03:53:52 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/17 10:43:35 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	dda(t_map *map, t_plane *p)
 	}
 }
 
-void	draw_rayons_all_2(t_map *map, t_drawrays *r, t_plane *p, int i, int max, int time)
+void	draw_rayons_all_2(t_map *map, t_drawrays *r, t_plane *p, int i, int max)
 {
 	int	y;
 
@@ -92,7 +92,7 @@ void	draw_rayons_all_2(t_map *map, t_drawrays *r, t_plane *p, int i, int max, in
 		{
 			r->tex.y = (int)r->texpos & (64 - 1);
 			r->texpos += r->step;
-			wall_color(map->plane, &r->color, r->tex, time);
+			wall_color(map->plane, &r->color, r->tex);
 		}
 		map->plane->buff[y][(int)i] = r->color;
 		p->re_buf = 1;
@@ -137,9 +137,7 @@ void	draw_rayons_all(t_map *map, t_plane *p, int max, int time)
 		r.texnum = map->map[p->map.x][p->map.y] - '0' - 1;
 		r.wallx = get_wall_x(p, r.pwall);
 		r.tex.x = get_tex_x(p, r.wallx);
-		draw_rayons_all_2(map, &r, p, i, max, time);
+		draw_rayons_all_2(map, &r, p, i, max);
 	}
-	init_sprite(map, &r, p, time);
-
-	// map->plane->drawstart = 0;
+	init_sprite(p, time, map->pos_q);
 }

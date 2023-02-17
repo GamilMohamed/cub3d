@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:31:57 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/16 01:10:34 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/17 10:47:21 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,13 @@ void	get_positions(t_map *map, t_data *data)
 				map->data->player = map->map[i][j];
 				map->map[i][j] = '0';
 			}
+			if (map->map[i][j] == 'Q')
+			{
+				printf("Q found\n");
+				map->map[i][j] = '0';
+				map->pos_q.y = (double)i;
+				map->pos_q.x = (double)j;
+			}
 			j++;
 		}
 		i++;
@@ -81,16 +88,15 @@ char	*get_file(char *buff, char *str, int *index)
 	static char	*extension[2] = {".JPG", ".jpg"};
 	char		copy[1024];
 	int			year;
-	char		value[5];
 
 	year = 2022;
 	while (*index < 2)
 	{
-		year = 2022;
-		while (year > 2012)
+		year = 2013;
+		while (year < 2024)
 		{
 			ft_strcpy(copy, buff);
-			ft_stoval(buff, year--, 26, 26 + 4);
+			ft_stoval(buff, year++, 26, 26 + 4);
 			ft_strcat(buff, "/");
 			ft_strcat(buff, str);
 			ft_strcat(buff, extension[*index]);
@@ -114,7 +120,7 @@ void	exec(char *file, char buff[3][1024], char **env)
 	wait(NULL);
 }
 
-int	extension(t_map *map, char *str, char *year, char **env)
+int	extension(t_map *map, char *str, char **env)
 {
 	static char	*extension[2] = {".JPG", ".jpg"};
 	char	buff[3][1024];
@@ -153,14 +159,14 @@ int	main(int ac, char **av, char **env)
 	if (!map->cubfile)
 		return (EXIT_FAILURE);
 	fillstruct(map);
-	extension(map, av[2], av[3], env);
+	extension(map, av[2], env);
 	ft_free((void **)&map->cubfile);
 	map->cubfile = readmap(map);
 	if (!map->cubfile)
 		return (ft_error(ERR_NO_MAP, YELLOW, map), 1);
 	checkmap(map);
 	get_positions(map, &data);
-	ft_printmap(map->map, 0);
+	// ft_printmap(map->map, 0);
 	ft_game(map, map->mlx, map->data);
 	ft_freetab(map->map);
 	ft_freestruct_map(map);

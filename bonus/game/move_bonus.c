@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:07:38 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/16 03:52:50 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/17 10:34:38 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,25 +34,27 @@ void	direction_ns(t_map *map, t_plane *p, int dir)
 	if (dir == 1)
 	{
 		if ((map->map[(int)(p->pos.x + p->movespeed
-				* p->dir.x)][(int)(p->pos.y)] == '0') || (map->map[(int)(p->pos.x + p->movespeed
-				* p->dir.x)][(int)(p->pos.y)] == 'C'))
+					* p->dir.x)][(int)(p->pos.y)] == '0')
+			|| (map->map[(int)(p->pos.x + p->movespeed
+					* p->dir.x)][(int)(p->pos.y)] == 'C'))
 			p->pos.x += p->dir.x * p->movespeed;
 		if ((map->map[(int)(p->pos.x)][(int)(p->pos.y + p->movespeed
-				* p->dir.y)] == '0') || (map->map[(int)(p->pos.x)][(int)(p->pos.y + p->movespeed
-				* p->dir.y)] == 'C'))
+					* p->dir.y)] == '0')
+			|| (map->map[(int)(p->pos.x)][(int)(p->pos.y + p->movespeed
+					* p->dir.y)] == 'C'))
 			p->pos.y += p->dir.y * p->movespeed;
+		return ;
 	}
-	if (dir == 2)
-	{
-		if ((map->map[(int)(p->pos.x - p->movespeed
-				* p->dir.x)][(int)(p->pos.y)] == '0') || (map->map[(int)(p->pos.x - p->movespeed
+	if ((map->map[(int)(p->pos.x - p->movespeed
+				* p->dir.x)][(int)(p->pos.y)] == '0')
+		|| (map->map[(int)(p->pos.x - p->movespeed
 				* p->dir.x)][(int)(p->pos.y)] == 'C'))
-			p->pos.x -= p->dir.x * p->movespeed;
-		if ((map->map[(int)(p->pos.x)][(int)(p->pos.y - p->movespeed
-				* p->dir.y)] == '0') || (map->map[(int)(p->pos.x)][(int)(p->pos.y - p->movespeed
+		p->pos.x -= p->dir.x * p->movespeed;
+	if ((map->map[(int)(p->pos.x)][(int)(p->pos.y - p->movespeed
+				* p->dir.y)] == '0')
+		|| (map->map[(int)(p->pos.x)][(int)(p->pos.y - p->movespeed
 				* p->dir.y)] == 'C'))
-			p->pos.y -= p->dir.y * p->movespeed;
-	}
+		p->pos.y -= p->dir.y * p->movespeed;
 }
 
 void	direction_we(t_map *map, t_plane *p, int dir)
@@ -60,133 +62,98 @@ void	direction_we(t_map *map, t_plane *p, int dir)
 	if (dir == 1)
 	{
 		if ((map->map[(int)(p->pos.x - p->dir.y
-				* p->movespeed)][(int)(p->pos.y)] == '0') || (map->map[(int)(p->pos.x - p->dir.y
-				* p->movespeed)][(int)(p->pos.y)] == 'C'))
+					* p->movespeed)][(int)(p->pos.y)] == '0')
+			|| (map->map[(int)(p->pos.x - p->dir.y
+					* p->movespeed)][(int)(p->pos.y)] == 'C'))
 			p->pos.x -= p->dir.y * p->movespeed;
 		if ((map->map[(int)(p->pos.x)][(int)(p->pos.y + p->dir.x
-				* p->movespeed)] == '0') || (map->map[(int)(p->pos.x)][(int)(p->pos.y + p->dir.x
-				* p->movespeed)] == 'C'))
+					* p->movespeed)] == '0')
+			|| (map->map[(int)(p->pos.x)][(int)(p->pos.y + p->dir.x
+					* p->movespeed)] == 'C'))
 			p->pos.y += p->dir.x * p->movespeed;
+		return ;
 	}
-	if (dir == 2)
-	{
-		if ((map->map[(int)(p->pos.x)][(int)(p->pos.y - p->dir.x
-				* p->movespeed)] == '0') || (map->map[(int)(p->pos.x)][(int)(p->pos.y - p->dir.x
+	if ((map->map[(int)(p->pos.x)][(int)(p->pos.y - p->dir.x
+				* p->movespeed)] == '0')
+		|| (map->map[(int)(p->pos.x)][(int)(p->pos.y - p->dir.x
 				* p->movespeed)] == 'C'))
-			p->pos.y -= p->dir.x * p->movespeed;
-		if ((map->map[(int)(p->pos.x + p->dir.y
-				* p->movespeed)][(int)(p->pos.y)] == '0') || (map->map[(int)(p->pos.x + p->dir.y
+		p->pos.y -= p->dir.x * p->movespeed;
+	if ((map->map[(int)(p->pos.x + p->dir.y
+				* p->movespeed)][(int)(p->pos.y)] == '0')
+		|| (map->map[(int)(p->pos.x + p->dir.y
 				* p->movespeed)][(int)(p->pos.y)] == 'C'))
-			p->pos.x += p->dir.y * p->movespeed;
-	}
+		p->pos.x += p->dir.y * p->movespeed;
 }
 
 #define SECOND 1
 
-void	day_night(t_map *map)
+t_luno2f	day_night(t_map *map)
 {
-	static	double	max;
-	static	double	r;
-	double	time;
-	static	double	d;
-	static	int		stop;
-	char			buff[1024];
+	static double	max;
+	static double	r;
+	double			time;
+	static double	d;
+	static int		stop;
+
+	draw_rayons_all(map, map->plane, max, ((r / 2) * 64 / 510));
 	if (stop)
-	{
-		draw_rayons_all(map, map->plane, max, ((r / 2) * 64 / 510));
-		if (max == 0)
-			stop = 0;
 		max -= SECOND;
-	}
 	if (!stop)
-	{
-		draw_rayons_all(map, map->plane, max, ((r / 2) * 64 / 510));
-		if (max == 510)
-			stop = 1;
 		max += SECOND;
-	}
+	if (max == 510)
+		stop = 1;
+	else if (max == 0)
+		stop = 0;
 	r += SECOND;
 	time = r / 42.5;
-	// draw(map);
-	mlx_string_put(map->mlx->mlx, map->mlx->win, 10, HEIGHT - 10, 0x00FFFFFF, "press h for help");
-	ft_strcpy(buff, "day: ");
-	ft_stoval(buff, d, 5, 5 + lenof(d));
-	mlx_string_put(map->mlx->mlx, map->mlx->win, WIDTH - 110, HEIGHT - 10, 0x00FFFFFF, buff);
-	ft_stoval(buff, time, 0, lenof(time));
-	ft_strcat(buff, "h");
-	mlx_string_put(map->mlx->mlx, map->mlx->win, WIDTH - 60, HEIGHT - 10, 0x00FFFFFF, buff);
 	if (time == 24)
 	{
 		r = 0;
-		d++;
-		if (d == 1023)
+		if (++d == 1023)
 			d = 0;
 	}
+	return ((t_luno2f){time, d});
 }
 
-void close_door(t_map *map)
+void	door(t_map *map, t_plane *p, char src, char dst)
 {
-	t_plane *p;
+	int	x;
+	int	y;
 
-	p = map->plane;
-
-	if (map->map[(int)map->plane->pos.x][(int)map->plane->pos.y + 1] == 'C')
-	{
-		map->map[(int)map->plane->pos.x][(int)map->plane->pos.y + 1] = 'D';
-		map->press->door = 0;
-	}
-	else if (map->map[(int)map->plane->pos.x][(int)map->plane->pos.y - 1] == 'C')
-	{
-		map->map[(int)map->plane->pos.x][(int)map->plane->pos.y - 1] = 'D';
-		map->press->door = 0;	
-	}
-	else if (map->map[(int)map->plane->pos.x - 1][(int)map->plane->pos.y] == 'C')
-	{
-		map->map[(int)map->plane->pos.x - 1][(int)map->plane->pos.y] = 'D';
-		map->press->door = 0;	
-	}
-	else if (map->map[(int)map->plane->pos.x + 1][(int)map->plane->pos.y] == 'C')
-	{
-		map->map[(int)map->plane->pos.x + 1][(int)map->plane->pos.y] = 'D';
-		map->press->door = 0;	
-	}
-
+	x = p->pos.x;
+	y = p->pos.y;
+	if (map->map[x][y + 1] == src)
+		map->map[x][y + 1] = dst;
+	else if (map->map[x][y - 1] == src)
+		map->map[x][y - 1] = dst;
+	else if (map->map[x - 1][y] == src)
+		map->map[x - 1][y] = dst;
+	else if (map->map[x + 1][y] == src)
+		map->map[x + 1][y] = dst;
+	else if (map->map[x][y] == src)
+		map->map[x][y] = dst;
+	map->press->door = 0;
 }
-void open_door(t_map *map)
+
+void	print_time(t_mlx *mlx, t_luno2f time)
 {
-	t_plane *p;
+	char	buff[1024];
 
-	p = map->plane;
-	if (map->map[(int)map->plane->pos.x][(int)map->plane->pos.y + 1] == 'D')
-	{
-		map->map[(int)map->plane->pos.x][(int)map->plane->pos.y + 1] = 'C';
-		map->press->door = 0;
-	}
-	else if (map->map[(int)map->plane->pos.x][(int)map->plane->pos.y - 1] == 'D')
-	{
-		map->map[(int)map->plane->pos.x][(int)map->plane->pos.y - 1] = 'C';
-		map->press->door = 0;
-	}
-	else if (map->map[(int)map->plane->pos.x - 1][(int)map->plane->pos.y] == 'D')
-	{
-		map->map[(int)map->plane->pos.x - 1][(int)map->plane->pos.y] = 'C';
-		map->press->door = 0;
-	}
-	else if (map->map[(int)map->plane->pos.x + 1][(int)map->plane->pos.y] == 'D')
-	{
-		map->map[(int)map->plane->pos.x + 1][(int)map->plane->pos.y] = 'C';
-		map->press->door = 0;
-	}
-	else
-	{
-		map->press->door = 1;
-	}
+	mlx_string_put(mlx->mlx, mlx->win, 10, HEIGHT - 10, 16777215,
+			"press h for help");
+	ft_strcpy(buff, "day: ");
+	ft_stoval(buff, time.y, 5, 5 + lenof(time.y));
+	mlx_string_put(mlx->mlx, mlx->win, WIDTH - 110, HEIGHT - 10, 16777215,
+			buff);
+	ft_stoval(buff, time.x, 0, lenof(time.x));
+	ft_strcat(buff, "h");
+	mlx_string_put(mlx->mlx, mlx->win, WIDTH - 60, HEIGHT - 10, 16777215, buff);
 }
-	
 
 int	move(t_map *map)
 {
 	t_plane		*p;
+	t_luno2f	time;
 
 	p = map->plane;
 	if (map->press->w == 1)
@@ -202,22 +169,18 @@ int	move(t_map *map)
 	if (map->press->left == 1)
 		rotation(map->plane, 0);
 	if (map->press->door == 2)
-		open_door(map);
+		door(map, p, 'D', 'C');
 	if (map->press->door == 1)
-		close_door(map);
+		door(map, p, 'C', 'D');
 	if (map->press->esc == 1)
 		mlx_loop_end(map->mlx->mlx);
-	day_night(map);
+	time = day_night(map);
 	if (map->press->h == 1)
-		print_help(map, & map->help);
-	draw(map);
-	p->door = 0;
+		print_help(map, &map->help);
 	if (map->press->m == 2)
-	{
-		fill_minimap(map, map->mlx,	map->data);
-		mlx_put_image_to_window(map->mlx->mlx, map->mlx->win, map->mini->img, 10, 10);
-		// p->door = 1;
-	}
+		fill_minimap(map, map->mlx);
+	draw(map);
+	print_time(map->mlx, time);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 01:20:48 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/14 03:23:17 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/16 20:46:56 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int	ft_close(t_map *map)
 	mlx_loop_end(map->mlx->mlx);
 	return (1);
 }
-
 
 int	ft_game(t_map *map, t_mlx *mlx, t_data *data)
 {

@@ -6,11 +6,13 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 00:25:19 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/16 01:11:10 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/17 12:28:12 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d_bonus.h"
+
+#define TEMP 1
 
 char	*multiplicator(char *src, char *dst)
 {
@@ -24,7 +26,7 @@ char	*multiplicator(char *src, char *dst)
 	while (src[++i])
 	{
 		j = -1;
-		while (++j < (SIZE))
+		while (++j < (TEMP))
 		{
 			if (ft_strchr("NSEW", src[i]) && !stop)
 			{
@@ -49,20 +51,20 @@ char	**expandmap(t_map *map)
 
 	i = -1;
 	count = 0;
-	tab = ft_calloc(sizeof(char *) * (map->height * SIZE + 1), 1);
+	tab = ft_calloc(sizeof(char *) * (map->height * TEMP + 1), 1);
 	while (map->map[++i])
 	{
 		j = -1;
-		while (++j < (SIZE))
+		while (++j < (TEMP))
 		{
-			tab[count] = ft_calloc(sizeof(char) * (map->maxlen * SIZE + 1), 1);
+			tab[count] = ft_calloc(sizeof(char) * (map->maxlen * TEMP + 1), 1);
 			multiplicator(map->map[i], tab[count]);
 			count++;
 		}
 	}
 	ft_freetab(map->map);
-	map->maxlen *= SIZE;
-	map->height *= SIZE;
+	map->maxlen *= TEMP;
+	map->height *= TEMP;
 	return (tab);
 }
 
@@ -140,26 +142,36 @@ void	checkchars(t_map *map)
 	int			wrong;
 	char		*str;
 	static int	var;
+	int			clock;
 
 	var = 0;
 	i = 0;
 	wrong = 0;
+	clock = 0;
 	str = map->cubfile;
 	while (str && str[i])
 	{
 		if (ft_strchr("NSEW", str[i]))
 			var++;
-		else if (!ft_strchr(" 10D\n", str[i]))
+		else if (!ft_strchr(" 10QD\n", str[i]))
 			wrong++;
+		else if (str[i] == 'Q')
+			clock++;
 		i++;
 	}
-	if (var != 1 || wrong)
+	if (var != 1 || wrong || clock > 1)
+	{
+		printf("var = %d, wrong = %d, clock = %d\n", var, wrong, clock);
 		ft_error(ERR_CHARS, YELLOW, map);
+	}
 }
 
 void	checkmap(t_map *map)
 {
 	checkchars(map);
 	check_surroundings(map);
-	// map->map = expandmap(map);
+	map->map = expandmap(map);
+	// int size = (map->maxlen * map->height) / 64;
+	// if (map->maxlen * size >= WIDTH || map->height * size >= HEIGHT)
+		// ft_error(ERR_MAP_B, YELLOW, map);
 }

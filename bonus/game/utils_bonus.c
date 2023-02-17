@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 18:09:28 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/16 03:49:35 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/16 22:18:57 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	lenof(int n)
 	return (len);
 }
 
-void	wall_color(t_plane *p, unsigned int *color, t_luno2i tex, int time)
+void	wall_color(t_plane *p, unsigned int *color, t_luno2i tex)
 {
 	if (p->side == 1)
 	{

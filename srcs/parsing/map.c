@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 00:25:19 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/12 20:33:22 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/17 10:39:04 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*multiplicator(char *src, char *dst)
 				dst[count++] = src[i];
 				stop++;
 			}
-			else if (!ft_strchr("NSEW", src[i]))
+			else if (!ft_strchr("NSEWQ", src[i]))
 				dst[count++] = src[i];
 			else
 				dst[count++] = '0';

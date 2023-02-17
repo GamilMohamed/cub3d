@@ -62,7 +62,6 @@ DEPS			=	${SRCS_NAMES:.c=.d}
 
 DEPS_B			=	${BONUS:.c=.d}
 
-
 SRCS_B			=	$(addprefix $(DIR_BONUS)/,$(BONUS))
 
 SRCS			=	$(addprefix $(DIR_SRCS)/,$(SRCS_NAMES))
@@ -92,12 +91,12 @@ all:	${NAME}
 $(NAME): $(DIR_OBJS) $(OBJS) 
 	@make -C libft
 	$(CC) $(OBJS) $(CFLAGS) $(LIB) $(MLX) -o $(NAME)
-	@echo "\033[31;5mcub3d\033[0m"
+	@echo "\033[32;5mcub3d\033[0m"
 
 bonus: $(DIR_OBJS) $(OBJS_B) 
 	@make -C libft
 	$(CC) $(OBJS_B) $(CFLAGS) $(LIB) $(MLX) -o $(NAME)
-	@echo "\033[31;5mcub3d\033[0m"
+	@echo "\033[31;5mcub3d bonus\033[0m"
 
 $(OBJS_B) : $(DIR_OBJS)/%.o : $(DIR_BONUS)/%.c
 	$(CC) $(CFLAGS) $(MLX_FLAGS)  $(CDFLAGS) $(INC) -c $< -o $@ 
