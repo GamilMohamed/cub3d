@@ -90,11 +90,15 @@ all:	${NAME}
 # mv mlx/mlx/libmlx.a mlx/mlx/libmlx_Linux.a mlx/
 $(NAME): $(DIR_OBJS) $(OBJS) 
 	@make -C libft
+	@make -C mlx/mlx
+	@cp mlx/mlx/libmlx.a mlx/mlx/libmlx_Linux.a .
 	$(CC) $(OBJS) $(CFLAGS) $(LIB) $(MLX) -o $(NAME)
 	@echo "\033[32;5mcub3d\033[0m"
 
 bonus: $(DIR_OBJS) $(OBJS_B) 
 	@make -C libft
+	@make -C mlx/mlx
+	@cp mlx/mlx/libmlx.a mlx/mlx/libmlx_Linux.a .
 	$(CC) $(OBJS_B) $(CFLAGS) $(LIB) $(MLX) -o $(NAME)
 	@echo "\033[31;5mcub3d bonus\033[0m"
 
@@ -115,6 +119,7 @@ leaks:	${NAME}
 	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes ./cub3d $(dad)
 clean:
 	make clean -C libft
+	make clean -C mlx/mlx
 	rm -rf ${DIR_OBJS}
 
 fclean:	clean
