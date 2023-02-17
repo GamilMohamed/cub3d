@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:01:09 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/17 12:28:04 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/17 23:36:24 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ void	orientation(t_plane *plane, char player)
 	if (player == 'N')
 	{
 		plane->dir.x = 0;
-		plane->dir.y = -1;
+		plane->dir.y = 1;
 	}
 	else if (player == 'S')
 	{
 		plane->dir.x = 0;
-		plane->dir.y = 1;
+		plane->dir.y = -1;
 	}
 	else if (player == 'E')
 	{
@@ -73,7 +73,7 @@ void	init_buff(t_plane *p)
 void	init_plane(t_plane *plane, t_map *map)
 {
 	orientation(plane, map->data->player);
-	plane->plane.x = 0.66 * (-1 * plane->dir.y);
+	plane->plane.x = 0.66 * (plane->dir.y);
 	plane->plane.y = 0.66 * (-1 * plane->dir.x);
 	plane->movespeed = 0.09;
 	plane->rotspeed = 0.09;

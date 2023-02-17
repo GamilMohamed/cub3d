@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/16 00:39:36 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/17 12:25:54 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/17 19:24:41 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ void	init_sprite(t_plane *p, int time, t_luno2f pos)
 {
 	t_sprite	s;
 
-	s.sprite_pos.x = pos.y + 2.5;
-	s.sprite_pos.y = pos.x + 2.5;
+	s.sprite_pos.x = pos.y + 25;
+	s.sprite_pos.y = pos.x + 25;
 	s.z = -1;
 	while (++s.z < 64)
 	{
