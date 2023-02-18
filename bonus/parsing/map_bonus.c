@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 00:25:19 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/17 23:09:54 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/18 04:51:05 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,7 @@ void	check_surroundings(t_map *map)
 {
 	int		i;
 	int		j;
-	int		total;
 
-	total = 0;
 	i = -1;
 	map->map = ft_specialit(map->cubfile, "\n", map->maxlen + 2);
 	map->height = ft_tablen(map->map);
@@ -171,7 +169,7 @@ void	checkmap(t_map *map)
 	checkchars(map);
 	check_surroundings(map);
 	map->map = expandmap(map);
-	// int size = (map->maxlen * map->height) / 64;
+	// int size = (map->maxlen * map->height) / 512;
 	// if (map->maxlen * size >= WIDTH || map->height * size >= HEIGHT)
 		// ft_error(ERR_MAP_B, YELLOW, map);
 }

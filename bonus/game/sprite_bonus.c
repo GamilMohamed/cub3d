@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/16 00:39:36 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/17 19:24:41 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/18 04:37:07 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,29 @@
 #define UDIV 1
 #define VDIV 1
 #define VMOVE 0.0
+
+// void	print_sprite(t_sprite *s, t_plane *p, int time)
+// {
+// 	while (++s->i < s->de.y)
+// 	{
+// 		s->tex.x = (int)((256 * (s->i - (-s->sprite_h / 2 + s->spritescreen))
+// 					* 64 / s->sprite_h) / 256);
+// 		if (s->transform.y > 0 && s->i > 0 && s->i < HEIGHT
+// 			&& s->transform.y < p->tex_buff[s->i])
+// 		{
+// 			s->k = s->ds.x - 1;
+// 			while (++s->k < s->de.x)
+// 			{
+// 				s->d = (s->k - s->vmove_s) * 256 - WIDTH * 128 + s->sprite_w
+// 					* 128;
+// 				s->tex.y = ((s->d * 64) / s->sprite_w) / 256;
+// 				s->color = p->tex_clock[time][64 * s->tex.y + s->tex.x];
+// 				if ((s->color & 0x00FFFFFF))
+// 					p->buff[s->k][s->i] = s->color;
+// 			}
+// 		}
+// 	}
+// }
 
 void	print_sprite(t_sprite *s, t_plane *p, int time)
 {
@@ -63,12 +86,15 @@ void	init_sprite(t_plane *p, int time, t_luno2f pos)
 {
 	t_sprite	s;
 
-	s.sprite_pos.x = pos.y + 25;
-	s.sprite_pos.y = pos.x + 25;
+	s.sprite_pos.x = pos.y + 0.5;
+	s.sprite_pos.y = pos.x + 0.5;
 	s.z = -1;
 	while (++s.z < 64)
 	{
-		s.sprite = s.sprite_pos - p->pos;
+		// s.sprite = s.sprite_pos - p->pos;
+		s.sprite.x = s.sprite_pos.x - p->pos.x;
+		s.sprite.y = s.sprite_pos.y - p->pos.y;
+
 		s.invdet = 1.0 / (p->plane.x * p->dir.y - p->dir.x * p->plane.y);
 		s.transform.x = s.invdet * (p->dir.y * s.sprite.x - p->dir.x
 				* s.sprite.y);

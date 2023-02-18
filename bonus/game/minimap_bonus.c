@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/13 03:30:42 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/17 23:12:25 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/18 03:20:54 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,31 +31,28 @@ void	map_to_minimap(t_map *map, t_temp *temp, int size)
 	t_luno2i	pixel_pos;
 	int			color;
 
-	double val = 7;
-
-
 	for (int i = 0; i < (map->maxlen * map->height); i++)
 	{
 		map_pos.x = i % map->maxlen; // 0 -> 200
 		map_pos.y = i / map->maxlen; // 0 -> 150
-		for (int j = 0; j < (val * val); j++)
+		for (int j = 0; j < (size * size); j++)
 		{
-			pixel_pos.y = j / val;
-			pixel_pos.x = fmod(j, val);
+			pixel_pos.y = j / size;
+			pixel_pos.x = fmod(j, size);
 			color = get_color_for_map_char(map->map[map_pos.y][map_pos.x]);
 			if (color != 0)
 			{
 				t_luno2i plz;
-				plz.x = (pixel_pos.y + map_pos.y * (int)val);
-				plz.y = (pixel_pos.x + map_pos.x * (int)val);
+				plz.y = (pixel_pos.y + map_pos.y * (int)size);
+				plz.x = (pixel_pos.x + map_pos.x * (int)size);
 				if (plz.x >= WIDTH || plz.y >= HEIGHT)
 					continue;
 				map->plane->buff[(plz.y)][(plz.x)] = color;
 			}
 		}
 	}
-	temp->coords.x = (map->plane->pos.y * val);
-	temp->coords.y = (map->plane->pos.x * val);
+	temp->coords.x = (map->plane->pos.y * size);
+	temp->coords.y = (map->plane->pos.x * size);
 }
 
 t_luno2f	docircle(t_map *map, t_luno2f coords, int ray)
@@ -88,7 +85,8 @@ void	draw_one_ray_xx(t_temp *temp, t_luno2f coords, t_luno2f dir, t_map *map)
 	middle.y = coords.y + dir.x * 5;
 	d.x = coords.x - middle.x;
 	d.y = coords.y - middle.y;
-	mid = (middle + coords) / 2;
+	mid.x = (middle.x + coords.x) / 2;
+	mid.y = (middle.y + coords.y) / 2;
 	left.x = mid.x - d.y;
 	left.y = mid.y + d.x;
 	right.x = mid.x + d.y;
@@ -104,6 +102,8 @@ void	fill_minimap(t_map *map, t_mlx *mlx)
 	(void)mlx;
 	size = map->mini->size;
 	map_to_minimap(map, map->mini, size);
-	// docircle(map, map->mini->coords, 3);
-	draw_one_ray_xx(map->mini, (t_luno2f){100, 100}, map->plane->dir, map);
+	if (map->mini->coords.x >= WIDTH || map->mini->coords.y >= HEIGHT)
+		return;
+	docircle(map, map->mini->coords, 3);	
+	draw_one_ray_xx(map->mini, map->mini->coords, map->plane->dir, map);
 }

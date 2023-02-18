@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   calc.c                                             :+:      :+:    :+:   */
+/*   calc_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 07:59:49 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/12 20:49:20 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/18 03:16:29 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ double	calc_radius(double angle)
 	return (angle * (M_PI / 180));
 }
 
-t_luno2f	normalize(t_luno2f coords)
-{
-	double	size;
+// t_luno2f	normalize(t_luno2f coords)
+// {
+// 	double	size;
 
-	size = sqrtf(pow(coords.x, 2) + pow(coords.y, 2));
-	coords /= size;
-	return (coords);
-}
+// 	size = sqrtf(pow(coords.x, 2) + pow(coords.y, 2));
+// 	coords /= size;
+// 	return (coords);
+// }

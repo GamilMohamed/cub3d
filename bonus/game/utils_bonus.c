@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 18:09:28 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/16 22:18:57 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/18 04:00:14 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,19 +32,19 @@ void	wall_color(t_plane *p, unsigned int *color, t_luno2i tex)
 	if (p->side == 1)
 	{
 		if (p->raydir.y > 0)
-			*color = p->texture[0][64 * tex.y + tex.x];
+			*color = p->texture[0][512 * tex.y + tex.x];
 		else
-			*color = p->texture[1][64 * tex.y + tex.x];
+			*color = p->texture[1][512 * tex.y + tex.x];
 	}
 	else
 	{
 		if (p->raydir.x > 0)
-			*color = p->texture[3][64 * tex.y + tex.x];
+			*color = p->texture[3][512 * tex.y + tex.x];
 		else
-			*color = p->texture[2][64 * tex.y + tex.x];
+			*color = p->texture[2][512 * tex.y + tex.x];
 	}
 	if (p->door == 1)
-		*color = p->texture[4][64 * tex.y + tex.x];
+		*color = p->texture[4][512 * tex.y + tex.x];
 }
 
 double	sides(t_plane *p)
@@ -62,10 +62,10 @@ t_luno2i	get_draw(int lineh)
 {
 	t_luno2i	draw;
 
-	draw.x = -lineh / 2 + HEIGHT / 2;
+	draw.x = -lineh / 2 + HEIGHT_2;
 	if (draw.x < 0)
 		draw.x = 0;
-	draw.y = lineh / 2 + HEIGHT / 2;
+	draw.y = lineh / 2 + HEIGHT_2;
 	if (draw.y >= HEIGHT)
 		draw.y = HEIGHT - 1;
 	return (draw);
@@ -87,10 +87,10 @@ int	get_tex_x(t_plane *p, double wallx)
 {
 	int	val;
 
-	val = (int)(wallx * (double)(64));
+	val = (int)(wallx * (double)(512));
 	if (p->side == 0 && p->raydir.x > 0)
-		val = 64 - val - 1;
+		val = 512 - val - 1;
 	if (p->side == 1 && p->raydir.y < 0)
-		val = 64 - val - 1;
+		val = 512 - val - 1;
 	return (val);
 }

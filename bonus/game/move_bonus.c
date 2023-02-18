@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:07:38 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/17 10:34:38 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/18 01:54:06 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,7 @@ int	move(t_map *map)
 		fill_minimap(map, map->mlx);
 	draw(map);
 	print_time(map->mlx, time);
+	ft_mouse_move(map);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:01:09 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/17 23:36:24 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/18 04:22:52 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	init_buff(t_plane *p)
 	p->texture = (int **)malloc(sizeof(int *) * (5 * 5));
 	i = -1;
 	while (++i < 5)
-		p->texture[i] = (int *)ft_calloc(sizeof(int), (64 * 64));
+		p->texture[i] = (int *)ft_calloc(sizeof(int), (512 * 512));
 }
 
 void	init_plane(t_plane *plane, t_map *map)

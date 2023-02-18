@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 22:31:57 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/17 23:01:32 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/18 04:40:02 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,14 @@ void	get_positions(t_map *map, t_data *data)
 	int	i;
 	int	j;
 
-	i = 0;
-	while (map->map[i])
+	i = -1;
+	while (map->map[++i])
 	{
-		j = 0;
-		while (map->map[i][j])
+		j = -1;
+		while (map->map[i][++j])
 		{
 			if (ft_strchr("NSEW", map->map[i][j]))
 			{
-				data->player_pos.x = i + 0.5;
-				data->player_pos.y = j + 0.5;
 				map->pos.x = (double)i + 0.5;
 				map->pos.y = (double)j + 0.5;
 				map->data->player = map->map[i][j];
@@ -56,14 +54,11 @@ void	get_positions(t_map *map, t_data *data)
 			}
 			if (map->map[i][j] == 'Q')
 			{
-				printf("Q found\n");
 				map->map[i][j] = '0';
 				map->pos_q.y = (double)i;
 				map->pos_q.x = (double)j;
 			}
-			j++;
 		}
-		i++;
 	}
 }
 
@@ -82,14 +77,12 @@ void	ft_stoval(char *str, int n, int start, int len)
 	}
 }
 
-
 char	*get_file(char *buff, char *str, int *index)
 {
 	static char	*extension[2] = {".JPG", ".jpg"};
 	char		copy[1024];
 	int			year;
 
-	year = 2022;
 	while (*index < 2)
 	{
 		year = 2013;
@@ -100,6 +93,7 @@ char	*get_file(char *buff, char *str, int *index)
 			ft_strcat(buff, "/");
 			ft_strcat(buff, str);
 			ft_strcat(buff, extension[*index]);
+			printf("%s%s%s\n", GREEN, buff, RESET);
 			if (access(buff, F_OK) != -1)
 				return (ft_strdup(buff));
 		}
@@ -112,23 +106,24 @@ void	exec(char *file, char buff[3][1024], char **env)
 {
 	if (fork() == 0)
 		execve("/usr/bin/cp", (char *[]){"/usr/bin/cp", file, "./stud", NULL},
-				env);
+			env);
 	wait(NULL);
 	if (fork() == 0)
 		execve("/usr/bin/convert", (char *[]){"/usr/bin/convert", buff[1],
-				"-resize", "64x64", buff[2], NULL}, env);
+			"-resize", "512x512", buff[2], NULL}, env);
 	wait(NULL);
 }
 
 int	extension(t_map *map, char *str, char **env)
 {
-	static char	*extension[2] = {".JPG", ".jpg"};
-	char	buff[3][1024];
-	char	*file;
-	int		index;
+	static 		char	*extension[2] = {".JPG", ".jpg"};
+	char		buff[3][1024];
+	char		*file;
+	int			index;
 
 	if (!str)
 		return (0);
+	index = 0;
 	ft_strcpy(buff[0], "/sgoinfre/photos_students/");
 	file = get_file(buff[0], str, &index);
 	if (!file)
@@ -140,9 +135,10 @@ int	extension(t_map *map, char *str, char **env)
 	ft_strcat(buff[2], str);
 	ft_strcat(buff[2], ".xpm");
 	exec(file, buff, env);
-	ft_free((void **)& map->path[0]);
+	ft_free((void **)&map->path[0]);
 	map->path[0] = ft_strdup(buff[2]);
-	return (unlink(buff[1]), 1);
+	return (1);
+	// return (unlink(buff[1]), 1);
 }
 
 int	main(int ac, char **av, char **env)
@@ -166,10 +162,9 @@ int	main(int ac, char **av, char **env)
 		return (ft_error(ERR_NO_MAP, YELLOW, map), 1);
 	checkmap(map);
 	get_positions(map, &data);
-	// ft_printmap(map->map, 0);
 	ft_game(map, map->mlx, map->data);
 	ft_freetab(map->map);
 	ft_freestruct_map(map);
 	return (0);
 }
-// ft_printstruct(map);
+// ft_printmap(map->map, 0);

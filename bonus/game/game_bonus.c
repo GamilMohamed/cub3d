@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 01:20:48 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/17 10:47:14 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/18 04:50:16 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	free_text(t_plane *plane)
 	while (++i < 5)
 		free(plane->texture[i]);
 	i = -1;
-	while (++i < 64)
+	while (++i < 512)
 		free(plane->tex_clock[i]);
 	free(plane->texture);
 	free(plane->tex_clock);
@@ -115,15 +115,20 @@ int		mouse_press(int button, int x, int y, t_map *map)
 	return (0);
 }
 
-int	mouse_move(int x, int y, t_map *map)
+int	ft_mouse_move(t_map *map)
 {
 	char	p;
 	int		ret;
-
+	int x, y;
 	p = map->data->player;
 	ret = 0;
+	mlx_mouse_get_pos(map->mlx->mlx, map->mlx->win, &x, &y);
+	// mlx_get(map->mlx->mlx, &x, &y);
 	if (p == 'N' || p == 'S')
 		ret = 1;
+	if (y >= HEIGHT)
+		mlx_mouse_move(map->mlx->mlx, map->mlx->win, WIDTH_2, HEIGHT);
+
 	if (x > WIDTH_2 - 5 || x < WIDTH_2 + 5)
 	{
 		if (x >= WIDTH_2)
@@ -131,7 +136,7 @@ int	mouse_move(int x, int y, t_map *map)
 		else
 			mouse_rotation(map->plane, (ret != 0), (WIDTH_2 - x) * 0.005);
 	}
-	if (y > HEIGHT_2 + 5 || y < HEIGHT_2 - 5)
+	if (y > HEIGHT_2 - 5 || y < HEIGHT_2 + 5)
 	{
 		if (y >= HEIGHT_2)
 		{
@@ -144,9 +149,47 @@ int	mouse_move(int x, int y, t_map *map)
 			map->plane->drawend = (HEIGHT_2 - y) * 1;
 		}
 	}
+	// if (x != WIDTH_2 && y != HEIGHT_2)
 	mlx_mouse_move(map->mlx->mlx, map->mlx->win, WIDTH_2, y);
 	return (0);
 }
+
+
+
+// int	mouse_move(int x, int y, t_map *map)
+// {
+// 	char	p;
+// 	int		ret;
+
+// 	p = map->data->player;
+// 	ret = 0;
+// 	mlx_get_screen_size(map->mlx->mlx, &x, &y);
+// 	if (p == 'N' || p == 'S')
+// 		ret = 1;
+// 	if (x > WIDTH_2 - 5 || x < WIDTH_2 + 5)
+// 	{
+// 		if (x >= WIDTH_2)
+// 			mouse_rotation(map->plane, (ret == 0), (x - WIDTH_2) * 0.005);
+// 		else
+// 			mouse_rotation(map->plane, (ret != 0), (WIDTH_2 - x) * 0.005);
+// 	}
+// 	if (y > HEIGHT_2 - 5 || y < HEIGHT_2 + 5)
+// 	{
+// 		if (y >= HEIGHT_2)
+// 		{
+// 			map->plane->drawstart = (y - HEIGHT_2) * -1;
+// 			map->plane->drawend = (y - HEIGHT_2) * -1;
+// 		}
+// 		else
+// 		{
+// 			map->plane->drawstart = (HEIGHT_2 - y) * 1;
+// 			map->plane->drawend = (HEIGHT_2 - y) * 1;
+// 		}
+// 	}
+// 	// if (x != WIDTH_2 && y != HEIGHT_2)
+// 		mlx_mouse_move(map->mlx->mlx, map->mlx->win, WIDTH_2, y);
+// 	return (0);
+// }
 
 
 int	initminimap(t_map *map, t_temp *mini)
@@ -162,12 +205,16 @@ int	initminimap(t_map *map, t_temp *mini)
 int	ft_game(t_map *map, t_mlx *mlx, t_data *data)
 {
 	(void)data;
+	t_xvar *louis;
+	t_win_list *window;
+	
 	map->temp = ft_calloc(sizeof(t_temp), 1);
 	map->plane = ft_calloc(sizeof(t_plane), 1);
 	map->press = ft_calloc(sizeof(t_press), 1);
 	map->mini = ft_calloc(sizeof(t_temp), 1);
 	if (initmlx(map, mlx))
 		return (1);
+	louis = (t_xvar *)mlx->mlx;
 	if (initminimap(map, map->mini))
 		return (1);
 	map->data->player_pos = map->pos;
@@ -179,14 +226,14 @@ int	ft_game(t_map *map, t_mlx *mlx, t_data *data)
 			&map->help.w, &map->help.h);
 	map->help.addr = (int *)mlx_get_data_addr(map->help.img, &map->help.bpp,
 			&map->help.size_l, &map->help.endian);
-	// mlx_mouse_hide(mlx->mlx, mlx->win);	
 	mlx_put_image_to_window(map->mlx->mlx, map->mlx->win, map->help.img, 0, 0);
 	init_plane(map->plane, map);
 	init_buff(map->plane);
 	load_texture(map);
+	window = (t_win_list *)mlx->win;
+	XFixesHideCursor(louis->display, window->window);
 	mlx_hook(mlx->win, 2, 1L << 0, &key_press, map);
 	mlx_hook(mlx->win, ButtonPress, ButtonPressMask, mouse_press, map);
-	mlx_hook(mlx->win, MotionNotify, PointerMotionMask, mouse_move, map);
 	mlx_hook(mlx->win, 3, 1L << 1, &key_release, map);
 	mlx_hook(mlx->win, 17, 0, &ft_close, map);
 	mlx_loop_hook(mlx->mlx, &move, map);

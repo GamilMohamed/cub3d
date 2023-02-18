@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 13:31:53 by mohazerr          #+#    #+#             */
-/*   Updated: 2022/12/28 03:48:23 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/18 03:22:28 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ char	*ft_strtrim(char const *s, char const *set)
 		return (ft_strdup(""));
 	len = ft_strlen(s);
 	i = 0;
-	start = 0;
 	while (s[i] && ft_isset(s[i], set))
 		i++;
 	if (s[i] == '\0')

@@ -72,7 +72,7 @@ OBJS_B			=	$(addprefix $(DIR_OBJS)/,$(OBJS_NAMES_B))
 
 INC				=	-Iincludes -Ilibft/includes -I/usr/include -I/mlx/include/mlx.h 
 
-LIB				=	-Llibft -lft -lm -lXext -lX11 -L/usr/lib -Lmlx -lmlx -L/usr/lib -Imlx
+LIB				=	-Llibft -lft -lm -lXext -lX11 -L/usr/lib -Lmlx -lXfixes -lmlx -L/usr/lib -Imlx
 
 #LIB				=	-Llibft -lft -lm -L/usr/lib -L/opt/X11/lib -L/opt/homebrew/lib -framework Cocoa -framework OpenGL -framework IOKit -lglfw -framework OpenGL
 
@@ -80,7 +80,7 @@ CC				=	cc
 
 CDFLAGS 		= 	-MMD -MP
 
-CFLAGS			=	-g3 # -Wall -Werror -Wextra
+CFLAGS			=	-g3 #-O3 -march=native # -Wall -Werror -Wextra
 
 MAKEFLAGS		=	--no-print-directory
 

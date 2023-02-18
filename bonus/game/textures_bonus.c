@@ -6,23 +6,25 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 04:03:03 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/17 11:49:39 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/18 05:02:29 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d_bonus.h"
 
-int	load_image(t_map *map, int *texture, char *path, t_img *img)
+int	load_image(t_map *map, int *texture, char *path, t_image *img)
 {
 	int	i;
 	int	j;
 
 	img->img = mlx_xpm_file_to_image(map->mlx->mlx, path, &img->w, &img->h);
 	if (!img->img)
-	{
-		printf("%s\n", path);
 		return (printf("%swrong texture path! %s\n", RED, RESET), 1);
-	}
+	// if (img->w != 512 || img->h != 512){
+		// printf("%i %i\n", img->w, img->h);
+		// printf("path: %s\n", path);
+		// return (printf("%simage si	ze must be 512x512! %s\n", RED, RESET), 1);
+	// }
 	img->data = (int *)mlx_get_data_addr(img->img, &img->bpp, &img->size_l,
 			&img->endian);
 	i = -1;
@@ -40,18 +42,13 @@ void	draw(t_map *map)
 {
 	int			i;
 	int			j;
-	t_luno2i	size;
 
-	size.x = HEIGHT;
-	size.y = WIDTH;
 	i = -1;
-	while (++i < size.x)
+	while (++i < HEIGHT)
 	{
 		j = -1;
-		while (++j < size.y)
-		{
-			map->img.data[size.y * i + j] = map->plane->buff[i][j];
-		}
+		while (++j < WIDTH)
+			map->img.data[WIDTH * i + j] = map->plane->buff[i][j];
 	}
 	mlx_put_image_to_window(map->mlx->mlx, map->mlx->win, map->img.img, 0, 0);
 }
@@ -79,7 +76,7 @@ void	init_clock(t_plane *p)
 		p->tex_clock[i] = (int *)ft_calloc(sizeof(int), (64 * 64));
 }
 
-int	load_clock(t_map *map, t_plane *p, t_img *img)
+int	load_clock(t_map *map, t_plane *p, t_image *img)
 {
 	int	j;
 	int	r;
@@ -109,7 +106,7 @@ int	load_clock(t_map *map, t_plane *p, t_img *img)
 
 void	load_texture(t_map *map)
 {
-	t_img	img;
+	t_image	img;
 
 	if (load_image(map, map->plane->texture[0], map->path[0], &img))
 		mlx_loop_end(map->mlx->mlx);
@@ -119,7 +116,7 @@ void	load_texture(t_map *map)
 		mlx_loop_end(map->mlx->mlx);
 	if (load_image(map, map->plane->texture[3], map->path[3], &img))
 		mlx_loop_end(map->mlx->mlx);
-	if (load_image(map, map->plane->texture[4], "s/door.xpm", &img))
+	if (load_image(map, map->plane->texture[4], "wool/brown_wool.xpm", &img))
 		mlx_loop_end(map->mlx->mlx);
 	fill_clock(map->plane->clock);
 	if (load_clock(map, map->plane, &img))

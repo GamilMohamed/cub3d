@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 08:06:37 by mgamil            #+#    #+#             */
-/*   Updated: 2023/02/17 10:43:35 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/18 04:13:00 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,11 @@ void	dda(t_map *map, t_plane *p)
 void	draw_rayons_all_2(t_map *map, t_drawrays *r, t_plane *p, int i, int max)
 {
 	int	y;
+	t_luno2f col;
 
 	y = -1;
-	r->step = 1.0 * 64 / r->lineh;
-	r->texpos = (r->draw.x - HEIGHT / 2 - p->drawstart + r->lineh / 2) * r->step ;
+	r->step = 1.0 * 512 / r->lineh;
+	r->texpos = (r->draw.x - HEIGHT_2 - p->drawstart + r->lineh / 2) * r->step ;
 	while (++y < HEIGHT)
 	{
 		if (y < r->draw.x)// + p->drawstart)
@@ -85,12 +86,14 @@ void	draw_rayons_all_2(t_map *map, t_drawrays *r, t_plane *p, int i, int max)
 		else if (y > r->draw.y)// + p->drawend)
 		{
 			r->color = create_rgb(0, 0, 50, 35);
-			if (max / 5 >= 50 && max / 7 >= 35)
-				r->color = create_rgb(0, 0, max / 5, max / 7);
+			col.y = max / 7;
+			col.x = max / 5;
+			if (col.x >= 50 && col.y >= 35)
+				r->color = create_rgb(0, 0, col.x, col.y);
 		}
 		else
 		{
-			r->tex.y = (int)r->texpos & (64 - 1);
+			r->tex.y = (int)r->texpos & (512 - 1);
 			r->texpos += r->step;
 			wall_color(map->plane, &r->color, r->tex);
 		}
@@ -109,10 +112,10 @@ t_luno2i	get_drawss(int lineh, t_plane *p)
 	draw.x = p->drawstart;
 	draw.y = p->drawend;
 
-	draw.x += -lineh / 2 + HEIGHT / 2;
+	draw.x += -lineh / 2 + HEIGHT_2;
 	if (draw.x < 0)
 		draw.x = 0;
-	draw.y += lineh / 2 + HEIGHT / 2;
+	draw.y += lineh / 2 + HEIGHT_2;
 	if (draw.y >= HEIGHT)
 		draw.y = HEIGHT - 1;
 	return (draw);

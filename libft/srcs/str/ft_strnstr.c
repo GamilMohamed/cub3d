@@ -6,7 +6,7 @@
 /*   By: mgamil <mgamil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 21:37:09 by mohazerr          #+#    #+#             */
-/*   Updated: 2023/01/03 03:57:13 by mgamil           ###   ########.fr       */
+/*   Updated: 2023/02/18 03:22:20 by mgamil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ char	*ft_strnstr(char const *haystack, char const *needle, size_t len)
 	size_t	i;
 	size_t	j;
 
-	j = 0;
 	i = 0;
 	if (!*needle)
 		return ((char *)(haystack));
